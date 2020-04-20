@@ -52,7 +52,6 @@ INSTALLED_APPS = [
 ]
 
 ##### Channels-specific settings
-
 redis_host = os.environ.get('REDIS_HOST', 'localhost')
 
 # Channel layer definitions
@@ -66,39 +65,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-##### Project-specific settings
-
-MSG_TYPE_COMMANDER = "commander"
-MSG_TYPE_QUEST_CHOICE = "quest_choice"
-MSG_TYPE_QUEST_VOTE = "quest_vote"
-MSG_TYPE_QUEST_RESULT = "quest_result"
-MSG_TYPE_NIGHT = "night"
-MSG_TYPE_START = "start"
-MSG_TYPE_END = "end"
-MSG_TYPE_LEAVE = "leave"
-
-MESSAGE_TYPES_CHOICES = (
-    (MSG_TYPE_COMMANDER, 'COMMANDER'),
-    (MSG_TYPE_QUEST_CHOICE, 'QUEST_CHOICE'),
-    (MSG_TYPE_QUEST_VOTE, 'QUEST_VOTE'),
-    (MSG_TYPE_QUEST_RESULT, 'QUEST_RESULT'),
-    (MSG_TYPE_NIGHT, 'NIGHT'),
-    (MSG_TYPE_START, 'START'),
-    (MSG_TYPE_END, 'END'),
-    (MSG_TYPE_LEAVE, 'LEAVE'),
-)
-
-MESSAGE_TYPES_LIST = [
-    MSG_TYPE_COMMANDER,
-    MSG_TYPE_QUEST_CHOICE,
-    MSG_TYPE_QUEST_VOTE,
-    MSG_TYPE_QUEST_RESULT,
-    MSG_TYPE_NIGHT,
-    MSG_TYPE_START,
-    MSG_TYPE_END,
-    MSG_TYPE_LEAVE,
-]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -188,11 +154,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'avalon.wsgi.application'
 
 
-# Cache
+# cache
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/",
+        "LOCATION": "redis://localhost:6379/",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },

@@ -4,7 +4,7 @@ from asgiref.sync import sync_to_async, async_to_sync
 from channels.auth import AuthMiddlewareStack
 from django.contrib.auth.models import AnonymousUser
 from django.db import close_old_connections
-from .models import Player
+from players.models import Player
 
 @database_sync_to_async
 def get_user(token_key):

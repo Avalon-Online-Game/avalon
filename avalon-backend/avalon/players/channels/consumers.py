@@ -1,12 +1,11 @@
 import json
 import logging
-from django.conf import settings
+from games.channels import utils
 from channels.consumer import SyncConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer, AsyncJsonWebsocketConsumer
 from django.contrib.auth.models import AnonymousUser
-from games.utils import GameState, Quest
+from games.channels.utils import GameState, Quest
 import avalon.utils as cache
-# from avalon.utils import set_value, get_value, update_value
 from .utils import get_game_or_error, start_game_or_wait, get_players_or_error
 from .exceptions import ClientError
 
@@ -63,9 +62,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         # Messages will have a "command" key we can switch on
         command = content.get("command", None)
         try:
-            # if command == "night":
-            #     await self.night(content)
-
             # Return the commander of the quest
             if command == "commander":
                 await self.commander(content["game_code"])
@@ -161,8 +157,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
 
 
 ##### Handlers for messages sent over the channel layer
-
-
     # These helper methods are named by the types we send - so game.start becomes game_start
     async def game_start(self, event):
         """

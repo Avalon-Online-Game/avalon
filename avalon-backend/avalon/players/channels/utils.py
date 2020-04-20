@@ -2,7 +2,7 @@ from channels.db import database_sync_to_async
 import random
 from .exceptions import ClientError
 from games.models import Game
-from .models import Player
+from players.models import Player
 
 @database_sync_to_async
 def get_game_or_error(player):
