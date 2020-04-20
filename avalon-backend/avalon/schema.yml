@@ -1,0 +1,1281 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/v1/users/rest-auth/logout/:
+    get:
+      operationId: listLogouts
+      description: 'Calls Django logout method and delete the Token object
+
+        assigned to the current User object.
+
+
+        Accepts/Returns nothing.'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+    post:
+      operationId: CreateLogout
+      description: 'Calls Django logout method and delete the Token object
+
+        assigned to the current User object.
+
+
+        Accepts/Returns nothing.'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+  /api/v1/users/rest-auth/user/:
+    get:
+      operationId: RetrieveAccountDetails
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    maxLength: 32
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 255
+                  first_name:
+                    type: string
+                    maxLength: 50
+                  last_name:
+                    type: string
+                    maxLength: 50
+                required:
+                - username
+                - email
+                - first_name
+                - last_name
+          description: ''
+    put:
+      operationId: UpdateAccountDetails
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id001
+              properties:
+                username:
+                  type: string
+                  maxLength: 32
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                first_name:
+                  type: string
+                  maxLength: 50
+                last_name:
+                  type: string
+                  maxLength: 50
+              required:
+              - username
+              - email
+              - first_name
+              - last_name
+          application/x-www-form-urlencoded:
+            schema: *id001
+          multipart/form-data:
+            schema: *id001
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    maxLength: 32
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 255
+                  first_name:
+                    type: string
+                    maxLength: 50
+                  last_name:
+                    type: string
+                    maxLength: 50
+                required:
+                - username
+                - email
+                - first_name
+                - last_name
+          description: ''
+    patch:
+      operationId: PartialUpdateAccountDetails
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id002
+              properties:
+                username:
+                  type: string
+                  maxLength: 32
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                first_name:
+                  type: string
+                  maxLength: 50
+                last_name:
+                  type: string
+                  maxLength: 50
+          application/x-www-form-urlencoded:
+            schema: *id002
+          multipart/form-data:
+            schema: *id002
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    maxLength: 32
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 255
+                  first_name:
+                    type: string
+                    maxLength: 50
+                  last_name:
+                    type: string
+                    maxLength: 50
+                required:
+                - username
+                - email
+                - first_name
+                - last_name
+          description: ''
+  /api/v1/games/:
+    get:
+      operationId: listGames
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    roles:
+                      type: array
+                      items:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          side:
+                            enum:
+                            - Good
+                            - Evil
+                          name:
+                            enum:
+                            - Loyal Servant of Arthur
+                            - Percival
+                            - Merlin
+                            - Minion of Mordred
+                            - Mordred
+                            - Assassin
+                            - Morgana
+                            - Oberon
+                        required:
+                        - side
+                        - name
+                    code:
+                      type: string
+                      maxLength: 4
+                    number_of_players:
+                      type: integer
+                      maximum: 10
+                      minimum: 5
+                    players_joined:
+                      type: integer
+                      maximum: 2147483647
+                      minimum: 0
+                    creator:
+                      type: integer
+                  required:
+                  - roles
+                  - code
+                  - number_of_players
+                  - creator
+          description: ''
+    post:
+      operationId: CreateGame
+      description: 'create new game and generate game code.
+
+        get : list all game instances'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id003
+              properties:
+                roles:
+                  type: array
+                  items:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      side:
+                        enum:
+                        - Good
+                        - Evil
+                      name:
+                        enum:
+                        - Loyal Servant of Arthur
+                        - Percival
+                        - Merlin
+                        - Minion of Mordred
+                        - Mordred
+                        - Assassin
+                        - Morgana
+                        - Oberon
+                    required:
+                    - side
+                    - name
+                code:
+                  type: string
+                  maxLength: 4
+                number_of_players:
+                  type: integer
+                  maximum: 10
+                  minimum: 5
+                players_joined:
+                  type: integer
+                  maximum: 2147483647
+                  minimum: 0
+                creator:
+                  type: integer
+              required:
+              - roles
+              - code
+              - number_of_players
+              - creator
+          application/x-www-form-urlencoded:
+            schema: *id003
+          multipart/form-data:
+            schema: *id003
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  roles:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        side:
+                          enum:
+                          - Good
+                          - Evil
+                        name:
+                          enum:
+                          - Loyal Servant of Arthur
+                          - Percival
+                          - Merlin
+                          - Minion of Mordred
+                          - Mordred
+                          - Assassin
+                          - Morgana
+                          - Oberon
+                      required:
+                      - side
+                      - name
+                  code:
+                    type: string
+                    maxLength: 4
+                  number_of_players:
+                    type: integer
+                    maximum: 10
+                    minimum: 5
+                  players_joined:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                  creator:
+                    type: integer
+                required:
+                - roles
+                - code
+                - number_of_players
+                - creator
+          description: ''
+  /api/v1/games/game/{id}/:
+    get:
+      operationId: RetrieveGame
+      description: 'get : retrieve a single game with token
+
+        delete : destroy a single game with token'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this game.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  roles:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        side:
+                          enum:
+                          - Good
+                          - Evil
+                        name:
+                          enum:
+                          - Loyal Servant of Arthur
+                          - Percival
+                          - Merlin
+                          - Minion of Mordred
+                          - Mordred
+                          - Assassin
+                          - Morgana
+                          - Oberon
+                      required:
+                      - side
+                      - name
+                  code:
+                    type: string
+                    maxLength: 4
+                  number_of_players:
+                    type: integer
+                    maximum: 10
+                    minimum: 5
+                  players_joined:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                  creator:
+                    type: integer
+                required:
+                - roles
+                - code
+                - number_of_players
+                - creator
+          description: ''
+    put:
+      operationId: UpdateGame
+      description: 'get : retrieve a single game with token
+
+        delete : destroy a single game with token'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this game.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id004
+              properties:
+                roles:
+                  type: array
+                  items:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      side:
+                        enum:
+                        - Good
+                        - Evil
+                      name:
+                        enum:
+                        - Loyal Servant of Arthur
+                        - Percival
+                        - Merlin
+                        - Minion of Mordred
+                        - Mordred
+                        - Assassin
+                        - Morgana
+                        - Oberon
+                    required:
+                    - side
+                    - name
+                code:
+                  type: string
+                  maxLength: 4
+                number_of_players:
+                  type: integer
+                  maximum: 10
+                  minimum: 5
+                players_joined:
+                  type: integer
+                  maximum: 2147483647
+                  minimum: 0
+                creator:
+                  type: integer
+              required:
+              - roles
+              - code
+              - number_of_players
+              - creator
+          application/x-www-form-urlencoded:
+            schema: *id004
+          multipart/form-data:
+            schema: *id004
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  roles:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        side:
+                          enum:
+                          - Good
+                          - Evil
+                        name:
+                          enum:
+                          - Loyal Servant of Arthur
+                          - Percival
+                          - Merlin
+                          - Minion of Mordred
+                          - Mordred
+                          - Assassin
+                          - Morgana
+                          - Oberon
+                      required:
+                      - side
+                      - name
+                  code:
+                    type: string
+                    maxLength: 4
+                  number_of_players:
+                    type: integer
+                    maximum: 10
+                    minimum: 5
+                  players_joined:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                  creator:
+                    type: integer
+                required:
+                - roles
+                - code
+                - number_of_players
+                - creator
+          description: ''
+    patch:
+      operationId: PartialUpdateGame
+      description: 'get : retrieve a single game with token
+
+        delete : destroy a single game with token'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this game.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id005
+              properties:
+                roles:
+                  type: array
+                  items:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      side:
+                        enum:
+                        - Good
+                        - Evil
+                      name:
+                        enum:
+                        - Loyal Servant of Arthur
+                        - Percival
+                        - Merlin
+                        - Minion of Mordred
+                        - Mordred
+                        - Assassin
+                        - Morgana
+                        - Oberon
+                    required:
+                    - side
+                    - name
+                code:
+                  type: string
+                  maxLength: 4
+                number_of_players:
+                  type: integer
+                  maximum: 10
+                  minimum: 5
+                players_joined:
+                  type: integer
+                  maximum: 2147483647
+                  minimum: 0
+                creator:
+                  type: integer
+          application/x-www-form-urlencoded:
+            schema: *id005
+          multipart/form-data:
+            schema: *id005
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  roles:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        side:
+                          enum:
+                          - Good
+                          - Evil
+                        name:
+                          enum:
+                          - Loyal Servant of Arthur
+                          - Percival
+                          - Merlin
+                          - Minion of Mordred
+                          - Mordred
+                          - Assassin
+                          - Morgana
+                          - Oberon
+                      required:
+                      - side
+                      - name
+                  code:
+                    type: string
+                    maxLength: 4
+                  number_of_players:
+                    type: integer
+                    maximum: 10
+                    minimum: 5
+                  players_joined:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                  creator:
+                    type: integer
+                required:
+                - roles
+                - code
+                - number_of_players
+                - creator
+          description: ''
+    delete:
+      operationId: DestroyGame
+      description: 'get : retrieve a single game with token
+
+        delete : destroy a single game with token'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this game.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /api/v1/players/:
+    get:
+      operationId: listPlayers
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    user:
+                      type: integer
+                    game:
+                      type: string
+                    token:
+                      type: string
+                      maxLength: 100
+                    player_num:
+                      type: integer
+                      maximum: 2147483647
+                      minimum: 0
+                  required:
+                  - user
+                  - game
+                  - token
+                  - player_num
+          description: ''
+    post:
+      operationId: CreatePlayer
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id006
+              properties:
+                user:
+                  type: integer
+                game:
+                  type: string
+                token:
+                  type: string
+                  maxLength: 100
+                player_num:
+                  type: integer
+                  maximum: 2147483647
+                  minimum: 0
+              required:
+              - user
+              - game
+              - token
+              - player_num
+          application/x-www-form-urlencoded:
+            schema: *id006
+          multipart/form-data:
+            schema: *id006
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  user:
+                    type: integer
+                  game:
+                    type: string
+                  token:
+                    type: string
+                    maxLength: 100
+                  player_num:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                required:
+                - user
+                - game
+                - token
+                - player_num
+          description: ''
+  /api/v1/players/player/{token}/:
+    get:
+      operationId: RetrievePlayer
+      description: 'get : retrieve a single player with token
+
+        delete : destroy a single player with token'
+      parameters:
+      - name: token
+        in: path
+        required: true
+        description: A unique value identifying this player.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  user:
+                    type: integer
+                  game:
+                    type: string
+                  token:
+                    type: string
+                    maxLength: 100
+                  player_num:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                required:
+                - user
+                - game
+                - token
+                - player_num
+          description: ''
+    put:
+      operationId: UpdatePlayer
+      description: 'get : retrieve a single player with token
+
+        delete : destroy a single player with token'
+      parameters:
+      - name: token
+        in: path
+        required: true
+        description: A unique value identifying this player.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id007
+              properties:
+                user:
+                  type: integer
+                game:
+                  type: string
+                token:
+                  type: string
+                  maxLength: 100
+                player_num:
+                  type: integer
+                  maximum: 2147483647
+                  minimum: 0
+              required:
+              - user
+              - game
+              - token
+              - player_num
+          application/x-www-form-urlencoded:
+            schema: *id007
+          multipart/form-data:
+            schema: *id007
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  user:
+                    type: integer
+                  game:
+                    type: string
+                  token:
+                    type: string
+                    maxLength: 100
+                  player_num:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                required:
+                - user
+                - game
+                - token
+                - player_num
+          description: ''
+    patch:
+      operationId: PartialUpdatePlayer
+      description: 'get : retrieve a single player with token
+
+        delete : destroy a single player with token'
+      parameters:
+      - name: token
+        in: path
+        required: true
+        description: A unique value identifying this player.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id008
+              properties:
+                user:
+                  type: integer
+                game:
+                  type: string
+                token:
+                  type: string
+                  maxLength: 100
+                player_num:
+                  type: integer
+                  maximum: 2147483647
+                  minimum: 0
+          application/x-www-form-urlencoded:
+            schema: *id008
+          multipart/form-data:
+            schema: *id008
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  user:
+                    type: integer
+                  game:
+                    type: string
+                  token:
+                    type: string
+                    maxLength: 100
+                  player_num:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                required:
+                - user
+                - game
+                - token
+                - player_num
+          description: ''
+    delete:
+      operationId: DestroyPlayer
+      description: 'get : retrieve a single player with token
+
+        delete : destroy a single player with token'
+      parameters:
+      - name: token
+        in: path
+        required: true
+        description: A unique value identifying this player.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /api/v1/users/rest-auth/password_reset/:
+    post:
+      operationId: CreatePasswordReset
+      description: 'Calls Django Auth PasswordResetForm save method.
+
+
+        Accepts the following POST parameters: email
+
+        Returns the success/fail message.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id009
+              properties:
+                email:
+                  type: string
+                  format: email
+              required:
+              - email
+          application/x-www-form-urlencoded:
+            schema: *id009
+          multipart/form-data:
+            schema: *id009
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  email:
+                    type: string
+                    format: email
+                required:
+                - email
+          description: ''
+  /api/v1/users/rest-auth/login/:
+    post:
+      operationId: CreateLogin
+      description: 'Check the credentials and return the REST Token
+
+        if the credentials are valid and authenticated.
+
+        Calls Django Auth login method to register User ID
+
+        in Django session framework
+
+
+        Accept the following POST parameters: username, password
+
+        Return the REST Framework Token Object''s key.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id010
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+              - password
+          application/x-www-form-urlencoded:
+            schema: *id010
+          multipart/form-data:
+            schema: *id010
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+                  password:
+                    type: string
+                required:
+                - password
+          description: ''
+  /api/v1/users/rest-auth/password/reset/:
+    post:
+      operationId: CreatePasswordReset
+      description: 'Calls Django Auth PasswordResetForm save method.
+
+
+        Accepts the following POST parameters: email
+
+        Returns the success/fail message.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id011
+              properties:
+                email:
+                  type: string
+                  format: email
+              required:
+              - email
+          application/x-www-form-urlencoded:
+            schema: *id011
+          multipart/form-data:
+            schema: *id011
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  email:
+                    type: string
+                    format: email
+                required:
+                - email
+          description: ''
+  /api/v1/users/rest-auth/password/reset/confirm/:
+    post:
+      operationId: CreatePasswordResetConfirm
+      description: "Password reset e-mail link is confirmed, therefore\nthis resets\
+        \ the user's password.\n\nAccepts the following POST parameters: token, uid,\n\
+        \    new_password1, new_password2\nReturns the success/fail message."
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id012
+              properties:
+                new_password1:
+                  type: string
+                  maxLength: 128
+                new_password2:
+                  type: string
+                  maxLength: 128
+                uid:
+                  type: string
+                token:
+                  type: string
+              required:
+              - new_password1
+              - new_password2
+              - uid
+              - token
+          application/x-www-form-urlencoded:
+            schema: *id012
+          multipart/form-data:
+            schema: *id012
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  new_password1:
+                    type: string
+                    maxLength: 128
+                  new_password2:
+                    type: string
+                    maxLength: 128
+                  uid:
+                    type: string
+                  token:
+                    type: string
+                required:
+                - new_password1
+                - new_password2
+                - uid
+                - token
+          description: ''
+  /api/v1/users/rest-auth/password/change/:
+    post:
+      operationId: CreatePasswordChange
+      description: 'Calls Django Auth SetPasswordForm save method.
+
+
+        Accepts the following POST parameters: new_password1, new_password2
+
+        Returns the success/fail message.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id013
+              properties:
+                new_password1:
+                  type: string
+                  maxLength: 128
+                new_password2:
+                  type: string
+                  maxLength: 128
+              required:
+              - new_password1
+              - new_password2
+          application/x-www-form-urlencoded:
+            schema: *id013
+          multipart/form-data:
+            schema: *id013
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  new_password1:
+                    type: string
+                    maxLength: 128
+                  new_password2:
+                    type: string
+                    maxLength: 128
+                required:
+                - new_password1
+                - new_password2
+          description: ''
+  /api/v1/users/rest-auth/registration/:
+    post:
+      operationId: CreateAccountRegistration
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id014
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password1:
+                  type: string
+                  writeOnly: true
+                password2:
+                  type: string
+                  writeOnly: true
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+              required:
+              - username
+              - email
+              - password1
+              - password2
+              - first_name
+              - last_name
+          application/x-www-form-urlencoded:
+            schema: *id014
+          multipart/form-data:
+            schema: *id014
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+                  first_name:
+                    type: string
+                  last_name:
+                    type: string
+                required:
+                - username
+                - email
+                - first_name
+                - last_name
+          description: ''
+  /api/v1/users/rest-auth/registration/account-confirm-email/{key}/:
+    post:
+      operationId: CreateVerifyEmail
+      description: ''
+      parameters:
+      - name: key
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id015
+              properties:
+                key:
+                  type: string
+              required:
+              - key
+          application/x-www-form-urlencoded:
+            schema: *id015
+          multipart/form-data:
+            schema: *id015
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  key:
+                    type: string
+                required:
+                - key
+          description: ''
+  /api/v1/users/rest-auth/registration/verify-email/:
+    post:
+      operationId: CreateVerifyEmail
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id016
+              properties:
+                key:
+                  type: string
+              required:
+              - key
+          application/x-www-form-urlencoded:
+            schema: *id016
+          multipart/form-data:
+            schema: *id016
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  key:
+                    type: string
+                required:
+                - key
+          description: ''
