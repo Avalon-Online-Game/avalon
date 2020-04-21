@@ -36,13 +36,11 @@ class TokenAuthMiddlewareInstance:
 
     async def __call__(self, receive, send):
         #Used for querystring token url auth
-        query_string = parse_qs(self.scope['query_string']) 
+        query_string = parse_qs(self.scope['query_string'])
         
         if b'token' in query_string:
             token_key = query_string[b'token'][0].decode()
-            # print(token_key)
             self.scope['user'] = await get_user(token_key)
-            # print(self.scope['user'])
 
         inner = self.inner(self.scope)
         return await inner(receive, send)

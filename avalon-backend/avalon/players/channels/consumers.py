@@ -1,12 +1,12 @@
 import json
 import logging
-from games.channels import utils
 from channels.consumer import SyncConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer, AsyncJsonWebsocketConsumer
 from django.contrib.auth.models import AnonymousUser
-from games.channels.utils import GameState, Quest
 import avalon.utils as cache
-from .utils import get_game_or_error, start_game_or_wait, get_players_or_error
+from .state import GameState, Quest
+from . import state
+from .utils import get_game_or_error, start_game_state, get_players_and_roles
 from .exceptions import ClientError
 
 log = logging.getLogger(__name__)
@@ -24,7 +24,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             await self.accept()
         
         game = await get_game_or_error(self.scope["user"])
-        print("user is :", self.scope['user'])
 
         # Add player to the game group
         await self.channel_layer.group_add(
@@ -38,10 +37,8 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
 
-        start_game = await start_game_or_wait(self.scope["user"], game)
-
         # Send each player's role if all players have joined
-        if start_game:
+        if await start_game_state(self.scope["user"], game):
             await self.channel_layer.group_send(
                 self.scope["user"].token,
                 {
@@ -163,21 +160,22 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         Called when all players have joined the game.
         event : (game, player, player_role)
         """
-        # Create GameState
-        players, goods, evils = await get_players_or_error(event["game_code"])
-        game_state = GameState(event["game_code"], players, goods, evils)
-        cache.set_value(game_state.game, game_state)
 
+        game_state = cache.get_value(event["game_code"])
+
+        if game_state is None:
+            # Create GameState
+            players, players_roles = await get_players_and_roles(event["game_code"])
+            game_state = GameState(event["game_code"], players, players_roles)
+            cache.set_value(game_state.game, game_state)
+        
         # Create customized response for each player
         json = {
-                "msg_type": settings.MSG_TYPE_START,
-                "game": event["game_code"],
-                "player": event["player_token"],
-                }
+                "msg_type": state.MSG_TYPE_START,
+                "game_state": game_state.to_json(),
+                "player_state": game_state.get_player_data(event['player_token'])
+        }
 
-        json.update(game_state.to_json())
-        json.update(game_state.get_player_response(event['player_token']))
-        print(json)
         # Send a message down to the client
         await self.send_json(
             json,
@@ -189,7 +187,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         Send commander for the current quest.
         """
         json = {
-                "msg_type": settings.MSG_TYPE_COMMANDER,
+                "msg_type": state.MSG_TYPE_COMMANDER,
                 }
     
         game_state = cache.get_value(event["game_code"])
@@ -207,7 +205,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         """
         await self.send_json(
             {
-                "msg_type": settings.MSG_TYPE_QUEST_CHOICE,
+                "msg_type": state.MSG_TYPE_QUEST_CHOICE,
             },
         )
 
@@ -217,7 +215,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         """
         await self.send_json(
             {
-                "msg_type": settings.MSG_TYPE_QUEST_VOTE,
+                "msg_type": state.MSG_TYPE_QUEST_VOTE,
             },
         )
 
@@ -227,7 +225,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         """
         await self.send_json(
             {
-                "msg_type": settings.MSG_TYPE_QUEST_RESULT,
+                "msg_type": state.MSG_TYPE_QUEST_RESULT,
             },
         )
 
@@ -237,7 +235,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         """
         await self.send_json(
             {
-                "msg_type": settings.MSG_TYPE_END,
+                "msg_type": state.MSG_TYPE_END,
             },
         )
 
@@ -247,7 +245,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         """
         await self.send_json(
             {
-                "msg_type": settings.MSG_TYPE_LEAVE,
+                "msg_type": state.MSG_TYPE_LEAVE,
                 "game_code": event["game"],
                 "player_token": event["player"],
             },
