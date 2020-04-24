@@ -1,19 +1,54 @@
 import React, {Component} from 'react';
 import {Text, StyleSheet} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import EntranceView from '../../components/UI/Entrance/EntranceView';
 import DefaultButton from '../../components/UI/Entrance/DefaultButton';
 
 class EntranceScreen extends Component {
-  skipEntranceHandler = () => {
-    Navigation.setRoot({
-      root: {
-        component: {
-          name: 'avalon.AuthScreen',
+  skipEntranceHandler = async () => {
+    if ((await AsyncStorage.getItem('user')) !== null) {
+      if ((await AsyncStorage.getItem('game')) !== null) {
+        if ((await AsyncStorage.getItem('player')) !== null) {
+          Navigation.setRoot({
+            root: {
+              stack: {
+                children: [
+                  {
+                    component: {
+                      name: 'avalon.MainBoardScreen',
+                    },
+                  },
+                ],
+              },
+            },
+          });
+        }
+      } else {
+        Navigation.setRoot({
+          root: {
+            stack: {
+              children: [
+                {
+                  component: {
+                    name: 'avalon.MainMenuScreen',
+                  },
+                },
+              ],
+            },
+          },
+        });
+      }
+    } else {
+      Navigation.setRoot({
+        root: {
+          component: {
+            name: 'avalon.AuthScreen',
+          },
         },
-      },
-    });
+      });
+    }
   };
   render() {
     return (

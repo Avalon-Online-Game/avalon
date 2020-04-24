@@ -115,15 +115,25 @@ class RolesList extends Component {
     return (
       <TouchableOpacity
         style={styles.roleButton}
-        onPressIn={() => this.chooseRoleHandler(item)}>
+        onPressIn={() => this.chooseRoleHandler(item)}
+        disabled={
+          this.props.chosenRoles.filter(role => item.id === role.id).length !==
+            0 ||
+          this.props.chosenRoles.length ===
+            parseInt(this.props.numberOfPlayers, 10)
+            ? true
+            : false
+        }>
         <Image
           source={item.image}
           style={[
             styles.roleImage,
             this.props.chosenRoles.filter(role => item.id === role.id)
-              .length === 0
-              ? {opacity: 1}
-              : {opacity: 0.5},
+              .length === 0 &&
+            this.props.chosenRoles.length !==
+              parseInt(this.props.numberOfPlayers, 10)
+              ? styles.bottomActive
+              : styles.bottomDeactive,
           ]}
           resizeMode="contain"
         />
@@ -139,7 +149,7 @@ class RolesList extends Component {
           style={styles.list}
           contentContainerStyle={styles.listContent}
           data={this.data}
-          extraData={this.props.chosenRoles}
+          extraData={[this.props.chosenRoles, this.props.numberOfPlayers]}
           renderItem={this.roleRenderItem}
           keyExtractor={extractKey}
           horizontal={true}
@@ -171,11 +181,18 @@ const styles = StyleSheet.create({
     fontSize: wp('3.5%'),
     fontFamily: 'JosefinSans-Medium',
   },
+  bottomActive: {
+    opacity: 1,
+  },
+  bottomDeactive: {
+    opacity: 0.5,
+  },
 });
 
 const mapStateToProps = state => {
   return {
     chosenRoles: state.roles.chosenRoles,
+    numberOfPlayers: state.roles.numberOfPlayers,
   };
 };
 
