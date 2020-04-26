@@ -16,6 +16,7 @@ import RolesList from './src/components/CreateGame/RolesList';
 import ChosenRolesList from './src/components/CreateGame/ChosenRolesList';
 import ShareGameCodeScreen from './src/screens/Main/ShareGame';
 import BoardScreen from './src/screens/Game/Board';
+import LoadingScreen from './src/screens/Game/Loading';
 
 import configureStore from './src/store/configureStore';
 
@@ -49,13 +50,18 @@ Navigation.registerComponent(
   'avalon.ShareGameCodeScreen',
   () => ShareGameCodeScreen,
 );
-Navigation.registerComponent('avalon.MainBoardScreen', () => BoardScreen);
-// Navigation.registerComponentWithRedux(
-//   'avalon.MainBoardScreen',
-//   () => BoardScreen,
-//   Provider,
-//   store,
-// );
+Navigation.registerComponentWithRedux(
+  'avalon.LoadingScreen',
+  () => LoadingScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.MainBoardScreen',
+  () => BoardScreen,
+  Provider,
+  store,
+);
 
 Promise.all([Icon.getImageSource('ios-arrow-back', wp('8%'))]).then(icons => {
   Navigation.setDefaultOptions({
@@ -100,3 +106,5 @@ Navigation.events().registerAppLaunchedListener(() => {
     },
   });
 });
+
+export default store;

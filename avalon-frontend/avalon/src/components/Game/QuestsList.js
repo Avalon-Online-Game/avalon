@@ -13,7 +13,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {connect} from 'react-redux';
-import {chooseRole} from '../../store/actions/index';
 
 const extractKey = ({id}) => id;
 
@@ -45,51 +44,66 @@ class QuestsList extends Component {
   }
 
   quests5 = [
-    {id: 1, number: 2},
-    {id: 2, number: 3},
-    {id: 3, number: 2},
-    {id: 4, number: 3},
-    {id: 5, number: 3},
+    {id: 1, number: 2, image: require('../../assets/quest1.png')},
+    {id: 2, number: 3, image: require('../../assets/quest2.png')},
+    {id: 3, number: 2, image: require('../../assets/quest3.png')},
+    {id: 4, number: 3, image: require('../../assets/quest4.png')},
+    {id: 5, number: 3, image: require('../../assets/quest5.png')},
   ];
 
   quests6 = [
-    {id: 1, number: 2},
-    {id: 2, number: 3},
-    {id: 3, number: 4},
-    {id: 4, number: 3},
-    {id: 5, number: 4},
+    {id: 1, number: 2, image: require('../../assets/quest1.png')},
+    {id: 2, number: 3, image: require('../../assets/quest2.png')},
+    {id: 3, number: 4, image: require('../../assets/quest3.png')},
+    {id: 4, number: 3, image: require('../../assets/quest4.png')},
+    {id: 5, number: 4, image: require('../../assets/quest5.png')},
   ];
 
   quests7 = [
-    {id: 1, number: 2},
-    {id: 2, number: 3},
-    {id: 3, number: 3},
-    {id: 4, number: 4, detail: 'Two fails required'},
-    {id: 5, number: 4},
+    {id: 1, number: 2, image: require('../../assets/quest1.png')},
+    {id: 2, number: 3, image: require('../../assets/quest2.png')},
+    {id: 3, number: 3, image: require('../../assets/quest3.png')},
+    {
+      id: 4,
+      number: 4,
+      detail: 'Two fails required',
+      image: require('../../assets/quest4.png'),
+    },
+    {id: 5, number: 4, image: require('../../assets/quest5.png')},
   ];
 
   quests8 = [
-    {id: 1, number: 3},
-    {id: 2, number: 4},
-    {id: 3, number: 4},
-    {id: 4, number: 5, detail: 'Two fails required'},
-    {id: 5, number: 5},
+    {id: 1, number: 3, image: require('../../assets/quest1.png')},
+    {id: 2, number: 4, image: require('../../assets/quest2.png')},
+    {id: 3, number: 4, image: require('../../assets/quest3.png')},
+    {
+      id: 4,
+      number: 5,
+      detail: 'Two fails required',
+      image: require('../../assets/quest4.png'),
+    },
+    {id: 5, number: 5, image: require('../../assets/quest5.png')},
   ];
 
   quests9 = [
-    {id: 1, number: 3},
-    {id: 2, number: 4},
-    {id: 3, number: 4},
-    {id: 4, number: 5, detail: 'Two fails required'},
-    {id: 5, number: 5},
+    {id: 1, number: 3, image: require('../../assets/quest1.png')},
+    {id: 2, number: 4, image: require('../../assets/quest2.png')},
+    {id: 3, number: 4, image: require('../../assets/quest3.png')},
+    {
+      id: 4,
+      number: 5,
+      detail: 'Two fails required',
+      image: require('../../assets/quest4.png'),
+    },
+    {id: 5, number: 5, image: require('../../assets/quest5.png')},
   ];
 
   quests10 = [
-    {id: 1, number: 3},
-    {id: 2, number: 4},
-    {id: 3, number: 4},
-    {id: 4, number: 5, detail: 'Two fails required'},
-    {id: 5, number: 5},
+    {id: 1, number: 3, image: require('../../assets/quest1.png')},
+    {id: 2, number: 4, image: require('../../assets/quest2.png')},
+    {id: 3, number: 4, image: require('../../assets/quest3.png')},
+    {id: 4, number: 5, image: require('../../assets/quest4.png')},
+    {id: 5, number: 5, image: require('../../assets/quest5.png')},
   ];
 
   seeQuestHandler = quest => {};
@@ -97,7 +111,7 @@ class QuestsList extends Component {
   questRenderItem = ({item}) => {
     let detail;
     if (typeof item.detail !== undefined) {
-      detail = <Text>{item.detail}</Text>;
+      detail = <Text style={styles.questDetail}>{item.detail}</Text>;
     } else {
       detail = undefined;
     }
@@ -108,7 +122,7 @@ class QuestsList extends Component {
           style={styles.questButton}
           onPressIn={() => this.seeQuestHandler(item)}>
           <ImageBackground
-            source={require('../../assets/quest.png')}
+            source={item.image}
             style={styles.questBackground}
             resizeMode="contain">
             <Text style={styles.questNumber}>{item.number}</Text>
@@ -125,7 +139,7 @@ class QuestsList extends Component {
           style={styles.list}
           contentContainerStyle={styles.listContent}
           data={this.data}
-          extraData={this.data}
+          extraData={[this.data, this.props.numberOfPlayers]}
           renderItem={this.questRenderItem}
           keyExtractor={extractKey}
           horizontal={true}
@@ -143,6 +157,10 @@ const styles = StyleSheet.create({
   listContent: {
     alignItems: 'center',
   },
+  questButtonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   questButton: {
     marginHorizontal: wp('2%'),
   },
@@ -155,7 +173,12 @@ const styles = StyleSheet.create({
   questNumber: {
     color: '#e2d7aa',
     fontSize: wp('20%'),
-    fontFamily: 'JosefinSans-Bold',
+    fontFamily: 'Dubai-Regular',
+  },
+  questDetail: {
+    color: '#e2d7aa',
+    fontSize: wp('5%'),
+    fontFamily: 'Dubai-Regular',
   },
   bottomActive: {
     opacity: 1,

@@ -1,34 +1,61 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Image,
+} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
 const bottomButton = props => {
+  let content =
+    props.text !== undefined ? (
+      <Text style={styles.buttonText}>{props.text}</Text>
+    ) : props.icon !== undefined ? (
+      <Image
+        resizeMode="contain"
+        style={styles.buttonIcon}
+        source={props.icon}
+      />
+    ) : (
+      undefined
+    );
   return (
     <TouchableOpacity
       style={[styles.button, props.buttonStyle]}
       onPress={props.onPress}>
-      {props.Icon}
-      <Text style={[styles.buttonText, props.textStyle]}>{props.children}</Text>
+      <ImageBackground
+        style={styles.buttonImage}
+        source={require('../../../assets/board-bottom-button.png')}
+        resizeMode="contain">
+        {content}
+      </ImageBackground>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
+    marginHorizontal: wp('5%'),
+  },
+  buttonImage: {
+    width: wp('25%'),
+    height: wp('25%'),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#e2d7aa',
-    width: wp('20%'),
-    height: hp('10%'),
-    marginHorizontal: wp('8%'),
   },
   buttonText: {
-    color: '#0b161c',
-    fontSize: wp('5%'),
-    fontFamily: 'JosefinSans-Bold',
+    color: '#e2d7aa',
+    fontSize: wp('6%'),
+    fontFamily: 'JosefinSans-Medium',
+  },
+  buttonIcon: {
+    width: wp('15%'),
+    height: wp('15%'),
   },
 });
 

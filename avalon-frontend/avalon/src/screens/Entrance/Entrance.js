@@ -13,14 +13,8 @@ class EntranceScreen extends Component {
         if ((await AsyncStorage.getItem('player')) !== null) {
           Navigation.setRoot({
             root: {
-              stack: {
-                children: [
-                  {
-                    component: {
-                      name: 'avalon.MainBoardScreen',
-                    },
-                  },
-                ],
+              component: {
+                name: 'avalon.LoadingScreen',
               },
             },
           });

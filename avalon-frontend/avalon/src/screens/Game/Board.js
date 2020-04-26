@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableHighlight, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,70 +9,43 @@ import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 
 import BoardView from '../../components/UI/Game/BoardView';
-import DefaultButton from '../../components/UI/Game/BottomButton';
+import BottomButton from '../../components/UI/Game/BottomButton';
 import QuestList from '../../components/Game/QuestsList';
 import API from '../../utils/API';
-import consumer from '../../utils/ws';
+import {updateGameState} from '../../store/actions/index';
 
 class BoardScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      commander: '',
-      questNumber: '',
-      players: [],
-      role: '',
-      roleData: [],
-    };
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('player').then(token => {
-      // eslint-disable-next-line no-undef
-      const ws = new WebSocket(
-        `ws://127.0.0.1:8000/ws/game/?token=${JSON.parse(token)}`,
-      );
-      ws.onopen = () => {
-        console.log('ws opened!');
-      };
-      ws.onmessage = this.wsReceiveState;
-    });
+    console.log(this.props);
   }
-
-  wsReceiveState = event => {
-    let data = JSON.parse(event.data);
-    this.setState({
-      players: data.game_state.players,
-      commander: data.game_state.commander,
-      // questNumber: event.data.gameState.players,
-      role: data.player_state.role,
-      roleData: data.player_state.role_data,
-    });
-  };
 
   render() {
     return (
       <BoardView style={styles.container}>
         <QuestList
           style={styles.questsList}
-          numberOfPlayers={this.state.players.length}
+          numberOfPlayers={this.props.numberOfPlayers}
         />
         <View style={styles.bottomContainer}>
-          <DefaultButton
+          <BottomButton
             style={styles.bottomButton}
-            onPress={this.kingCommandHandler}>
-            king
-          </DefaultButton>
-          <DefaultButton
+            onPress={this.kingCommandHandler}
+            icon={require('../../assets/commander.png')}
+          />
+          <BottomButton
             style={styles.bottomButton}
-            onPress={this.watchStateHandler}>
-            state
-          </DefaultButton>
-          <DefaultButton
+            onPress={this.watchStateHandler}
+            text="STATE"
+          />
+          <BottomButton
             style={styles.bottomButton}
-            onPress={this.watchRoleHandler}>
-            role
-          </DefaultButton>
+            onPress={this.watchRoleHandler}
+            icon={require('../../assets/role-data.png')}
+          />
         </View>
       </BoardView>
     );
@@ -85,19 +58,33 @@ const styles = StyleSheet.create({
   },
   questsList: {
     height: hp('30%'),
-    backgroundColor: 'white',
   },
   bottomContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: hp('3%'),
   },
 });
 
-// const mapStateToProps = state => {
-//   return {
-//     numberOfPlayers: state.roles.numberOfPlayers,
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+    commander: state.game.commander,
+    questNumber: state.game.questNumber,
+    players: state.game.players,
+    numberOfPlayers: state.game.numberOfPlayers,
+    role: state.game.roles,
+    roleData: state.game.roleData,
+  };
+};
 
-// export default connect(mapStateToProps)(BoardScreen);
-export default BoardScreen;
+const mapDispatchToProps = dispatch => {
+  return {
+    updateGameState: data => dispatch(updateGameState(data)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(BoardScreen);
