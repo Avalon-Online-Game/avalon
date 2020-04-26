@@ -16,10 +16,9 @@ export const wsDisconnect = () => {
   };
 };
 
-export const wsConnected = host => {
+export const wsConnected = () => {
   return {
     type: WS_CONNECTED,
-    token: host,
   };
 };
 

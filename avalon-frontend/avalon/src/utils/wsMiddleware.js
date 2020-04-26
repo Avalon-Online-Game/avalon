@@ -1,12 +1,13 @@
 import {wsConnected, wsDisconnected} from '../store/actions/index';
 import {updateGameState} from '../store/actions/index';
+import {Navigation} from 'react-native-navigation';
 
 const socketMiddleware = () => {
   let socket = null;
 
   const onOpen = store => event => {
-    console.log('websocket opened', event);
-    store.dispatch(wsConnected(event.target.url));
+    console.log('websocket opened');
+    store.dispatch(wsConnected());
   };
 
   const onClose = store => () => {
@@ -18,8 +19,21 @@ const socketMiddleware = () => {
     console.log('receiving server message');
 
     switch (payload.msg_type) {
-      case 'update_game_state':
+      case 'start':
         store.dispatch(updateGameState(payload));
+        Navigation.setRoot({
+          root: {
+            stack: {
+              children: [
+                {
+                  component: {
+                    name: 'avalon.MainBoardScreen',
+                  },
+                },
+              ],
+            },
+          },
+        });
         break;
       default:
         break;
@@ -32,13 +46,10 @@ const socketMiddleware = () => {
         if (socket !== null) {
           socket.close();
         }
-        // connect to the remote host
         // eslint-disable-next-line no-undef
         socket = new WebSocket(
           `ws://localhost:8000/ws/game/?token=${action.token}`,
         );
-
-        // websocket handlers
         socket.onmessage = onMessage(store);
         socket.onclose = onClose(store);
         socket.onopen = onOpen(store);

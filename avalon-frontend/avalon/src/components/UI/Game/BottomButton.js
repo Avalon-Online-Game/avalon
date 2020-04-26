@@ -30,7 +30,7 @@ const bottomButton = props => {
       onPress={props.onPress}>
       <ImageBackground
         style={styles.buttonImage}
-        source={require('../../../assets/board-bottom-button.png')}
+        source={require('../../../assets/board/board-bottom-button.png')}
         resizeMode="contain">
         {content}
       </ImageBackground>

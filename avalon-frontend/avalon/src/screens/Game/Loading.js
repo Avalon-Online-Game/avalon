@@ -17,9 +17,6 @@ import {
 class LoadingScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true,
-    };
   }
 
   componentDidMount() {
@@ -28,27 +25,6 @@ class LoadingScreen extends Component {
       this.props.wsConnect(JSON.parse(token));
     });
   }
-
-  wsReceiveState = async event => {
-    let data = JSON.parse(event.data);
-    await this.props.updateGameState(data);
-    Navigation.setRoot({
-      root: {
-        stack: {
-          children: [
-            {
-              component: {
-                name: 'avalon.MainBoardScreen',
-                passProps: {
-                  socket: this.socket,
-                },
-              },
-            },
-          ],
-        },
-      },
-    });
-  };
 
   render() {
     return (
@@ -59,11 +35,11 @@ class LoadingScreen extends Component {
         <ImageBackground
           style={styles.innerBackgroundImage}
           resizeMode="contain"
-          source={require('../../assets/waiting-castle-back.png')}>
+          source={require('../../assets/loading/waiting-castle-back.png')}>
           <Image
             style={styles.innerImage}
             resizeMode="contain"
-            source={require('../../assets/castle.png')}
+            source={require('../../assets/loading/castle.png')}
           />
         </ImageBackground>
       </View>

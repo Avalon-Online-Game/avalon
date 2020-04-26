@@ -33,7 +33,7 @@ class WelcomeScreen extends Component {
       <EntranceView>
         <Image
           style={styles.tickImage}
-          source={require('../../assets/welcome.png')}
+          source={require('../../assets/main/welcome.png')}
         />
         <DefaultButton
           buttonStyle={styles.tutorialButton}

@@ -30,11 +30,16 @@ class BoardScreen extends Component {
           style={styles.questsList}
           numberOfPlayers={this.props.numberOfPlayers}
         />
+        <BottomButton
+          style={styles.bottomButton}
+          onPress={this.kingCommandHandler}
+          icon={require('../../assets/board/commander.png')}
+        />
         <View style={styles.bottomContainer}>
           <BottomButton
             style={styles.bottomButton}
             onPress={this.kingCommandHandler}
-            icon={require('../../assets/commander.png')}
+            icon={require('../../assets/board/commander.png')}
           />
           <BottomButton
             style={styles.bottomButton}
@@ -44,7 +49,7 @@ class BoardScreen extends Component {
           <BottomButton
             style={styles.bottomButton}
             onPress={this.watchRoleHandler}
-            icon={require('../../assets/role-data.png')}
+            icon={require('../../assets/board/role-data.png')}
           />
         </View>
       </BoardView>

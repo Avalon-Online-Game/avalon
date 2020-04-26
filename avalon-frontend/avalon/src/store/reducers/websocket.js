@@ -3,7 +3,6 @@ import {WS_DISCONNECTED} from '../actions/actionTypes';
 
 const initialState = {
   wsConnection: false,
-  wsHost: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -12,13 +11,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         wsConnection: true,
-        wsHost: action.host,
       };
     case WS_DISCONNECTED:
       return {
         ...state,
         wsConnection: false,
-        wsHost: '',
       };
     default:
       return state;
