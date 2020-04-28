@@ -7,9 +7,27 @@ from players.models import Player
 from .exceptions import ClientError
 from . import state
 
+@database_sync_to_async
+def set_channel_name(player, channel_name):
+    """
+    Set channel name for a player
+    """
+    player = Player.objects.get(token=player)
+    player.channel_name = channel_name
+    player.save()
 
 @database_sync_to_async
-def get_game_or_error(player):
+def remove_channel_name(player):
+    """
+    Set channel name for a player
+    """
+    player = Player.objects.get(token=player)
+    player.channel_name = ''
+    player.save()
+
+
+@database_sync_to_async
+def get_game(player):
     """
     Try to fetch a game for the player.
     """
@@ -25,7 +43,7 @@ def get_players_and_roles(game_code):
     Return players and roles in the game.
     """
     try:
-        players = Player.objects.filter(game=game_code)
+        players = Player.objects.filter(game=game_code).select_related('role')
     except Game.DoesNotExist:
         raise ClientError("GAME_INVALID")
     
@@ -33,7 +51,7 @@ def get_players_and_roles(game_code):
     return sorted(players, key=lambda p : p.player_num), players_roles
 
 @database_sync_to_async
-def start_game_state(player, game):
+def start_game(player, game):
     """
     Check if all players have joined then assign a role to each.
     game: game object
@@ -43,21 +61,19 @@ def start_game_state(player, game):
         random.shuffle(tmp)
         return tmp
 
-    if cache.get(game.code) is not None:
-        return True
-
     if game.players_joined == game.number_of_players:
-        roles = shuffle(game.roles.all())
-        players = shuffle(Player.objects.filter(game=game))
+        game_players = game.player_related.all()
+        if all(player.channel_name for player in game_players):
+            if cache.get(game.code) is None:
+                roles = shuffle(game.roles.all())
+                players = shuffle(game_players)
+                for player_role in zip(players, roles):
+                    player = player_role[0]
+                    role = player_role[1]
+                    player.role = role
+                    player.save()
 
-        for player_role in zip(players, roles):
-            # print(pair)
-            player = player_role[0]
-            role = player_role[1]
-            player.role = role
-            player.save()
-        
-        return True
+            return True
 
     return False
 

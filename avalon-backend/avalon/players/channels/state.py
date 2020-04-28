@@ -2,35 +2,35 @@ import json
 from json import JSONEncoder
 
 ##### Project-specific settings
-MSG_TYPE_COMMANDER = "commander"
 MSG_TYPE_QUEST_CHOICE = "quest_choice"
-MSG_TYPE_QUEST_VOTE = "quest_vote"
+MSG_TYPE_QUEST_VOTE_RESULT = "quest_vote_result"
 MSG_TYPE_QUEST_RESULT = "quest_result"
-MSG_TYPE_NIGHT = "night"
 MSG_TYPE_START = "start"
 MSG_TYPE_END = "end"
 MSG_TYPE_LEAVE = "leave"
+MSG_TYPE_DISCONNECT = "disconnect"
+MSG_TYPE_UPDATE = "update"
 
 MESSAGE_TYPES_CHOICES = (
-    (MSG_TYPE_COMMANDER, 'COMMANDER'),
     (MSG_TYPE_QUEST_CHOICE, 'QUEST_CHOICE'),
-    (MSG_TYPE_QUEST_VOTE, 'QUEST_VOTE'),
+    (MSG_TYPE_QUEST_VOTE_RESULT, 'QUEST_VOTE_RESULT'),
     (MSG_TYPE_QUEST_RESULT, 'QUEST_RESULT'),
-    (MSG_TYPE_NIGHT, 'NIGHT'),
     (MSG_TYPE_START, 'START'),
     (MSG_TYPE_END, 'END'),
     (MSG_TYPE_LEAVE, 'LEAVE'),
+    (MSG_TYPE_DISCONNECT, 'DISCONNECT'),
+    (MSG_TYPE_UPDATE, 'UPDATE'),
 )
 
 MESSAGE_TYPES_LIST = [
-    MSG_TYPE_COMMANDER,
     MSG_TYPE_QUEST_CHOICE,
-    MSG_TYPE_QUEST_VOTE,
+    MSG_TYPE_QUEST_VOTE_RESULT,
     MSG_TYPE_QUEST_RESULT,
-    MSG_TYPE_NIGHT,
     MSG_TYPE_START,
     MSG_TYPE_END,
     MSG_TYPE_LEAVE,
+    MSG_TYPE_DISCONNECT,
+    MSG_TYPE_UPDATE,
 ]
 
 class Quest():
@@ -156,6 +156,7 @@ class GameState():
             "commander": self.commander,
             "board_info" : self.board_info,
             "quests": self.quests,
+            "number_of_players": self.number_of_players,
         }
         return json
 

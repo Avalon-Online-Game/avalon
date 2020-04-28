@@ -19,6 +19,7 @@ class Player(models.Model):
                              related_name="%(class)s_related",
                              related_query_name="%(class)ss", null=True)
     player_num = models.PositiveIntegerField()
+    channel_name = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.token
