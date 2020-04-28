@@ -81,11 +81,11 @@ Promise.all([Icon.getImageSource('ios-arrow-back', wp('8%'))]).then(icons => {
       title: {
         text: 'AVALON',
         color: '#e2d7aa',
-        fontSize: wp('8%'),
+        fontSize: hp('4.5%'),
         fontFamily: 'JosefinSans-Bold',
         alignment: 'center',
       },
-      height: hp('10%'),
+      height: hp('8%'),
       background: {
         color: '#0b161c',
       },

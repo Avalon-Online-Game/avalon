@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ImageBackground,
   Image,
+  View,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -12,18 +13,6 @@ import {
 } from 'react-native-responsive-screen';
 
 const bottomButton = props => {
-  let content =
-    props.text !== undefined ? (
-      <Text style={styles.buttonText}>{props.text}</Text>
-    ) : props.icon !== undefined ? (
-      <Image
-        resizeMode="contain"
-        style={styles.buttonIcon}
-        source={props.icon}
-      />
-    ) : (
-      undefined
-    );
   return (
     <TouchableOpacity
       style={[styles.button, props.style]}
@@ -32,7 +21,11 @@ const bottomButton = props => {
         style={styles.buttonImage}
         source={require('../../../assets/board/board-bottom-button.png')}
         resizeMode="contain">
-        {content}
+        <Image
+          resizeMode="contain"
+          style={styles.buttonIcon}
+          source={props.icon}
+        />
       </ImageBackground>
     </TouchableOpacity>
   );
@@ -40,7 +33,7 @@ const bottomButton = props => {
 
 const styles = StyleSheet.create({
   button: {
-    // marginHorizontal: wp('5%'),
+    width: wp('18%'),
   },
   buttonImage: {
     width: wp('18%'),
@@ -48,15 +41,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonText: {
-    color: '#e2d7aa',
-    fontSize: wp('6%'),
-    fontFamily: 'JosefinSans-Medium',
-  },
   buttonIcon: {
     width: wp('10%'),
     height: wp('10%'),
   },
+  roleButtonContainer: {
+    height: wp('20%'),
+    width: wp('20%'),
+    // marginTop: hp('-7%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  // roleButtonText: {
+  //   color: '#e2d7aa',
+  //   fontSize: wp('4.5%'),
+  //   fontFamily: 'JosefinSans-Medium',
+  //   textAlign: 'center',
+  //   textAlignVertical: 'center',
+  // },
 });
 
 export default bottomButton;

@@ -42,7 +42,12 @@ class QuestsList extends Component {
   }
 
   quests5 = [
-    {id: 1, number: 2, image: require('../../assets/board/quest1.png')},
+    {
+      id: 1,
+      number: 2,
+      image: require('../../assets/board/quest1.png'),
+      // detail: 'Two fails required',
+    },
     {id: 2, number: 3, image: require('../../assets/board/quest2.png')},
     {id: 3, number: 2, image: require('../../assets/board/quest3.png')},
     {id: 4, number: 3, image: require('../../assets/board/quest4.png')},
@@ -111,10 +116,10 @@ class QuestsList extends Component {
     if (typeof item.detail !== undefined) {
       detail = <Text style={styles.questDetail}>{item.detail}</Text>;
     } else {
-      detail = undefined;
+      detail = null;
     }
     return (
-      <View style={styles.questButtonContainer}>
+      <View>
         {detail}
         <TouchableOpacity
           style={styles.questButton}
@@ -150,21 +155,17 @@ class QuestsList extends Component {
 
 const styles = StyleSheet.create({
   list: {
-    backgroundColor: 'transparent',
+    // backgroundColor: 'white',
   },
   listContent: {
     alignItems: 'center',
-  },
-  questButtonContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   questButton: {
     marginHorizontal: wp('2%'),
   },
   questBackground: {
-    width: wp('40%'),
-    height: wp('40%'),
+    width: hp('20%'),
+    height: hp('20%'),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -175,8 +176,10 @@ const styles = StyleSheet.create({
   },
   questDetail: {
     color: '#e2d7aa',
-    fontSize: wp('5%'),
-    fontFamily: 'Dubai-Regular',
+    fontSize: wp('4.5%'),
+    height: hp('4%'),
+    fontFamily: 'Dubai-Light',
+    textAlign: 'center',
   },
   bottomActive: {
     opacity: 1,
