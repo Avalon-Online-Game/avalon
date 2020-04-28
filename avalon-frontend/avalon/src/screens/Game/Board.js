@@ -31,23 +31,13 @@ class BoardScreen extends Component {
           numberOfPlayers={this.props.numberOfPlayers}
         />
         <BottomButton
-          style={styles.bottomButton}
+          style={styles.commanderButton}
           onPress={this.kingCommandHandler}
           icon={require('../../assets/board/commander.png')}
         />
         <View style={styles.bottomContainer}>
           <BottomButton
-            style={styles.bottomButton}
-            onPress={this.kingCommandHandler}
-            icon={require('../../assets/board/commander.png')}
-          />
-          <BottomButton
-            style={styles.bottomButton}
-            onPress={this.watchStateHandler}
-            text="STATE"
-          />
-          <BottomButton
-            style={styles.bottomButton}
+            style={styles.roleDataButton}
             onPress={this.watchRoleHandler}
             icon={require('../../assets/board/role-data.png')}
           />
@@ -59,16 +49,22 @@ class BoardScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   questsList: {
     height: hp('30%'),
   },
   bottomContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: hp('3%'),
+    justifyContent: 'space-between',
+    marginHorizontal: wp('2%'),
+  },
+  roleDataButton: {
+    
+  },
+  commanderButton: {
+    marginTop: hp('8%'),
+    marginHorizontal: wp('2%'),
   },
 });
 

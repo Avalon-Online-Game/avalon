@@ -26,7 +26,7 @@ const bottomButton = props => {
     );
   return (
     <TouchableOpacity
-      style={[styles.button, props.buttonStyle]}
+      style={[styles.button, props.style]}
       onPress={props.onPress}>
       <ImageBackground
         style={styles.buttonImage}
@@ -40,11 +40,11 @@ const bottomButton = props => {
 
 const styles = StyleSheet.create({
   button: {
-    marginHorizontal: wp('5%'),
+    // marginHorizontal: wp('5%'),
   },
   buttonImage: {
-    width: wp('25%'),
-    height: wp('25%'),
+    width: wp('18%'),
+    height: wp('18%'),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
     fontFamily: 'JosefinSans-Medium',
   },
   buttonIcon: {
-    width: wp('15%'),
-    height: wp('15%'),
+    width: wp('10%'),
+    height: wp('10%'),
   },
 });
 

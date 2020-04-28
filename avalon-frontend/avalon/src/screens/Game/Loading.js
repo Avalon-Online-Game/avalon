@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     fontSize: wp('7%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Medium',
-    marginTop: hp('15%'),
+    marginTop: hp('5%'),
   },
   innerBackgroundImage: {
     width: wp('80%'),

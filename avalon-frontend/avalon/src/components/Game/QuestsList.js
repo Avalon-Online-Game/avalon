@@ -3,7 +3,6 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  Image,
   Text,
   StyleSheet,
   ImageBackground,
@@ -12,7 +11,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {connect} from 'react-redux';
 
 const extractKey = ({id}) => id;
 
@@ -165,8 +163,8 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('2%'),
   },
   questBackground: {
-    width: wp('45%'),
-    height: wp('45%'),
+    width: wp('40%'),
+    height: wp('40%'),
     alignItems: 'center',
     justifyContent: 'center',
   },

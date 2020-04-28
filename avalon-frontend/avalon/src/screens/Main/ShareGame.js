@@ -15,17 +15,9 @@ class ShareGameScreen extends Component {
   }
 
   nextHandler = () => {
-    Navigation.setRoot({
-      root: {
-        stack: {
-          children: [
-            {
-              component: {
-                name: 'avalon.MainBoardScreen',
-              },
-            },
-          ],
-        },
+    Navigation.setStackRoot(this.props.componentId, {
+      component: {
+        name: 'avalon.LoadingScreen',
       },
     });
   };

@@ -16,6 +16,7 @@ class WelcomeScreen extends Component {
     Navigation.setRoot({
       root: {
         stack: {
+          id: 'main',
           children: [
             {
               component: {
@@ -64,6 +65,9 @@ const styles = StyleSheet.create({
   },
   tutorialButton: {
     marginTop: hp('40%'),
+  },
+  skipButton: {
+    marginTop: hp('5%'),
   },
   skipButtonText: {
     color: '#e2d7aa',

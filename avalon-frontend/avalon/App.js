@@ -106,5 +106,3 @@ Navigation.events().registerAppLaunchedListener(() => {
     },
   });
 });
-
-export default store;
