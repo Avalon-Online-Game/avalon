@@ -5,7 +5,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 
 import {
@@ -80,7 +79,7 @@ const mapStateToProps = state => {
     questNumber: state.game.questNumber,
     players: state.game.players,
     numberOfPlayers: state.game.numberOfPlayers,
-    role: state.game.roles,
+    role: state.game.role,
     roleData: state.game.roleData,
   };
 };

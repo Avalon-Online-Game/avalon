@@ -98,7 +98,7 @@ const mapStateToProps = state => {
     questNumber: state.game.questNumber,
     players: state.game.players,
     numberOfPlayers: state.game.numberOfPlayers,
-    role: state.game.roles,
+    role: state.game.role,
     roleData: state.game.roleData,
   };
 };
