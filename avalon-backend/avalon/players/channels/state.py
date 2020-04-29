@@ -105,16 +105,16 @@ class GameState():
     def __init__(self, game, players, players_roles):
         """
         game: game code
-        players(in order)
-        commander
+        players: a list of tuples of player token, username, avatar
+        roles: list of roles in the
+        commander: a tuple of commander token, username, avatar
         commander_counter
         number_of_players
-        board_info : dict containing (number_of_players, int), ????
-        quests: list of Quest
+        quests: list of Quests
         quest_counter
         """
         self.game = game
-        self.players = [p.token for p in players]
+        self.players = [(p.token, p.user.username, p.user.avatar) for p in players]
         self.players_roles = players_roles
         self.commander = None
         self.commander_counter = 0
@@ -123,7 +123,6 @@ class GameState():
         self.quests = []
         self.quest_counter = 0
 
-    
     def get_next_commander(self):
         self.commander = self.players[self.commander_counter%self.number_of_players]
         self.commander_counter+=1
@@ -131,28 +130,25 @@ class GameState():
     def get_next_quest(self):
         pass
 
-
     def get_game_result(self):
         pass
 
-    def get_player_data(self, player):
+    def get_player_data(self, player_token):
         """
         player : token
-        Returns team info for the player.
+        Returns player info and night info
         """
-        player_role = self.players_roles.get(player)
+        player_role = next(role for player, role in self.players_roles.items() if player[0] == player_token)
         if player_role.name in self.ROLES_DATA.keys():
-            role_data = [player for player,role in self.players_roles.items() if role.name in self.ROLES_DATA[player_role.name]]
+            role_data = [player for player, role in self.players_roles.items() if role.name in self.ROLES_DATA[player_role.name]]
             player_data = {'role': player_role.name, 'role_data': role_data}
-            return json.dumps(player_data)
-        return json.dumps({'role': player_role.name})
+            return player_data
+        return {'role': player_role.name}
     
     def to_json(self):
         json = {
             "game": self.game,
             "players": self.players,
-            # "goods": self.goods,
-            # "evils": self.evils,
             "commander": self.commander,
             "board_info" : self.board_info,
             "quests": self.quests,

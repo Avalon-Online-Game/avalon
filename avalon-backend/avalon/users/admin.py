@@ -50,7 +50,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'is_staff',)
+        fields = ('username', 'email', 'password', 'is_staff', 'avatar', )
 
     def clean_password(self):
         """
@@ -74,7 +74,7 @@ class CustomUserAdmin(UserAdmin):
     filter_horizontal = ()
 
     fieldsets = (
-        (None, {'fields': ('username', 'email', 'password')}),
+        (None, {'fields': ('username', 'email', 'password', 'avatar',)}),
         ('Permissions', {'fields': ('is_staff',)}),
     )
 
