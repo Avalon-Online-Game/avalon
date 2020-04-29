@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('2%'),
   },
   kingCommandButton: {
-    marginTop: hp('13%'),
+    marginTop: hp('18%'),
     marginHorizontal: wp('2%'),
   },
   roleButtonsContainer: {

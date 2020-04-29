@@ -61,8 +61,9 @@ def start_game(player, game):
         random.shuffle(tmp)
         return tmp
 
+
     if game.players_joined == game.number_of_players:
-        game_players = game.player_related.all()
+        game_players = game.players.all()
         if all(player.channel_name for player in game_players):
             if cache.get(game.code) is None:
                 roles = shuffle(game.roles.all())

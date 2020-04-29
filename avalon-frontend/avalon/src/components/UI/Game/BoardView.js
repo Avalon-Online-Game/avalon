@@ -21,6 +21,7 @@ const boardView = props => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#0B161C',
+    height: hp('100%'),
   },
   image: {
     width: wp('100%'),

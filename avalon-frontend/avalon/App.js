@@ -17,6 +17,7 @@ import ChosenRolesList from './src/components/CreateGame/ChosenRolesList';
 import ShareGameCodeScreen from './src/screens/Main/ShareGame';
 import BoardScreen from './src/screens/Game/Board';
 import LoadingScreen from './src/screens/Game/Loading';
+import RoleScreen from './src/screens/Game/Role';
 
 import configureStore from './src/store/configureStore';
 
@@ -59,6 +60,12 @@ Navigation.registerComponentWithRedux(
 Navigation.registerComponentWithRedux(
   'avalon.MainBoardScreen',
   () => BoardScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.RoleScreen',
+  () => RoleScreen,
   Provider,
   store,
 );

@@ -5,6 +5,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Navigation} from 'react-native-navigation';
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
@@ -42,11 +43,20 @@ class JoinGameScreen extends Component {
       },
     )
       .then(async res => {
-        AsyncStorage.setItem('player', JSON.stringify(res.data));
+        AsyncStorage.setItem('player', JSON.stringify(res.data)).then(
+          Navigation.setStackRoot('main', {
+            component: {
+              name: 'avalon.MainBoardScreen',
+            },
+          }),
+        );
       })
       .catch(err => {
-        if (err.response.status == 404) {
+        if (err.response.status === 404) {
           alert('Game code is not correct');
+        }
+        if (err.response.status === 406) {
+          alert('Game is full');
         }
       });
   };
