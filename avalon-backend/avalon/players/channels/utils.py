@@ -8,20 +8,20 @@ from .exceptions import ClientError
 from . import state
 
 @database_sync_to_async
-def set_channel_name(player, channel_name):
+def set_channel_name(player_token, channel_name):
     """
     Set channel name for a player
     """
-    player = Player.objects.get(token=player)
+    player = Player.objects.get(token=player_token)
     player.channel_name = channel_name
     player.save()
 
 @database_sync_to_async
-def remove_channel_name(player):
+def remove_channel_name(player_token):
     """
     Set channel name for a player
     """
-    player = Player.objects.get(token=player)
+    player = Player.objects.get(token=player_token)
     player.channel_name = ''
     player.save()
 
@@ -32,7 +32,7 @@ def get_game(player):
     Try to fetch a game for the player.
     """
     try:
-        game = Game.objects.get(code=player.game)
+        game = Game.objects.prefetch_related('roles').get(code=player.game)
         return game
     except Game.DoesNotExist:
         raise ClientError("GAME_INVALID")
@@ -43,7 +43,7 @@ def get_players_and_roles(game_code):
     Return players and roles in the game.
     """
     try:
-        players = Player.objects.select_related('role').select_related('user').filter(game=game_code)
+        players = Player.objects.select_related('user').filter(game=game_code)
     except Game.DoesNotExist:
         raise ClientError("GAME_INVALID")
     
@@ -61,9 +61,8 @@ def start_game(player, game):
         random.shuffle(tmp)
         return tmp
 
-
-    if game.players_joined == game.number_of_players:
-        game_players = game.players.all()
+    game_players = list(game.players.all())
+    if len(game_players) == game.number_of_players:
         if all(player.channel_name for player in game_players):
             if cache.get(game.code) is None:
                 roles = shuffle(game.roles.all())

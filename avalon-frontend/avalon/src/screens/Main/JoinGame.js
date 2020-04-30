@@ -43,10 +43,13 @@ class JoinGameScreen extends Component {
       },
     )
       .then(async res => {
-        AsyncStorage.setItem('player', JSON.stringify(res.data)).then(
+        AsyncStorage.multiSet([
+          ['game', JSON.stringify(res.data.game.code)],
+          ['player', JSON.stringify(res.data.token)],
+        ]).then(
           Navigation.setStackRoot('main', {
             component: {
-              name: 'avalon.MainBoardScreen',
+              name: 'avalon.LoadingScreen',
             },
           }),
         );

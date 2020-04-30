@@ -38,7 +38,7 @@ class EntranceScreen extends Component {
                   API.get(`players/player/${player}/`, {
                     headers: headers,
                   })
-                    .then(async res => {
+                    .then(res => {
                       if (res.data.game.code === game) {
                         Navigation.setRoot({
                           root: {

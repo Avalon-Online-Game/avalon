@@ -22,11 +22,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='player',
             name='role',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='role', related_query_name='role', to='games.Role'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='player', related_query_name='player', to='games.Role'),
         ),
         migrations.AlterField(
             model_name='player',
             name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='user', related_query_name='user', to=settings.AUTH_USER_MODEL),
+            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='player', related_query_name='player', to=settings.AUTH_USER_MODEL),
         ),
     ]
