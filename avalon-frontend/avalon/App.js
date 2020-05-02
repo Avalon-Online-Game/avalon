@@ -15,6 +15,10 @@ import CreateGameScreen from './src/screens/Main/CreateGame';
 import RolesList from './src/components/CreateGame/RolesList';
 import ChosenRolesList from './src/components/CreateGame/ChosenRolesList';
 import ShareGameCodeScreen from './src/screens/Main/ShareGame';
+import BoardScreen from './src/screens/Game/Board';
+import LoadingScreen from './src/screens/Game/Loading';
+import RoleScreen from './src/screens/Game/Role';
+import PlayersScreen from './src/screens/Game/Players';
 
 import configureStore from './src/store/configureStore';
 
@@ -48,6 +52,30 @@ Navigation.registerComponent(
   'avalon.ShareGameCodeScreen',
   () => ShareGameCodeScreen,
 );
+Navigation.registerComponentWithRedux(
+  'avalon.LoadingScreen',
+  () => LoadingScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.MainBoardScreen',
+  () => BoardScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.RoleScreen',
+  () => RoleScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.PlayersScreen',
+  () => PlayersScreen,
+  Provider,
+  store,
+);
 
 Promise.all([Icon.getImageSource('ios-arrow-back', wp('8%'))]).then(icons => {
   Navigation.setDefaultOptions({
@@ -67,11 +95,11 @@ Promise.all([Icon.getImageSource('ios-arrow-back', wp('8%'))]).then(icons => {
       title: {
         text: 'AVALON',
         color: '#e2d7aa',
-        fontSize: wp('8%'),
+        fontSize: hp('4.5%'),
         fontFamily: 'JosefinSans-Bold',
         alignment: 'center',
       },
-      height: hp('10%'),
+      height: hp('8%'),
       background: {
         color: '#0b161c',
       },

@@ -11,7 +11,7 @@ def get_user(token_key):
     try:
         return Player.objects.get(token=token_key)
     except:
-        return AnonymousUser()
+        return AnonymousUser
 
 
 class TokenAuthMiddleware:

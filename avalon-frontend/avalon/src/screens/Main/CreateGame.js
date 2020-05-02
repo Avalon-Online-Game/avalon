@@ -7,24 +7,20 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
+import {Navigation} from 'react-native-navigation';
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
 import RolesList from '../../components/CreateGame/RolesList';
 import ChosenRolesList from '../../components/CreateGame/ChosenRolesList';
 import API from '../../utils/API';
-import {Navigation} from 'react-native-navigation';
+import {
+  increaseNumberOfPlayers,
+  decreaseNumberOfPlayers,
+  removeRole,
+} from '../../store/actions/index';
 
 class CreateGameScreen extends Component {
-  constructor() {
-    super();
-    this.state = {
-      numberOfPlayers: '5',
-    };
-    this.maxNumberOfPlayers = '10';
-    this.minNumberOfPlayers = '5';
-  }
-
   createGameHandler = async () => {
     const user = JSON.parse(await AsyncStorage.getItem('user'));
     const headers = {
@@ -34,44 +30,68 @@ class CreateGameScreen extends Component {
     API.post(
       'games/',
       {
-        number_of_players: this.state.numberOfPlayers,
+        number_of_players: this.props.numberOfPlayers,
         roles: this.props.chosenRoles.map(role => role.id),
       },
       {
         headers: headers,
       },
     )
-      .then(res => {
-        AsyncStorage.setItem('game', JSON.stringify(res.data.code));
+      .then(gameRes => {
+        AsyncStorage.setItem('game', JSON.stringify(gameRes.data.code));
         API.post(
           'players/',
           {
-            game: res.data.code,
+            game: gameRes.data.code,
           },
           {
             headers: headers,
           },
         )
-          .then(async res => {
-            AsyncStorage.setItem('player', JSON.stringify(res.data.token));
+          .then(async playerRes => {
+            AsyncStorage.setItem(
+              'player',
+              JSON.stringify(playerRes.data.token),
+            );
             Navigation.push(this.props.componentId, {
               component: {
                 name: 'avalon.ShareGameCodeScreen',
                 passProps: {
                   gameCode: await AsyncStorage.getItem('game').then(gameCode =>
-                    gameCode.toString(),
+                    JSON.parse(gameCode),
                   ),
                 },
               },
             });
           })
           .catch(err => {
-            alert('Failed to register player to the game');
+            // eslint-disable-next-line no-alert
+            alert(
+              `Failed to register player to the game: ${err.response.status}`,
+            );
           });
       })
       .catch(err => {
-        alert('Failed to register the game');
+        // eslint-disable-next-line no-alert
+        alert(`Failed to register the game: ${err.response.status}`);
       });
+  };
+
+  handleIncreaseNumberOfPlayers = () => {
+    if (this.props.numberOfPlayers < this.props.maxNumberOfPlayers) {
+      this.props.increaseNumberOfPlayers();
+    }
+  };
+
+  handleDecreaseNumberOfPlayers = () => {
+    if (this.props.numberOfPlayers > this.props.minNumberOfPlayers) {
+      this.props.decreaseNumberOfPlayers();
+      if (this.props.chosenRoles.length === this.props.numberOfPlayers) {
+        this.props.removeRole(
+          this.props.chosenRoles[this.props.chosenRoles.length - 1],
+        );
+      }
+    }
   };
 
   render() {
@@ -80,40 +100,37 @@ class CreateGameScreen extends Component {
         <Text style={styles.numberPickerText}>Number of Players</Text>
         <View style={styles.numberPickerContainer}>
           <TouchableHighlight
-            onPress={() => {
-              if (this.state.numberOfPlayers !== this.minNumberOfPlayers) {
-                this.setState({
-                  numberOfPlayers: (
-                    parseInt(this.state.numberOfPlayers, 10) - 1
-                  ).toString(),
-                });
-              }
-            }}
+            onPress={this.handleDecreaseNumberOfPlayers}
             disabled={
-              this.state.numberOfPlayers === this.minNumberOfPlayers
+              this.props.numberOfPlayers === this.props.minNumberOfPlayers
                 ? true
                 : false
             }>
             <Icon
-              style={styles.numberPickerIcon}
+              style={
+                this.props.numberOfPlayers === this.props.minNumberOfPlayers
+                  ? styles.numberPickerIconDeactive
+                  : styles.numberPickerIconActive
+              }
               name="md-arrow-dropdown"
               color="#e2d7aa"
               size={wp('12%')}
             />
           </TouchableHighlight>
-          <Text style={styles.numberText}>{this.state.numberOfPlayers}</Text>
+          <Text style={styles.numberText}>{this.props.numberOfPlayers}</Text>
           <TouchableHighlight
-            onPress={() => {
-              if (this.state.numberOfPlayers !== this.maxNumberOfPlayers) {
-                this.setState({
-                  numberOfPlayers: (
-                    parseInt(this.state.numberOfPlayers, 10) + 1
-                  ).toString(),
-                });
-              }
-            }}>
+            onPress={this.handleIncreaseNumberOfPlayers}
+            disabled={
+              this.props.numberOfPlayers === this.props.maxNumberOfPlayers
+                ? true
+                : false
+            }>
             <Icon
-              style={styles.numberPickerIcon}
+              style={
+                this.props.numberOfPlayers === this.props.maxNumberOfPlayers
+                  ? styles.numberPickerIconDeactive
+                  : styles.numberPickerIconActive
+              }
               name="md-arrow-dropup"
               color="#e2d7aa"
               size={wp('12%')}
@@ -151,6 +168,12 @@ const styles = StyleSheet.create({
     fontSize: wp('6%'),
     fontFamily: 'JosefinSans-Medium',
   },
+  numberPickerIconActive: {
+    opacity: 1,
+  },
+  numberPickerIconDeactive: {
+    opacity: 0.5,
+  },
   numberText: {
     backgroundColor: '#17242c',
     width: wp('8%'),
@@ -180,7 +203,21 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     chosenRoles: state.roles.chosenRoles,
+    numberOfPlayers: state.roles.numberOfPlayers,
+    maxNumberOfPlayers: state.roles.maxNumberOfPlayers,
+    minNumberOfPlayers: state.roles.minNumberOfPlayers,
   };
 };
 
-export default connect(mapStateToProps)(CreateGameScreen);
+const mapDispatchToProps = dispatch => {
+  return {
+    increaseNumberOfPlayers: () => dispatch(increaseNumberOfPlayers()),
+    decreaseNumberOfPlayers: () => dispatch(decreaseNumberOfPlayers()),
+    removeRole: role => dispatch(removeRole(role)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CreateGameScreen);

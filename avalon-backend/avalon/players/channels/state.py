@@ -1,36 +1,37 @@
 import json
 from json import JSONEncoder
+import random
 
 ##### Project-specific settings
-MSG_TYPE_COMMANDER = "commander"
 MSG_TYPE_QUEST_CHOICE = "quest_choice"
-MSG_TYPE_QUEST_VOTE = "quest_vote"
+MSG_TYPE_QUEST_VOTE_RESULT = "quest_vote_result"
 MSG_TYPE_QUEST_RESULT = "quest_result"
-MSG_TYPE_NIGHT = "night"
 MSG_TYPE_START = "start"
 MSG_TYPE_END = "end"
 MSG_TYPE_LEAVE = "leave"
+MSG_TYPE_DISCONNECT = "disconnect"
+MSG_TYPE_UPDATE = "update"
 
 MESSAGE_TYPES_CHOICES = (
-    (MSG_TYPE_COMMANDER, 'COMMANDER'),
     (MSG_TYPE_QUEST_CHOICE, 'QUEST_CHOICE'),
-    (MSG_TYPE_QUEST_VOTE, 'QUEST_VOTE'),
+    (MSG_TYPE_QUEST_VOTE_RESULT, 'QUEST_VOTE_RESULT'),
     (MSG_TYPE_QUEST_RESULT, 'QUEST_RESULT'),
-    (MSG_TYPE_NIGHT, 'NIGHT'),
     (MSG_TYPE_START, 'START'),
     (MSG_TYPE_END, 'END'),
     (MSG_TYPE_LEAVE, 'LEAVE'),
+    (MSG_TYPE_DISCONNECT, 'DISCONNECT'),
+    (MSG_TYPE_UPDATE, 'UPDATE'),
 )
 
 MESSAGE_TYPES_LIST = [
-    MSG_TYPE_COMMANDER,
     MSG_TYPE_QUEST_CHOICE,
-    MSG_TYPE_QUEST_VOTE,
+    MSG_TYPE_QUEST_VOTE_RESULT,
     MSG_TYPE_QUEST_RESULT,
-    MSG_TYPE_NIGHT,
     MSG_TYPE_START,
     MSG_TYPE_END,
     MSG_TYPE_LEAVE,
+    MSG_TYPE_DISCONNECT,
+    MSG_TYPE_UPDATE,
 ]
 
 class Quest():
@@ -81,15 +82,6 @@ class GameState():
     game, players, quests, check conditions
     """
 
-    AVALON_MANUAL = {
-        5: {},
-        6: {},
-        7: {},
-        8: {},
-        9: {},
-        10: {},
-    }
-
     ROLES_DATA = {
         'merlin': ['minion1', 'minion2', 'minion3', 'assassin', 'oberon', 'morgana'],
         'mordred': ['minion1', 'minion2', 'minion3', 'assassin', 'morgana'],
@@ -102,60 +94,58 @@ class GameState():
         'percival': ['merlin', 'morgana']
     }
 
-    def __init__(self, game, players, players_roles):
+    def __init__(self, game, players):
         """
         game: game code
-        players(in order)
-        commander
-        commander_counter
+        players: list of dict of player token, username, avatar
+        players_roles: list of  tuple of dict of player token, username, avatar and player role
+        commander: a tuple of commander token, username, avatar
+        commander_index: keeps the commander index
         number_of_players
-        board_info : dict containing (number_of_players, int), ????
-        quests: list of Quest
+        quests: list of Quests
         quest_counter
         """
         self.game = game
-        self.players = [p.token for p in players]
-        self.players_roles = players_roles
-        self.commander = None
-        self.commander_counter = 0
+        self.players = [{'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar, 'num': p.player_num} for p in players]
+        self.players_roles = [({'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar}, p.role) for p in players]
         self.number_of_players = len(self.players)
-        self.board_info = self.AVALON_MANUAL.get(self.number_of_players, None)
+        self.commander_index = random.randint(0, self.number_of_players - 1)
+        self.commander = self.players[self.commander_index % self.number_of_players]
         self.quests = []
-        self.quest_counter = 0
+        self.quest_number = 1
 
-    
     def get_next_commander(self):
-        self.commander = self.players[self.commander_counter%self.number_of_players]
-        self.commander_counter+=1
+        """
+        Sets the new commander
+        """
+        self.commander_index = (self.commander_index + 1) % self.number_of_players
+        self.commander = self.players[self.commander_index]
 
     def get_next_quest(self):
         pass
 
-
     def get_game_result(self):
         pass
 
-    def get_player_data(self, player):
+    def get_player_data(self, player_token):
         """
         player : token
-        Returns team info for the player.
+        Returns player info and night info
         """
-        player_role = self.players_roles.get(player)
+        player_role = next(role for player, role in self.players_roles if player['token'] == player_token)
         if player_role.name in self.ROLES_DATA.keys():
-            role_data = [player for player,role in self.players_roles.items() if role.name in self.ROLES_DATA[player_role.name]]
+            role_data = [player for player, role in self.players_roles if role.name in self.ROLES_DATA[player_role.name]]
             player_data = {'role': player_role.name, 'role_data': role_data}
-            return json.dumps(player_data)
-        return json.dumps({'role': player_role.name})
+            return player_data
+        return {'role': player_role.name}
     
     def to_json(self):
         json = {
             "game": self.game,
             "players": self.players,
-            # "goods": self.goods,
-            # "evils": self.evils,
             "commander": self.commander,
-            "board_info" : self.board_info,
             "quests": self.quests,
+            "number_of_players": self.number_of_players,
         }
         return json
 

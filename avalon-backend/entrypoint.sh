@@ -12,6 +12,7 @@ then
 fi
 
 cd avalon/
+python manage.py makemigrations --noinput
 python manage.py migrate --noinput
 python manage.py collectstatic --no-input --clear
 python manage.py runserver 0.0.0.0:8000

@@ -45,7 +45,6 @@ class Game(models.Model):
     code = models.CharField(max_length=4, primary_key=True)
     roles = models.ManyToManyField(Role)
     number_of_players = models.PositiveIntegerField(validators=[MaxValueValidator(10), MinValueValidator(5)])
-    players_joined = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.code

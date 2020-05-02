@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics, status
 from uuid import uuid4
+from django.db.models import Q
 
 from players.serializers import PlayerSerializer
 from players.models import Player
@@ -42,4 +43,3 @@ class GameRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Game.objects.all()
     serializer_class = GameSerializer
-
