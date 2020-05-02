@@ -18,7 +18,17 @@ class BoardScreen extends Component {
     super(props);
   }
 
-  kingCommandHandler = () => {};
+  kingCommandHandler = () => {
+    Navigation.showModal({
+      component: {
+        name: 'avalon.PlayersScreen',
+        options: {
+          modalTransitionStyle: 'crossDissolve',
+          modalPresentationStyle: 'overCurrentContext',
+        },
+      },
+    });
+  };
 
   watchRoleHandler = () => {
     Navigation.showModal({

@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import {
-  Text,
   Image,
+  Text,
+  FlatList,
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -15,9 +19,10 @@ import {connect} from 'react-redux';
 import {Overlay} from 'react-native-elements';
 
 import RoleDataList from '../../components/Game/RoleDataList';
+import avatars from '../../utils/avatars';
 import {startGame, wsConnect, wsDisconnect} from '../../store/actions/index';
 
-class RoleScreen extends Component {
+class PlayersScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,6 +37,23 @@ class RoleScreen extends Component {
     Navigation.dismissModal(this.props.componentId);
   };
 
+  playerRenderItem = ({item}) => {
+    return (
+      <TouchableWithoutFeedback style={styles.userButtonContainer}>
+        <View style={styles.userButton}>
+          <Image
+            source={
+              avatars.find(avatar => avatar.id === item.avatar.toString()).image
+            }
+            style={styles.userImage}
+            resizeMode="contain"
+          />
+          <Text style={styles.userText}>{item.username}</Text>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  };
+
   render() {
     return (
       <Overlay
@@ -43,16 +65,12 @@ class RoleScreen extends Component {
           style={styles.background}
           source={require('../../assets/popups/modal-back.png')}
           resizeMode="contain">
-          <Text style={styles.titleText}>You are</Text>
-          <Image
-            style={styles.roleImage}
-            resizeMode="contain"
-            source={this.props.role.image}
-          />
-          <Text style={styles.roleText}>{this.props.role.text}</Text>
-          <RoleDataList
-            data={this.props.roleData}
-            style={styles.roleDataList}
+          <FlatList
+            style={styles.list}
+            data={this.props.players}
+            renderItem={this.playerRenderItem}
+            keyExtractor={item => item.token}
+            numColumns={2}
           />
           <TouchableOpacity
             style={styles.button}
@@ -61,7 +79,7 @@ class RoleScreen extends Component {
               source={require('../../assets/popups/button.png')}
               style={styles.buttonImage}
               resizeMode="contain">
-              <Text style={styles.buttonText}>Got it</Text>
+              <Text style={styles.buttonText}>OK</Text>
             </ImageBackground>
           </TouchableOpacity>
         </ImageBackground>
@@ -89,37 +107,17 @@ const styles = StyleSheet.create({
     height: hp('70%'),
     backgroundColor: 'transparent',
   },
-  titleText: {
-    color: '#e2d7aa',
-    fontSize: wp('6%'),
-    textAlign: 'center',
-    marginTop: hp('5%'),
-    fontFamily: 'JosefinSans-Regular',
-  },
-  roleText: {
-    color: '#e2d7aa',
-    fontSize: wp('8%'),
-    textAlign: 'center',
-    marginTop: hp('-7%'),
-    fontFamily: 'JosefinSans-Regular',
-  },
-  roleImage: {
-    marginTop: hp('-5%'),
-  },
-  roleDataList: {},
   button: {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: hp('-4%'),
     width: wp('60%'),
-    // backgroundColor: 'red',
   },
   buttonImage: {
     width: wp('60%'),
     height: hp('8%'),
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'green',
   },
   buttonText: {
     color: '#0B161C',
@@ -127,6 +125,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     fontFamily: 'JosefinSans-Bold',
+  },
+  userButtonContainer: {},
+  userButton: {
+    width: wp('20%'),
+    marginTop: hp('2%'),
+    marginHorizontal: wp('5%'),
+    alignItems: 'center',
+  },
+  userImage: {
+    width: wp('18%'),
+    height: wp('18%'),
+  },
+  userText: {
+    color: '#e2d7aa',
+    fontSize: wp('4%'),
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontFamily: 'JosefinSans-Light',
   },
 });
 
@@ -152,4 +168,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RoleScreen);
+)(PlayersScreen);

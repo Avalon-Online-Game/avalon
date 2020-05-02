@@ -18,6 +18,7 @@ import ShareGameCodeScreen from './src/screens/Main/ShareGame';
 import BoardScreen from './src/screens/Game/Board';
 import LoadingScreen from './src/screens/Game/Loading';
 import RoleScreen from './src/screens/Game/Role';
+import PlayersScreen from './src/screens/Game/Players';
 
 import configureStore from './src/store/configureStore';
 
@@ -66,6 +67,12 @@ Navigation.registerComponentWithRedux(
 Navigation.registerComponentWithRedux(
   'avalon.RoleScreen',
   () => RoleScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.PlayersScreen',
+  () => PlayersScreen,
   Provider,
   store,
 );
