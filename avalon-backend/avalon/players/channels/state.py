@@ -1,5 +1,6 @@
 import json
 from json import JSONEncoder
+import random
 
 ##### Project-specific settings
 MSG_TYPE_QUEST_CHOICE = "quest_choice"
@@ -81,15 +82,6 @@ class GameState():
     game, players, quests, check conditions
     """
 
-    AVALON_MANUAL = {
-        5: {},
-        6: {},
-        7: {},
-        8: {},
-        9: {},
-        10: {},
-    }
-
     ROLES_DATA = {
         'merlin': ['minion1', 'minion2', 'minion3', 'assassin', 'oberon', 'morgana'],
         'mordred': ['minion1', 'minion2', 'minion3', 'assassin', 'morgana'],
@@ -105,27 +97,29 @@ class GameState():
     def __init__(self, game, players, players_roles):
         """
         game: game code
-        players: a list of tuples of player token, username, avatar
-        roles: list of roles in the
+        players: list of dict of player token, username, avatar
+        players_roles: list of  tuple of dict of player token, username, avatar and player role
         commander: a tuple of commander token, username, avatar
-        commander_counter
+        commander_index: keeps the commander index
         number_of_players
         quests: list of Quests
         quest_counter
         """
         self.game = game
-        self.players = [(p.token, p.user.username, p.user.avatar) for p in players]
-        self.players_roles = players_roles
-        self.commander = None
-        self.commander_counter = 0
+        self.players = [{'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar, 'num': p.player_num} for p in players]
+        self.players_roles = [({'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar}, p.role) for p in players]
         self.number_of_players = len(self.players)
-        self.board_info = self.AVALON_MANUAL.get(self.number_of_players, None)
+        self.commander_index = random.randint(0, self.number_of_players - 1)
+        self.commander = self.players[self.commander_index % self.number_of_players]
         self.quests = []
-        self.quest_counter = 0
+        self.quest_number = 1
 
     def get_next_commander(self):
-        self.commander = self.players[self.commander_counter%self.number_of_players]
-        self.commander_counter+=1
+        """
+        Sets the new commander
+        """
+        self.commander_index = (self.commander_index + 1) % self.number_of_players
+        self.commander = self.players[self.commander_index]
 
     def get_next_quest(self):
         pass
@@ -150,7 +144,6 @@ class GameState():
             "game": self.game,
             "players": self.players,
             "commander": self.commander,
-            "board_info" : self.board_info,
             "quests": self.quests,
             "number_of_players": self.number_of_players,
         }

@@ -43,12 +43,11 @@ def get_players_and_roles(game_code):
     Return players and roles in the game.
     """
     try:
-        players = Player.objects.select_related('role').select_related('user').filter(game=game_code)
+        players = Player.objects.select_related('user').select_related('role').filter(game=game_code)
     except Game.DoesNotExist:
         raise ClientError("GAME_INVALID")
     
-    players_roles = {(p.token, p.user.username, p.user.avatar): p.role for p in players}
-    return sorted(players, key=lambda p : p.player_num), players_roles
+    return sorted(players, key=lambda p : p.player_num)
 
 @database_sync_to_async
 def start_game(player, game):

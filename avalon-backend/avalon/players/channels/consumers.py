@@ -57,25 +57,25 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         Called when we get a text frame. Channels will JSON-decode the payload
         for us and pass it as the first argument.
         """
-        command = content.get("command", None)
+        msg_type = content.get('msg_type', None)
         try:
-            if command == "commander":
-                await self.commander(content["game_code"])
+            # if command == "commander":
+            #     await self.commander(content["game_code"])
 
-            elif command == "quest_choice":
-                await self.quest_choice(content["game_code"], content["players"])
+            if msg_type == 'quest_choice':
+                await self.quest_choice(content['game'], content['players'])
 
-            elif command == "quest_vote":
+            elif msg_type == 'quest_vote':
                 await self.quest_vote(content)
 
-            elif command == "quest_result":
+            elif msg_type == 'quest_result':
                 await self.quest_result(content)
             
-            elif command == "leave":
-                await self.leave(content["game_code"])
+            elif msg_type == 'leave':
+                await self.leave(content['game'])
 
         except ClientError as e:
-            await self.send_json({"error": e.code})
+            await self.send_json({'error': e.code})
 
 
     async def disconnect(self, code):
@@ -105,42 +105,42 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             pass
 
 
-    async def commander(self, game_code):
-        await self.channel_layer.group_send(
-                game_code,
-                {
-                    "type": "game.commander",
-                    "game_code": game_code,
-                }
-            )
+    # async def commander(self, game_code):
+    #     await self.channel_layer.group_send(
+    #             game_code,
+    #             {
+    #                 "type": "game.commander",
+    #                 "game_code": game_code,
+    #             }
+    #         )
 
     async def quest_choice(self, game_code, players):
         await self.channel_layer.group_send(
                 game_code,
                 {
-                    "type": "game.quest_choice",
-                    "game_code": game_code,
-                    "players": players,
+                    'type': 'game.quest_choice',
+                    'game_code': game_code,
+                    'players': players,
                 }
             )
 
 
     async def quest_vote(self, content):
-        game = await get_game(content["game_code"])
+        game = await get_game(content['game_code'])
         await self.channel_layer.group_send(
                 game.code,
                 {
-                    "type": "game.quest_vote_result",
+                    'type': 'game.quest_vote_result',
                 }
             )
 
         
     async def quest_result(self, content):
-        game = await get_game(content["game_code"])
+        game = await get_game(content['game_code'])
         await self.channel_layer.group_send(
                 game.code,
                 {
-                    "type": "game.quest_result",
+                    'type': 'game.quest_result',
                 }
             )
 
@@ -200,32 +200,36 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         )
 
 
-    async def game_commander(self, event):
-        """
-        Send commander for the current quest.
-        """
-        json = {
-                "msg_type": state.MSG_TYPE_COMMANDER,
-                }
+    # async def game_commander(self, event):
+    #     """
+    #     Send commander for the current quest.
+    #     """
+    #     json = {
+    #             "msg_type": state.MSG_TYPE_COMMANDER,
+    #     }
     
-        game_state = cache.get_value(event["game_code"])
-        game_state.get_next_commander()
-        json.update(game_state.to_json())
-        cache.update_value(event["game_code"], game_state)
+    #     game_state = cache.get_value(event["game_code"])
+    #     game_state.get_next_commander()
+    #     json.update(game_state.to_json())
+    #     cache.update_value(event["game_code"], game_state)
         
-        await self.send_json(
-            json,
-        )
+    #     await self.send_json(
+    #         json,
+    #     )
 
     async def game_quest_choice(self, event):
         """
         Send commander's chosen players for the current quest.
         """
-        await self.send_json(
-            {
-                "msg_type": state.MSG_TYPE_QUEST_CHOICE,
-            },
-        )
+        game_state = cache.get_value(event['game_code'])
+        quest_players = event['players']
+        if all(quest_player in game_state.players for quest_player in quest_players):
+            await self.send_json(
+                {
+                    'msg_type': state.MSG_TYPE_QUEST_CHOICE,
+                    'players': quest_players
+                },
+            )
 
     async def game_quest_vote_result(self, event):
         """
@@ -233,7 +237,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         """
         await self.send_json(
             {
-                "msg_type": state.MSG_TYPE_QUEST_VOTE_RESULT,
+                'msg_type': state.MSG_TYPE_QUEST_VOTE_RESULT,
             },
         )
 
