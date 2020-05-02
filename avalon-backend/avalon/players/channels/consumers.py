@@ -11,7 +11,7 @@ from . import state
 from .utils import (
     get_game,
     start_game,
-    get_players_and_roles,
+    get_players,
     set_channel_name,
     remove_channel_name,
 )
@@ -38,7 +38,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         await set_channel_name(self.scope['user'], self.channel_name)        
 
         if await start_game(self.scope['user'], game):
-            players, roles = await get_players_and_roles(game.code)
+            players = await get_players(game.code)
             for player in players:
                 await self.channel_layer.send(
                     player.channel_name,
@@ -183,8 +183,8 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
 
         if game_state is None:
             # Create GameState
-            players, players_roles = await get_players_and_roles(event['game_code'])
-            game_state = GameState(event['game_code'], players, players_roles)
+            players = await get_players(event['game_code'])
+            game_state = GameState(event['game_code'], players)
             cache.set_value(game_state.game, game_state)
         
         # Create customized response for each player

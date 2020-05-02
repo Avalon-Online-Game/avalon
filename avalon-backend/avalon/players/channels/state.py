@@ -102,7 +102,7 @@ class GameState():
         'percival': ['merlin', 'morgana']
     }
 
-    def __init__(self, game, players, players_roles):
+    def __init__(self, game, players):
         """
         game: game code
         players: a list of tuples of player token, username, avatar
@@ -114,8 +114,8 @@ class GameState():
         quest_counter
         """
         self.game = game
-        self.players = [(p.token, p.user.username, p.user.avatar) for p in players]
-        self.players_roles = players_roles
+        self.players = [{'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar, 'num': p.player_num} for p in players]
+        self.players_roles = [({'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar}, p.role) for p in players]
         self.commander = None
         self.commander_counter = 0
         self.number_of_players = len(self.players)
@@ -138,9 +138,9 @@ class GameState():
         player : token
         Returns player info and night info
         """
-        player_role = next(role for player, role in self.players_roles.items() if player[0] == player_token)
+        player_role = next(role for player, role in self.players_roles if player['token'] == player_token)
         if player_role.name in self.ROLES_DATA.keys():
-            role_data = [player for player, role in self.players_roles.items() if role.name in self.ROLES_DATA[player_role.name]]
+            role_data = [player for player, role in self.players_roles if role.name in self.ROLES_DATA[player_role.name]]
             player_data = {'role': player_role.name, 'role_data': role_data}
             return player_data
         return {'role': player_role.name}

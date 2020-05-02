@@ -1,8 +1,8 @@
-import {UPDATE_GAME_STATE} from './actionTypes';
+import {START_GAME} from './actionTypes';
 
-export const updateGameState = data => {
+export const startGame = data => {
   return {
-    type: UPDATE_GAME_STATE,
+    type: START_GAME,
     data: data,
   };
 };

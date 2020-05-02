@@ -13,93 +13,16 @@ import {
 } from 'react-native-responsive-screen';
 import {connect} from 'react-redux';
 import {chooseRole} from '../../store/actions/index';
-
-const goods = [
-  {
-    id: 'merlin',
-    text: 'Merlin',
-    image: require('../../assets/goods/merlin.png'),
-  },
-  {
-    id: 'percival',
-    text: 'Percival',
-    image: require('../../assets/goods/percival.png'),
-  },
-  {
-    id: 'loyal1',
-    text: 'Richard',
-    image: require('../../assets/goods/loyal1.png'),
-  },
-  {
-    id: 'loyal2',
-    text: 'Mattheus',
-    image: require('../../assets/goods/loyal2.png'),
-  },
-  {
-    id: 'loyal3',
-    text: 'Christian',
-    image: require('../../assets/goods/loyal3.png'),
-  },
-  {
-    id: 'loyal4',
-    text: 'David',
-    image: require('../../assets/goods/loyal4.png'),
-  },
-  {
-    id: 'loyal5',
-    text: 'Maria',
-    image: require('../../assets/goods/loyal5.png'),
-  },
-];
-
-const evils = [
-  {
-    id: 'mordred',
-    text: 'Mordred',
-    image: require('../../assets/evils/mordred.png'),
-  },
-  {
-    id: 'morgana',
-    text: 'Morgana',
-    image: require('../../assets/evils/morgana.png'),
-  },
-  {
-    id: 'oberon',
-    text: 'Oberon',
-    image: require('../../assets/evils/oberon.png'),
-  },
-  {
-    id: 'assassin',
-    text: 'Assassin',
-    image: require('../../assets/evils/assassin.png'),
-  },
-  {
-    id: 'minion1',
-    text: 'Minion',
-    image: require('../../assets/evils/minion1.png'),
-  },
-  {
-    id: 'minion2',
-    text: 'Minion',
-    image: require('../../assets/evils/minion2.png'),
-  },
-  {
-    id: 'minion3',
-    text: 'Minion',
-    image: require('../../assets/evils/minion3.png'),
-  },
-];
-
-const extractKey = ({id}) => id;
+import roles from '../../utils/roles';
 
 class RolesList extends Component {
   constructor(props) {
     super(props);
     this.data =
       this.props.side === 'evil'
-        ? evils
+        ? roles.filter(role => role.side === 'evil')
         : this.props.side === 'good'
-        ? goods
+        ? roles.filter(role => role.side === 'good')
         : undefined;
   }
 
@@ -151,7 +74,7 @@ class RolesList extends Component {
           data={this.data}
           extraData={[this.props.chosenRoles, this.props.numberOfPlayers]}
           renderItem={this.roleRenderItem}
-          keyExtractor={extractKey}
+          keyExtractor={item => item.id}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         />

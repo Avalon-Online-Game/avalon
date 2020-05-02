@@ -3,7 +3,7 @@ export {removeRole} from './roles';
 export {increaseNumberOfPlayers} from './roles';
 export {decreaseNumberOfPlayers} from './roles';
 
-export {updateGameState} from './game';
+export {startGame} from './game';
 
 export {wsConnect} from './websocket';
 export {wsDisconnect} from './websocket';

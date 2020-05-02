@@ -4,8 +4,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-
-const extractKey = ({id}) => id;
+import avatars from '../../utils/avatars';
 
 class RoleDataList extends Component {
   constructor(props) {
@@ -16,7 +15,9 @@ class RoleDataList extends Component {
     return (
       <View style={styles.roleDataContainer}>
         <Image
-          source={item.image}
+          source={
+            avatars.find(avatar => avatar.id === item.avatar.toString()).image
+          }
           style={styles.roleDataImage}
           resizeMode="contain"
         />
@@ -27,12 +28,12 @@ class RoleDataList extends Component {
 
   render() {
     return (
-      <View style={this.props.style}>
+      <View style={[styles.container, this.props.style]}>
         <FlatList
           style={styles.list}
-          data={this.data}
+          data={this.props.data}
           renderItem={this.roleDataRenderItem}
-          keyExtractor={extractKey}
+          keyExtractor={item => item.token}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
@@ -42,15 +43,22 @@ class RoleDataList extends Component {
 }
 
 const styles = StyleSheet.create({
-  list: {
-    // backgroundColor: 'white',
+  container: {
+    height: hp('14%'),
   },
-  roleDataContainer: {},
-  roleDataImage: {},
+  roleDataContainer: {
+    marginHorizontal: wp('2%'),
+    alignItems: 'center',
+  },
+  roleDataImage: {
+    width: wp('20%'),
+    height: wp('20%'),
+  },
   roleDataText: {
     color: '#e2d7aa',
-    fontSize: wp('20%'),
-    fontFamily: 'Dubai-Regular',
+    fontSize: wp('4%'),
+    fontFamily: 'JosefinSans-Regular',
+    textAlign: 'center',
   },
 });
 
@@ -67,7 +75,7 @@ const styles = StyleSheet.create({
 
 // const mapDispatchToProps = dispatch => {
 //   return {
-//     updateGameState: data => dispatch(updateGameState(data)),
+//     startGame: data => dispatch(startGame(data)),
 //     wsConnect: token => dispatch(wsConnect(token)),
 //     wsDisconnect: () => dispatch(wsDisconnect()),
 //   };

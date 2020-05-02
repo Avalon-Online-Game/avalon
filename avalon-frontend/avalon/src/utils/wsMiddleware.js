@@ -1,5 +1,5 @@
 import {wsConnected, wsDisconnected} from '../store/actions/index';
-import {updateGameState} from '../store/actions/index';
+import {startGame} from '../store/actions/index';
 import {Navigation} from 'react-native-navigation';
 
 const socketMiddleware = () => {
@@ -20,7 +20,7 @@ const socketMiddleware = () => {
 
     switch (payload.msg_type) {
       case 'start':
-        store.dispatch(updateGameState(payload));
+        store.dispatch(startGame(payload));
         Navigation.setStackRoot('main', {
           component: {
             name: 'avalon.MainBoardScreen',

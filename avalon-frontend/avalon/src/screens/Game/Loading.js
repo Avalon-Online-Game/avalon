@@ -7,11 +7,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 
-import {
-  updateGameState,
-  wsConnect,
-  wsDisconnect,
-} from '../../store/actions/index';
+import {startGame, wsConnect, wsDisconnect} from '../../store/actions/index';
 
 class LoadingScreen extends Component {
   constructor(props) {
@@ -86,7 +82,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateGameState: data => dispatch(updateGameState(data)),
+    startGame: data => dispatch(startGame(data)),
     wsConnect: token => dispatch(wsConnect(token)),
     wsDisconnect: () => dispatch(wsDisconnect()),
   };

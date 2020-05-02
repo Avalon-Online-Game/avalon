@@ -42,7 +42,7 @@ class JoinGameScreen extends Component {
         headers: headers,
       },
     )
-      .then(async res => {
+      .then(res => {
         AsyncStorage.multiSet([
           ['game', JSON.stringify(res.data.game.code)],
           ['player', JSON.stringify(res.data.token)],

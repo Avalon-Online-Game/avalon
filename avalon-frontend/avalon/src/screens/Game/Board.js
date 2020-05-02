@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 import BoardView from '../../components/UI/Game/BoardView';
 import BottomButton from '../../components/UI/Game/BottomButton';
 import QuestList from '../../components/Game/QuestsList';
-import {updateGameState} from '../../store/actions/index';
+import {startGame} from '../../store/actions/index';
 
 class BoardScreen extends Component {
   constructor(props) {
@@ -20,7 +20,17 @@ class BoardScreen extends Component {
 
   kingCommandHandler = () => {};
 
-  watchRoleHandler = () => {};
+  watchRoleHandler = () => {
+    Navigation.showModal({
+      component: {
+        name: 'avalon.RoleScreen',
+        options: {
+          modalTransitionStyle: 'crossDissolve',
+          modalPresentationStyle: 'overCurrentContext',
+        },
+      },
+    });
+  };
 
   render() {
     return (
@@ -45,7 +55,7 @@ class BoardScreen extends Component {
               <Image
                 resizeMode="contain"
                 style={styles.roleButtonImage}
-                source={require('../../assets/board/lady-of-the-lake.png')}
+                source={require('../../assets/board/king.png')}
               />
             </View>
             <View style={styles.ladyOfTheLake}>
@@ -105,7 +115,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateGameState: data => dispatch(updateGameState(data)),
+    startGame: data => dispatch(startGame(data)),
   };
 };
 

@@ -38,17 +38,19 @@ def get_game(player):
         raise ClientError("GAME_INVALID")
 
 @database_sync_to_async
-def get_players_and_roles(game_code):
+def get_players(game_code):
     """
     Return players and roles in the game.
     """
     try:
-        players = Player.objects.select_related('user').filter(game=game_code)
+        players = Player.objects.select_related('user').select_related('role').filter(game=game_code)
+        # players = [{'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar, 'num': p.player_num} for p in qs]
     except Game.DoesNotExist:
         raise ClientError("GAME_INVALID")
     
-    players_roles = {(p.token, p.user.username, p.user.avatar): p.role for p in players}
-    return sorted(players, key=lambda p : p.player_num), players_roles
+    # players_roles = [({'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar}, p.role) for p in qs]
+    # return sorted(players, key=lambda p : p['num']), players_roles
+    return sorted(players, key=lambda p : p.player_num)
 
 @database_sync_to_async
 def start_game(player, game):
