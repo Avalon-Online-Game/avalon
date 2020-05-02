@@ -1,8 +1,13 @@
 import {CHOOSE_ROLE} from '../actions/actionTypes';
 import {REMOVE_ROLE} from '../actions/actionTypes';
+import {INCREASE_NUMBER_OF_PLAYERS} from '../actions/actionTypes';
+import {DECREASE_NUMBER_OF_PLAYERS} from '../actions/actionTypes';
 
 const initialState = {
   chosenRoles: [],
+  numberOfPlayers: 5,
+  maxNumberOfPlayers: 10,
+  minNumberOfPlayers: 5,
 };
 
 const reducer = (state = initialState, action) => {
@@ -18,6 +23,16 @@ const reducer = (state = initialState, action) => {
         chosenRoles: state.chosenRoles.filter(role => {
           return role.id !== action.role.id;
         }),
+      };
+    case INCREASE_NUMBER_OF_PLAYERS:
+      return {
+        ...state,
+        numberOfPlayers: state.numberOfPlayers + 1,
+      };
+    case DECREASE_NUMBER_OF_PLAYERS:
+      return {
+        ...state,
+        numberOfPlayers: state.numberOfPlayers - 1,
       };
     default:
       return state;

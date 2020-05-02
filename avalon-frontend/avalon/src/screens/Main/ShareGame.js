@@ -4,6 +4,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {Navigation} from 'react-native-navigation';
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
@@ -13,19 +14,25 @@ class ShareGameScreen extends Component {
     super(props);
   }
 
-  shareHandler = async () => {};
+  nextHandler = () => {
+    Navigation.setStackRoot(this.props.componentId, {
+      component: {
+        name: 'avalon.LoadingScreen',
+      },
+    });
+  };
 
   render() {
     return (
       <MainView style={styles.container}>
         <Text style={styles.text}>Share game code</Text>
         <View style={styles.gameCodeContainer}>
+          <Text style={styles.gameCode}>{this.props.gameCode.charAt(0)}</Text>
           <Text style={styles.gameCode}>{this.props.gameCode.charAt(1)}</Text>
           <Text style={styles.gameCode}>{this.props.gameCode.charAt(2)}</Text>
           <Text style={styles.gameCode}>{this.props.gameCode.charAt(3)}</Text>
-          <Text style={styles.gameCode}>{this.props.gameCode.charAt(4)}</Text>
         </View>
-        <BottomButton onPress={this.shareHandler}>Next</BottomButton>
+        <BottomButton onPress={this.nextHandler}>Next</BottomButton>
       </MainView>
     );
   }

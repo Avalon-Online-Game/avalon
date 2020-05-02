@@ -94,7 +94,7 @@ class GameState():
         'percival': ['merlin', 'morgana']
     }
 
-    def __init__(self, game, players, players_roles):
+    def __init__(self, game, players):
         """
         game: game code
         players: list of dict of player token, username, avatar
@@ -132,9 +132,9 @@ class GameState():
         player : token
         Returns player info and night info
         """
-        player_role = next(role for player, role in self.players_roles.items() if player[0] == player_token)
+        player_role = next(role for player, role in self.players_roles if player['token'] == player_token)
         if player_role.name in self.ROLES_DATA.keys():
-            role_data = [player for player, role in self.players_roles.items() if role.name in self.ROLES_DATA[player_role.name]]
+            role_data = [player for player, role in self.players_roles if role.name in self.ROLES_DATA[player_role.name]]
             player_data = {'role': player_role.name, 'role_data': role_data}
             return player_data
         return {'role': player_role.name}

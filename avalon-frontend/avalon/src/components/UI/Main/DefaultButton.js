@@ -13,7 +13,7 @@ import {
 const defaultButton = props => {
   let buttonContent = (
     <ImageBackground
-      source={require('../../../assets/button.png')}
+      source={require('../../../assets/main/button.png')}
       style={styles.buttonImage}
       resizeMode="contain">
       <Text style={[styles.buttonText, props.textStyle]}>{props.children}</Text>
