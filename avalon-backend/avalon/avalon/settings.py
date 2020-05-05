@@ -113,7 +113,7 @@ ACCOUNT_ADAPTER = 'users.adapter.CustomAccountAdapter'
 REST_USE_JWT = False
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware', # redis
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -121,7 +121,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware', # redis
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'avalon.urls'
@@ -147,10 +147,11 @@ WSGI_APPLICATION = 'avalon.wsgi.application'
 # cache
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get('REDIS_LOCATION', 'redis://localhost:6379/'),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.environ.get('REDIS_LOCATION', 'redis://localhost:6379/'),
+        'TIMEOUT': 86400,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
     }
 }
