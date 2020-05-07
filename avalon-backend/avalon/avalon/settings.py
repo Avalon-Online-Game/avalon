@@ -16,12 +16,12 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get('SECRET_KEY', 'u9ug2$e9zd-$&-ggbl)o^-7paf0pg@-8yrh1nm8mqk791bm%#4')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(' ')
 
 
 # Application definition
@@ -52,10 +52,10 @@ redis_host = os.environ.get('REDIS_HOST', 'localhost')
 
 # Channel layer definitions
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [(redis_host, 6379)],
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [(redis_host, 6379)],
         },
     },
 }
@@ -80,24 +80,13 @@ REST_AUTH_SERIALIZERS = {
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {
-    "REGISTER_SERIALIZER": "users.serializers.AccountRegistrationSerializer",
+    'REGISTER_SERIALIZER': 'users.serializers.AccountRegistrationSerializer',
 }
 
 # Channels configurations
 ASGI_APPLICATION = 'avalon.routing.application'
 
 SITE_ID = 1
-
-# Email settings
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# MAILER_EMAIL_BACKEND = EMAIL_BACKEND
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'markitteamservice@gmail.com'
-# EMAIL_HOST_PASSWORD = 'seteamfall19'
-# EMAIL_HOST_USERNAME = 'markitteamservice'
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Account settings
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
@@ -146,7 +135,7 @@ WSGI_APPLICATION = 'avalon.wsgi.application'
 
 # cache
 CACHES = {
-    "default": {
+    'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': os.environ.get('REDIS_LOCATION', 'redis://localhost:6379/'),
         'TIMEOUT': 86400,
@@ -165,7 +154,7 @@ DATABASES = {
         'NAME': os.environ.get('SQL_DATABASE', 'avalondb'),
         'USER': os.environ.get('SQL_USER', 'avalon'),
         'PASSWORD': os.environ.get('SQL_PASSWORD', 'avalonbackend'),
-        'HOST': os.environ.get('SQL_HOST', 'db'),
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
         'PORT': os.environ.get('SQL_PORT', '5432')
     }
 }
@@ -207,8 +196,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

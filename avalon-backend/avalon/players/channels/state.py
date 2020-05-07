@@ -59,7 +59,7 @@ class Quest():
         self.commander = None
         self.players = []
         self.votes = []
-        self.score = {'success': 0, 'fail': 0}
+        self.scores = {'success': 0, 'fail': 0}
         self.result = None
         self.done = False
 
@@ -90,11 +90,21 @@ class Quest():
         """
         return True if len(self.votes) == game_state.number_of_players else False
 
-    def collect_scores(self):
+    def set_score(self, score):
+        """
+        Set a quest player score in the quest scores dict
+        """
+        if score == 'success':
+            self.scores['success'] += 1
+        else: self.scores['fail'] += 1
+
+    def set_result(self):
         """
         Return final result of quest
         """
-        pass
+        if self.scores['fail'] >= self.fails_number:
+            self.result = 'fail'
+        else: self.result = 'success'
 
 
 class GameState():
@@ -126,7 +136,10 @@ class GameState():
         'quest': 'quest',
         'day': 'day',
         'voting': 'voting',
+        'assassination': 'assassination',
+        'end': 'end',
     }
+
 
     def __init__(self, game, players):
         """
@@ -144,7 +157,7 @@ class GameState():
         """
         self.game = game
         self.state = self.STATE['day']
-        self.players = [{'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar, 'num': p.player_num} for p in players]
+        self.players = [{'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar} for p in players]
         self.players_roles = [({'token':p.token, 'username':p.user.username, 'avatar':p.user.avatar}, p.role) for p in players]
         self.number_of_players = len(self.players)
         self.commander_index = random.randint(0, self.number_of_players - 1)
@@ -155,6 +168,8 @@ class GameState():
         self.current_quest_number = 1
         self.failed_votings = 0
         self.current_quest_candidates = []
+        self.winner = None
+
 
     def set_next_commander(self):
         """
@@ -163,9 +178,11 @@ class GameState():
         self.commander_index = (self.commander_index + 1) % self.number_of_players
         self.commander = self.players[self.commander_index]
 
+
     def set_voting_state(self, chosen_players):
         self.current_quest_candidates = chosen_players
         self.state = self.STATE['voting']
+
 
     def update_current_quest(self, quest):
         """
@@ -173,17 +190,24 @@ class GameState():
         """
         self.quests[self.current_quest_number - 1] = quest
 
+
     def set_quest_state(self):
+        """
+        Set state after quest voting approved
+        """
         self.failed_votings = 0
         self.state = self.STATE['quest']
+
 
     def set_next_quest_state(self):
         """
         Set states for starting next quest process
         """
-        self.current_quest_number += 1
-        self.set_next_commander()
-        self.state = self.STATE['day']
+        if not self.get_game_result():
+            self.current_quest_number += 1
+            self.set_next_commander()
+            self.state = self.STATE['day']
+
 
     def set_failed_voting_state(self):
         """
@@ -192,10 +216,6 @@ class GameState():
         self.failed_votings += 1
         self.set_next_commander()
         self.state = self.STATE['day']
-
-
-    def get_game_result(self):
-        pass
 
 
     def get_player_data(self, player_token):
@@ -210,6 +230,26 @@ class GameState():
         return {'role': player_role.name}
 
 
+    def get_game_result(self):
+        """
+        Consider if game is done
+        """
+        if sum(quest.result == 'success' for quest in self.quests) == 3:
+            self.state = self.STATE['assassination']
+            return True
+        if sum(quest.result == 'fail' for quest in self.quests) == 3:
+            self.state = self.STATE['end']
+            self.winner = 'evil'
+            return True
+        return False
+
+    
+    def assassinate(self, player_role):
+        self.state = self.STATE['end']
+        if player_role[1].name == 'merlin':
+            self.winner = 'evil'
+
+
     def to_json(self):
         """
         Serialize game state
@@ -221,9 +261,10 @@ class GameState():
             'code': self.game,
             'players': self.players,
             'commander': self.commander,
-            'quests': json.loads(json.dumps(self.quests, default=obj_dict)),
+            'quests': json.loads(json.dumps([quest for quest in self.quests if quest.result != None], default=obj_dict)),
             'number_of_players': self.number_of_players,
             'quest_number': self.current_quest_number,
             'failed_votings': self.failed_votings,
-            'state': self.state
+            'state': self.state,
+            'winner': self.winner,
         }
