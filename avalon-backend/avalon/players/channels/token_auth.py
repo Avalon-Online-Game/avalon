@@ -9,7 +9,7 @@ from players.models import Player
 @database_sync_to_async
 def get_user(token_key):
     try:
-        return Player.objects.get(token=token_key)
+        return Player.objects.select_related('user').select_related('role').get(token=token_key)
     except:
         return AnonymousUser
 

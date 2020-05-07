@@ -1,6 +1,7 @@
 from channels.db import database_sync_to_async
 import random
-from avalon.utils import cache
+# from avalon.utils import cache
+from django.core.cache import cache
 from games.models import Game
 from players.models import Player
 
@@ -55,26 +56,22 @@ def start_game(player, game):
     Check if all players have joined then assign a role to each.
     game: game object
     """
-    def shuffle(arg):
-        tmp = list(arg)[:]
-        random.shuffle(tmp)
-        return tmp
 
     game_players = list(game.players.all())
     if len(game_players) == game.number_of_players:
         if all(player.channel_name for player in game_players):
-            if cache.get(game.code) is None:
-                roles = shuffle(game.roles.all())
-                players = shuffle(game_players)
-                for player_role in zip(players, roles):
-                    player = player_role[0]
-                    role = player_role[1]
-                    player.role = role
-                    player.save()
-
             return True
 
     return False
 
 
-
+@database_sync_to_async
+def set_players_roles(players_roles):
+    """
+    Set players roles in database
+    """
+    for player_role in players_roles:
+        player = player_role[0]
+        role = player_role[1]
+        player.role = role
+        player.save()
