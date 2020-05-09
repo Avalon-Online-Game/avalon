@@ -2,6 +2,7 @@ import {WS_CONNECT} from './actionTypes';
 import {WS_DISCONNECT} from './actionTypes';
 import {WS_CONNECTED} from './actionTypes';
 import {WS_DISCONNECTED} from './actionTypes';
+import {WS_SEND} from './actionTypes';
 
 export const wsConnect = token => {
   return {
@@ -25,5 +26,12 @@ export const wsConnected = () => {
 export const wsDisconnected = () => {
   return {
     type: WS_DISCONNECTED,
+  };
+};
+
+export const wsSend = msg => {
+  return {
+    type: WS_SEND,
+    msg: msg,
   };
 };

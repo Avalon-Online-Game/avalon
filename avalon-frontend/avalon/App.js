@@ -19,6 +19,8 @@ import BoardScreen from './src/screens/Game/Board';
 import LoadingScreen from './src/screens/Game/Loading';
 import RoleScreen from './src/screens/Game/Role';
 import PlayersScreen from './src/screens/Game/Players';
+import VoteScreen from './src/screens/Game/Vote';
+import WaitingScreen from './src/screens/Game/Waiting';
 
 import configureStore from './src/store/configureStore';
 
@@ -73,6 +75,18 @@ Navigation.registerComponentWithRedux(
 Navigation.registerComponentWithRedux(
   'avalon.PlayersScreen',
   () => PlayersScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.VoteScreen',
+  () => VoteScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.WaitingScreen',
+  () => WaitingScreen,
   Provider,
   store,
 );

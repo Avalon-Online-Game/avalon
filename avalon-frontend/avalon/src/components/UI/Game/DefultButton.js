@@ -1,8 +1,8 @@
 import React from 'react';
 import {
   TouchableOpacity,
-  Text,
   ImageBackground,
+  Text,
   StyleSheet,
 } from 'react-native';
 import {
@@ -11,43 +11,36 @@ import {
 } from 'react-native-responsive-screen';
 
 const defaultButton = props => {
-  let buttonContent = (
-    <ImageBackground
-      source={require('../../../assets/main/button.png')}
-      style={[styles.buttonImage, props.backgroundStyle]}
-      resizeMode="contain">
-      <Text style={[styles.buttonText, props.textStyle]}>{props.children}</Text>
-    </ImageBackground>
-  );
-  if (props.transparentButton) {
-    buttonContent = (
-      <Text style={[styles.buttonText, props.textStyle]}>{props.children}</Text>
-    );
-  }
   return (
     <TouchableOpacity
-      style={[styles.container, props.buttonStyle]}
+      style={[styles.button, props.style]}
       onPress={props.onPress}>
-      {buttonContent}
+      <ImageBackground
+        source={require('../../../assets/popups/button.png')}
+        style={styles.buttonImage}
+        resizeMode="contain">
+        <Text style={styles.buttonText}>{props.children}</Text>
+      </ImageBackground>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  button: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: hp('8%'),
   },
   buttonImage: {
-    width: wp('80%'),
-    height: hp('10%'),
+    width: wp('60%'),
+    height: hp('8%'),
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
-    color: '#0b161c',
+    color: '#0B161C',
     fontSize: wp('6%'),
+    textAlign: 'center',
+    textAlignVertical: 'center',
     fontFamily: 'JosefinSans-Bold',
   },
 });

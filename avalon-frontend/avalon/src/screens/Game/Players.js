@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  TouchableHighlight,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -18,7 +17,7 @@ import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 import {Overlay} from 'react-native-elements';
 
-import RoleDataList from '../../components/Game/RoleDataList';
+import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';
 import {startGame, wsConnect, wsDisconnect} from '../../store/actions/index';
 
@@ -72,16 +71,9 @@ class PlayersScreen extends Component {
             keyExtractor={item => item.token}
             numColumns={2}
           />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this.dissmissHandler}>
-            <ImageBackground
-              source={require('../../assets/popups/button.png')}
-              style={styles.buttonImage}
-              resizeMode="contain">
-              <Text style={styles.buttonText}>OK</Text>
-            </ImageBackground>
-          </TouchableOpacity>
+          <DefaultButton style={styles.button} onPress={this.dissmissHandler}>
+            OK
+          </DefaultButton>
         </ImageBackground>
       </Overlay>
     );
@@ -113,19 +105,19 @@ const styles = StyleSheet.create({
     marginBottom: hp('-4%'),
     width: wp('60%'),
   },
-  buttonImage: {
-    width: wp('60%'),
-    height: hp('8%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#0B161C',
-    fontSize: wp('6%'),
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontFamily: 'JosefinSans-Bold',
-  },
+  // buttonImage: {
+  //   width: wp('60%'),
+  //   height: hp('8%'),
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // buttonText: {
+  //   color: '#0B161C',
+  //   fontSize: wp('6%'),
+  //   textAlign: 'center',
+  //   textAlignVertical: 'center',
+  //   fontFamily: 'JosefinSans-Bold',
+  // },
   userButtonContainer: {},
   userButton: {
     width: wp('20%'),

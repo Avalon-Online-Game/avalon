@@ -1,5 +1,15 @@
+import {WS_CONNECT, WS_DISCONNECT, WS_SEND} from '../store/actions/actionTypes';
 import {wsConnected, wsDisconnected} from '../store/actions/index';
-import {startGame} from '../store/actions/index';
+import {
+  startGame,
+  updateGame,
+  setQuestChosenPlayers,
+  setQuestVotedPlayers,
+  setQuestVoteResult,
+  setQuestResult,
+  setAssassinationResult,
+  setEndGame,
+} from '../store/actions/index';
 import {Navigation} from 'react-native-navigation';
 
 const socketMiddleware = () => {
@@ -27,6 +37,27 @@ const socketMiddleware = () => {
           },
         });
         break;
+      case 'update':
+        store.dispatch(updateGame(payload));
+        break;
+      case 'quest_choice':
+        store.dispatch(setQuestChosenPlayers(payload));
+        break;
+      case 'quest_vote':
+        store.dispatch(setQuestVotedPlayers(payload));
+        break;
+      case 'quest_vote_result':
+        store.dispatch(setQuestVoteResult(payload));
+        break;
+      case 'quest_result':
+        store.dispatch(setQuestResult(payload));
+        break;
+      case 'assassination_result':
+        store.dispatch(setAssassinationResult(payload));
+        break;
+      case 'end':
+        store.dispatch(setEndGame(payload));
+        break;
       default:
         break;
     }
@@ -34,7 +65,7 @@ const socketMiddleware = () => {
 
   return store => next => action => {
     switch (action.type) {
-      case 'WS_CONNECT':
+      case WS_CONNECT:
         if (socket !== null) {
           socket.close();
         }
@@ -46,12 +77,16 @@ const socketMiddleware = () => {
         socket.onclose = onClose(store);
         socket.onopen = onOpen(store);
         break;
-      case 'WS_DISCONNECT':
+      case WS_DISCONNECT:
         if (socket !== null) {
           socket.close();
         }
         socket = null;
         console.log('websocket closed');
+        break;
+      case WS_SEND:
+        console.log('sending a message', action.msg);
+        socket.send(JSON.stringify(action.msg));
         break;
       default:
         return next(action);
