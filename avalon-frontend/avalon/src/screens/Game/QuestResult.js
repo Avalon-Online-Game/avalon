@@ -9,18 +9,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 
-class WaitingScreen extends Component {
+class QuestResultScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: true,
     };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.gameState !== prevProps.gameState) {
-      this.dissmissHandler();
-    }
   }
 
   dissmissHandler = () => {
@@ -41,7 +35,7 @@ class WaitingScreen extends Component {
           style={styles.background}
           source={require('../../assets/popups/popup-back.png')}
           resizeMode="contain">
-          <Text style={styles.titleText}>Waiting...</Text>
+          <Text style={styles.titleText}>Quest Result</Text>
           <Text style={styles.mainText}>{this.props.message}</Text>
           <Image
             style={styles.crownImage}
@@ -100,4 +94,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(WaitingScreen);
+export default connect(mapStateToProps)(QuestResultScreen);

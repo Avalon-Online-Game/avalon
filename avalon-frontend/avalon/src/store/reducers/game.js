@@ -1,3 +1,5 @@
+import {SET_PLAYER_TOKEN} from '../actions/actionTypes';
+import {SET_GAME_QUESTS} from '../actions/actionTypes';
 import {START_GAME} from '../actions/actionTypes';
 import {UPDATE_GAME} from '../actions/actionTypes';
 import {SET_QUEST_CHOSEN_PLAYERS} from '../actions/actionTypes';
@@ -6,11 +8,11 @@ import {SET_QUEST_VOTE_RESULT} from '../actions/actionTypes';
 import {SET_QUEST_RESULT} from '../actions/actionTypes';
 import {SET_ASSASSINATION_RESULT} from '../actions/actionTypes';
 import {SET_END_GAME} from '../actions/actionTypes';
-import {SET_PLAYER_VOTE} from '../actions/actionTypes';
 
 import roles from '../../utils/roles';
 
 const initialState = {
+  playerToken: '',
   players: [],
   commander: '',
   quests: [],
@@ -29,12 +31,25 @@ const initialState = {
   questResult: '',
   assassinatedPlayer: undefined,
   assassinationResult: '',
+  gameQuests: [],
   // disconnectedPlayers: [],
   // leftPlayers: [],
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_GAME_QUESTS: {
+      return {
+        ...state,
+        gameQuests: action.quests,
+      };
+    }
+    case SET_PLAYER_TOKEN: {
+      return {
+        ...state,
+        playerToken: action.token,
+      };
+    }
     case START_GAME: {
       const role = roles.find(item => item.id === action.data.player.role);
       return {
@@ -108,11 +123,9 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         questResult:
-          action.data.game_state.quests[action.data.game_state.quest_number]
-            .result,
+          action.data.game_state.quests[state.currentQuestNumber - 1].result,
         questScores:
-          action.data.game_state.quests[action.data.game_state.quest_number]
-            .scores,
+          action.data.game_state.quests[state.currentQuestNumber - 1].scores,
         commander: action.data.game_state.commander,
         quests: action.data.game_state.quests,
         currentQuestNumber: action.data.game_state.quest_number,

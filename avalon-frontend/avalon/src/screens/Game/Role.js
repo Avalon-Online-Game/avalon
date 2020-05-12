@@ -1,11 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Text,
-  Image,
-  StyleSheet,
-  ImageBackground,
-  TouchableOpacity,
-} from 'react-native';
+import {Text, Image, StyleSheet, ImageBackground} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

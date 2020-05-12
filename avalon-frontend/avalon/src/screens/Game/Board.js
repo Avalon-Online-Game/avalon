@@ -12,76 +12,242 @@ import AsyncStorage from '@react-native-community/async-storage';
 import BoardView from '../../components/UI/Game/BoardView';
 import BottomButton from '../../components/UI/Game/BottomButton';
 import QuestList from '../../components/Game/QuestsList';
+import VotingsList from '../../components/Game/VotingsList';
 
 class BoardScreen extends Component {
   constructor(props) {
     super(props);
+    this.questWaitMessage = 'heroes are in quest';
+    this.votingWaitMessage = 'other players are voting';
   }
 
-  componentDidMount() {
-    AsyncStorage.getItem('player').then(token => {
-      switch (this.props.gameState) {
-        case 'voting': {
-          if (
-            this.props.questVotedPlayers.find(
-              player => player.token === JSON.parse(token),
-            ) !== undefined
-          ) {
-            // the player has already voted and must wait for other players to vote
-            Navigation.showModal({
-              component: {
-                name: 'avalon.WaitingScreen',
-                options: {
-                  modalTransitionStyle: 'crossDissolve',
-                  modalPresentationStyle: 'overCurrentContext',
-                },
-                passProps: {
-                  message: 'Waiting for quest voting result',
-                },
-              },
-            });
-          } else {
-            // the player must vote for the quest
-            Navigation.push(this.props.componentId, {
-              component: {
-                name: 'avalon.VoteScreen',
-              },
-            });
-          }
-        }
-      }
-    });
-  }
+  isPlayerCommander = () => {
+    return this.props.commander.token === this.props.playerToken ? true : false;
+  };
 
-  componentDidUpdate(prevProps) {
-    if (this.props.gameState !== prevProps.gameState) {
-      switch (this.props.gameState) {
-        case 'voting': {
+  async componentDidMount() {
+    switch (this.props.gameState) {
+      case 'voting': {
+        if (
+          this.props.questVotedPlayers.find(
+            player => player.token === this.props.playerToken,
+          ) !== undefined
+        ) {
+          // the player has already voted and must wait for other players to vote
+          Navigation.showModal({
+            component: {
+              id: 'votingWaitScreen',
+              name: 'avalon.WaitingScreen',
+              options: {
+                modalTransitionStyle: 'crossDissolve',
+                modalPresentationStyle: 'overCurrentContext',
+              },
+              passProps: {
+                message: this.votingWaitMessage,
+              },
+            },
+          });
+        } else {
+          // the player must vote for the quest
           Navigation.push(this.props.componentId, {
             component: {
+              id: 'voteScreen',
               name: 'avalon.VoteScreen',
             },
           });
-          break;
         }
-        case 'quest': {
+        break;
+      }
+      case 'quest': {
+        if (
+          this.props.questChosenPlayers.find(
+            player => player.token === this.props.playerToken,
+          ) !== undefined
+        ) {
+          // the player is among heroes for quest
           Navigation.push(this.props.componentId, {
             component: {
-              name: 'avalon.VoteResultScreen',
+              id: 'questScreen',
+              name: 'avalon.QuestScreen',
+            },
+          });
+        } else {
+          // the player must wait for the quest result
+          Navigation.showModal({
+            component: {
+              id: 'questWaitScreen',
+              name: 'avalon.WaitingScreen',
+              options: {
+                modalTransitionStyle: 'crossDissolve',
+                modalPresentationStyle: 'overCurrentContext',
+              },
+              passProps: {
+                message: this.questWaitMessage,
+              },
             },
           });
         }
       }
     }
+
+    Navigation.events().registerScreenPoppedListener(({componentId}) => {
+      switch (componentId) {
+        case 'voteScreen': {
+          console.log('opening vote waiting');
+          Navigation.showModal({
+            component: {
+              id: 'votingWaitScreen',
+              name: 'avalon.WaitingScreen',
+              options: {
+                modalTransitionStyle: 'crossDissolve',
+                modalPresentationStyle: 'overCurrentContext',
+              },
+              passProps: {
+                message: this.votingWaitMessage,
+              },
+            },
+          });
+          break;
+        }
+        case 'questScreen': {
+          Navigation.showModal({
+            component: {
+              id: 'votingWaitScreen',
+              name: 'avalon.WaitingScreen',
+              options: {
+                modalTransitionStyle: 'crossDissolve',
+                modalPresentationStyle: 'overCurrentContext',
+              },
+              passProps: {
+                message: this.questWaitMessage,
+              },
+            },
+          });
+        }
+      }
+    });
+
+    Navigation.events().registerModalDismissedListener(
+      ({componentId, modalsDismissed}) => {
+        switch (componentId) {
+          case 'votingWaitScreen': {
+            console.log('opening vote result');
+            Navigation.showModal({
+              component: {
+                id: 'voteResultScreen',
+                name: 'avalon.VoteResultScreen',
+                options: {
+                  modalTransitionStyle: 'crossDissolve',
+                  modalPresentationStyle: 'overCurrentContext',
+                },
+              },
+            });
+            break;
+          }
+          case 'votingResultScreen': {
+            if (this.props.gameState === 'quest') {
+              if (
+                this.props.questChosenPlayers.find(
+                  player => player.token === this.props.playerToken,
+                ) !== undefined
+              ) {
+                Navigation.showModal({
+                  component: {
+                    id: 'questScreen',
+                    name: 'avalon.QuestScreen',
+                    options: {
+                      modalTransitionStyle: 'crossDissolve',
+                      modalPresentationStyle: 'overCurrentContext',
+                    },
+                  },
+                });
+              } else {
+                Navigation.showModal({
+                  component: {
+                    id: 'questWaitScreen',
+                    name: 'avalon.WaitingScreen',
+                    options: {
+                      modalTransitionStyle: 'crossDissolve',
+                      modalPresentationStyle: 'overCurrentContext',
+                    },
+                    passProps: {
+                      message: this.questWaitMessage,
+                    },
+                  },
+                });
+              }
+            }
+            break;
+          }
+          case 'questWaitScreen': {
+            Navigation.showModal({
+              component: {
+                id: 'questResultScreen',
+                name: 'avalon.QuestResultScreen',
+                options: {
+                  modalTransitionStyle: 'crossDissolve',
+                  modalPresentationStyle: 'overCurrentContext',
+                },
+              },
+            });
+            break;
+          }
+          // case 'questChoiceScreen': {
+          //   if (this.props.gameState === 'voting') {
+          //     Navigation.push(this.props.componentId, {
+          //       component: {
+          //         id: 'voteScreen',
+          //         name: 'avalon.VoteScreen',
+          //       },
+          //     });
+          //   }
+          //   break;
+          // }
+        }
+      },
+    );
   }
 
-  commanderCommandHandler = () => {
+  componentDidUpdate(prevProps) {
+    console.log(this.props.gameState);
+    if (this.props.gameState !== prevProps.gameState) {
+      switch (this.props.gameState) {
+        case 'voting': {
+          Navigation.push(this.props.componentId, {
+            component: {
+              id: 'voteScreen',
+              name: 'avalon.VoteScreen',
+            },
+          });
+          break;
+        }
+        // case 'quest': {
+        //   Navigation.push(this.props.componentId, {
+        //     component: {
+        //       name: 'avalon.VoteResultScreen',
+        //     },
+        //   });
+        // }
+      }
+    }
+  }
+
+  watchPlayersHandler = () => {
+    let commanderButtonText = this.isPlayerCommander() ? 'Confirm' : 'Got it';
+    let modalId = this.isPlayerCommander()
+      ? 'questChoiceScreen'
+      : 'playersScreen';
     Navigation.showModal({
       component: {
+        id: modalId,
         name: 'avalon.PlayersScreen',
         options: {
           modalTransitionStyle: 'crossDissolve',
           modalPresentationStyle: 'overCurrentContext',
+        },
+        passProps: {
+          isPlayerCommander: this.isPlayerCommander(),
+          buttonText: commanderButtonText,
         },
       },
     });
@@ -100,16 +266,17 @@ class BoardScreen extends Component {
   };
 
   render() {
+    let commanderButtonImage = this.isPlayerCommander()
+      ? require('../../assets/board/commander.png')
+      : require('../../assets/board/players.png');
     return (
       <BoardView style={styles.container}>
-        <QuestList
-          style={styles.questsList}
-          numberOfPlayers={this.props.numberOfPlayers}
-        />
+        <QuestList style={styles.questsList} />
+        <VotingsList style={styles.votingsList} />
         <BottomButton
-          style={styles.commanderCommandButton}
-          onPress={this.commanderCommandHandler}
-          icon={require('../../assets/board/commander.png')}
+          style={styles.playersButton}
+          onPress={this.watchPlayersHandler}
+          icon={commanderButtonImage}
         />
         <View style={styles.bottomContainer}>
           <BottomButton
@@ -151,24 +318,39 @@ class BoardScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+    // backgroundColor: 'white',
+  },
   questsList: {
-    height: hp('25%'),
-    marginTop: hp('2%'),
+    height: hp('28%'),
+    // backgroundColor: 'red',
+  },
+  votingsList: {
+    width: wp('90%'),
+    height: wp('20%'),
+    marginHorizontal: wp('2%'),
+    // marginTop: hp('-2%'),
+    // backgroundColor: 'purple',
   },
   bottomContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: wp('2%'),
+    // backgroundColor: 'yellow',
   },
-  commanderCommandButton: {
-    marginTop: hp('18%'),
+  playersButton: {
     marginHorizontal: wp('2%'),
+    marginTop: hp('7%'),
   },
   roleButtonsContainer: {
     flexDirection: 'row',
-    marginTop: hp('-3%'),
+    marginTop: hp('-4%'),
+    height: hp('12%'),
     alignItems: 'center',
     justifyContent: 'center',
+    // backgroundColor: 'blue',
   },
   roleButtonImage: {
     width: wp('18%'),
@@ -200,6 +382,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    playerToken: state.game.playerToken,
     players: state.game.players,
     commander: state.game.commander,
     quests: state.game.quests,

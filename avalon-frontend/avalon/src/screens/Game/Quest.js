@@ -9,8 +9,7 @@ import {connect} from 'react-redux';
 
 import MainView from '../../components/UI/Main/MainView';
 import DefaultButton from '../../components/UI/Main/DefaultButton';
-import avatars from '../../utils/avatars';
-import {wsSend, setPlayerVote} from '../../store/actions/index';
+import {wsSend} from '../../store/actions/index';
 
 class VoteScreen extends Component {
   constructor(props) {
@@ -18,75 +17,32 @@ class VoteScreen extends Component {
     this.questTitle = `Quest ${this.props.currentQuestNumber}`;
   }
 
-  acceptHandler = () => {
+  questHandler = score => {
     const msg = {
-      msg_type: 'quest_vote',
-      vote: 'approve',
+      msg_type: 'quest',
+      score: score,
     };
     this.props.wsSend(msg);
     Navigation.pop(this.props.componentId);
-  };
-
-  rejectHandler = () => {
-    const msg = {
-      msg_type: 'quest_vote',
-      vote: 'reject',
-    };
-    this.props.wsSend(msg);
-    Navigation.pop(this.props.componentId);
-  };
-
-  playerRenderItem = ({item}) => {
-    return (
-      <View style={styles.questPlayer}>
-        <Image
-          source={
-            avatars.find(avatar => avatar.id === item.avatar.toString()).image
-          }
-          style={styles.questPlayerImage}
-          resizeMode="contain"
-        />
-        <Text style={styles.questPlayerText}>{item.username}</Text>
-      </View>
-    );
   };
 
   render() {
     return (
       <MainView style={styles.container}>
         <Text style={styles.questTitle}>{this.questTitle}</Text>
-        <View style={styles.commander}>
-          <Image
-            source={require('../../assets/board/king.png')}
-            style={styles.commanderImage}
-            resizeMode="contain"
-          />
-          <Text style={styles.commanderText}>
-            {this.props.commander.username}
-          </Text>
-        </View>
-        <View style={styles.listContainer}>
-          <FlatList
-            style={styles.playersList}
-            data={this.props.questChosenPlayers}
-            renderItem={this.playerRenderItem}
-            keyExtractor={item => item.token}
-            numColumns={2}
-          />
-        </View>
-        <Text style={styles.voteText}>Vote For The Quest</Text>
+        <Text style={styles.mainText}>Choose your quest result</Text>
         <View style={styles.buttonContainer}>
           <DefaultButton
             buttonStyle={styles.button}
             backgroundStyle={styles.buttonBackground}
-            onPress={this.acceptHandler}>
-            Approve
+            onPress={() => this.questHandler('success')}>
+            Success
           </DefaultButton>
           <DefaultButton
             buttonStyle={styles.button}
             backgroundStyle={styles.buttonBackground}
-            onPress={this.rejectHandler}>
-            Reject
+            onPress={() => this.questHandler('fail')}>
+            Fail
           </DefaultButton>
         </View>
       </MainView>
@@ -95,7 +51,10 @@ class VoteScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    // justifyContent: 'center',
+    // alignItems: 'center',
+  },
   questTitle: {
     color: '#e2d7aa',
     fontSize: wp('7%'),
@@ -104,44 +63,8 @@ const styles = StyleSheet.create({
     fontFamily: 'JosefinSans-Medium',
     marginTop: hp('3%'),
   },
-  commander: {
-    width: wp('22%'),
-    marginTop: hp('3%'),
-    alignItems: 'center',
-  },
-  commanderImage: {
-    width: wp('18%'),
-    height: wp('18%'),
-  },
-  commanderText: {
-    color: '#e2d7aa',
-    fontSize: wp('5%'),
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontFamily: 'JosefinSans-Regular',
-  },
-  listContainer: {
-    height: hp('40%'),
-  },
-  playersList: {},
-  questPlayer: {
-    width: wp('20%'),
-    marginTop: hp('2%'),
-    marginHorizontal: wp('5%'),
-    alignItems: 'center',
-  },
-  questPlayerImage: {
-    width: wp('18%'),
-    height: wp('18%'),
-  },
-  questPlayerText: {
-    color: '#e2d7aa',
-    fontSize: wp('4%'),
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontFamily: 'JosefinSans-Regular',
-  },
-  voteText: {
+  mainText: {
+    marginTop: hp('10%'),
     color: '#e2d7aa',
     fontSize: wp('6%'),
     textAlign: 'center',
@@ -149,17 +72,13 @@ const styles = StyleSheet.create({
     fontFamily: 'JosefinSans-Medium',
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginTop: hp('25%'),
   },
   button: {
-    marginTop: hp('0%'),
-    marginHorizontal: wp('2%'),
-    // backgroundColor: 'green',
+    marginTop: hp('2%'),
   },
   buttonBackground: {
-    width: wp('48%'),
-    // backgroundColor: 'red',
+    width: wp('80%'),
   },
 });
 
@@ -189,7 +108,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     wsSend: msg => dispatch(wsSend(msg)),
-    setPlayerVote: vote => dispatch(setPlayerVote(vote)),
   };
 };
 

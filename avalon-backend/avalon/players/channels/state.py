@@ -172,6 +172,7 @@ class GameState():
         self.quest_votes = []
         self.quest_voted_players = []
         self.quest_voting_result = ''
+        self.quest_scored_players = []
         self.winner = None
 
 
@@ -194,10 +195,25 @@ class GameState():
     
     def add_voted_player(self, player):
         """
-        Append player voted players list
+        Append player to voted players list
         """
         self.quest_voted_players.append({'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar})
 
+
+    def add_scored_player(self, player):
+        """
+        Append player to scored players list
+        """
+        self.quest_scored_players.append({'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar})
+
+    def clear_voting_state(self):
+        self.quest_chosen_players = []
+        self.quest_voted_players = []
+        self.quest_voting_result = ''
+        self.quest_votes = []
+
+    def clear_quest_state(self):
+        self.quest_scored_players = []
 
     def update_current_quest(self, quest):
         """
@@ -286,4 +302,5 @@ class GameState():
             'quest_votes': self.quest_votes,
             'quest_voted_players': self.quest_voted_players,
             'quest_voting_result': self.quest_voting_result,
+            'quest_scored_players': self.quest_scored_players,
         }

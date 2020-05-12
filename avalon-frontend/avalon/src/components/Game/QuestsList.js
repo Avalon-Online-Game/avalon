@@ -11,96 +11,37 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {connect} from 'react-redux';
+
+import quests from '../../utils/quests';
+import {setGameQuests} from '../../store/actions/index';
 
 class QuestsList extends Component {
   constructor(props) {
     super(props);
     switch (this.props.numberOfPlayers) {
       case 5:
-        this.data = this.quests5;
-        return;
+        this.props.setGameQuests(quests.quests5);
+        break;
       case 6:
-        this.data = this.quests6;
-        return;
+        this.props.setGameQuests(quests.quests6);
+        break;
       case 7:
-        this.data = this.quests7;
-        return;
+        this.props.setGameQuests(quests.quests7);
+        break;
       case 8:
-        this.data = this.quests8;
-        return;
+        this.props.setGameQuests(quests.quests8);
+        break;
       case 9:
-        this.data = this.quests9;
-        return;
+        this.props.setGameQuests(quests.quests9);
+        break;
       case 10:
-        this.data = this.quests10;
-        return;
+        this.props.setGameQuests(quests.quests10);
+        break;
       default:
-        return;
+        break;
     }
   }
-
-  quests5 = [
-    {id: 1, number: '2', image: require('../../assets/board/quest1.png')},
-    {id: 2, number: '3', image: require('../../assets/board/quest2.png')},
-    {id: 3, number: '2', image: require('../../assets/board/quest3.png')},
-    {id: 4, number: '3', image: require('../../assets/board/quest4.png')},
-    {id: 5, number: '3', image: require('../../assets/board/quest5.png')},
-  ];
-
-  quests6 = [
-    {id: 1, number: '2', image: require('../../assets/board/quest1.png')},
-    {id: 2, number: '3', image: require('../../assets/board/quest2.png')},
-    {id: 3, number: '4', image: require('../../assets/board/quest3.png')},
-    {id: 4, number: '3', image: require('../../assets/board/quest4.png')},
-    {id: 5, number: '4', image: require('../../assets/board/quest5.png')},
-  ];
-
-  quests7 = [
-    {id: 1, number: '2', image: require('../../assets/board/quest1.png')},
-    {id: 2, number: '3', image: require('../../assets/board/quest2.png')},
-    {id: 3, number: '3', image: require('../../assets/board/quest3.png')},
-    {
-      id: 4,
-      number: '4',
-      detail: 'Two fails required',
-      image: require('../../assets/board/quest4.png'),
-    },
-    {id: 5, number: '4', image: require('../../assets/board/quest5.png')},
-  ];
-
-  quests8 = [
-    {id: 1, number: '3', image: require('../../assets/board/quest1.png')},
-    {id: 2, number: '4', image: require('../../assets/board/quest2.png')},
-    {id: 3, number: '4', image: require('../../assets/board/quest3.png')},
-    {
-      id: 4,
-      number: '5',
-      detail: 'Two fails required',
-      image: require('../../assets/board/quest4.png'),
-    },
-    {id: 5, number: '5', image: require('../../assets/board/quest5.png')},
-  ];
-
-  quests9 = [
-    {id: 1, number: '3', image: require('../../assets/board/quest1.png')},
-    {id: 2, number: '4', image: require('../../assets/board/quest2.png')},
-    {id: 3, number: '4', image: require('../../assets/board/quest3.png')},
-    {
-      id: 4,
-      number: '5',
-      detail: 'Two fails required',
-      image: require('../../assets/board/quest4.png'),
-    },
-    {id: 5, number: '5', image: require('../../assets/board/quest5.png')},
-  ];
-
-  quests10 = [
-    {id: 1, number: '3', image: require('../../assets/board/quest1.png')},
-    {id: 2, number: '4', image: require('../../assets/board/quest2.png')},
-    {id: 3, number: '4', image: require('../../assets/board/quest3.png')},
-    {id: 4, number: '5', image: require('../../assets/board/quest4.png')},
-    {id: 5, number: '5', image: require('../../assets/board/quest5.png')},
-  ];
 
   seeQuestHandler = quest => {};
 
@@ -111,21 +52,61 @@ class QuestsList extends Component {
     } else {
       detail = null;
     }
-    return (
-      <View>
-        {detail}
-        <TouchableOpacity
-          style={styles.questButton}
-          onPressIn={() => this.seeQuestHandler(item)}>
-          <ImageBackground
-            source={item.image}
-            style={styles.questBackground}
-            resizeMode="contain">
-            <Text style={styles.questNumber}>{item.number}</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-      </View>
-    );
+    let content;
+    if (
+      this.props.quests.filter(quest => quest.quest_number === item.id)
+        .length !== 0
+    ) {
+      const questResult = this.props.quests.find(
+        questItem => questItem.quest_number === item.id,
+      ).result;
+      const questResultBorder =
+        questResult === 'success'
+          ? require('../../assets/board/success-quest.png')
+          : require('../../assets/board/fail-quest.png');
+      content = (
+        <View>
+          {detail}
+          <TouchableOpacity
+            style={styles.questButton}
+            onPressIn={() => this.seeQuestHandler(item)}>
+            <ImageBackground
+              style={styles.questBackgroundBorder}
+              source={questResultBorder}
+              resizeMode="contain">
+              <ImageBackground
+                source={item.image}
+                style={styles.questBackground}
+                resizeMode="contain">
+                <Text style={styles.questNumber}>{item.number}</Text>
+              </ImageBackground>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      content = (
+        <View>
+          {detail}
+          <TouchableOpacity
+            style={styles.questButton}
+            onPressIn={() => this.seeQuestHandler(item)}>
+            <View
+              style={styles.questBackgroundBorder}
+              source={require('../../assets/popups/player-back-border.png')}
+              resizeMode="contain">
+              <ImageBackground
+                source={item.image}
+                style={styles.questBackground}
+                resizeMode="contain">
+                <Text style={styles.questNumber}>{item.number}</Text>
+              </ImageBackground>
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return content;
   };
 
   render() {
@@ -134,8 +115,8 @@ class QuestsList extends Component {
         <FlatList
           style={styles.list}
           contentContainerStyle={styles.listContent}
-          data={this.data}
-          extraData={[this.data, this.props.numberOfPlayers]}
+          data={this.props.gameQuests}
+          extraData={[this.props.gameQuests, this.props.numberOfPlayers]}
           renderItem={this.questRenderItem}
           keyExtractor={item => item.id.toString()}
           horizontal={true}
@@ -152,9 +133,18 @@ const styles = StyleSheet.create({
   },
   listContent: {
     alignItems: 'center',
+    // backgroundColor: 'white',
   },
   questButton: {
     marginHorizontal: wp('2%'),
+  },
+  questBackgroundBorder: {
+    width: hp('22%'),
+    height: hp('22%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+    // marginTop: hp('1.5%'),
+    // marginHorizontal: wp('5%'),
   },
   questBackground: {
     width: hp('20%'),
@@ -182,17 +172,23 @@ const styles = StyleSheet.create({
   },
 });
 
-// const mapStateToProps = state => {
-//   return {
-//     chosenRoles: state.roles.chosenRoles,
-//     numberOfPlayers: state.roles.numberOfPlayers,
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+    numberOfPlayers: state.game.numberOfPlayers,
+    currentQuestNumber: state.game.currentQuestNumber,
+    quests: state.game.quests,
+    failedVotings: state.game.failedVotings,
+    gameQuests: state.game.gameQuests,
+  };
+};
 
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     chooseRole: role => dispatch(chooseRole(role)),
-//   };
-// };
+const mapDispatchToProps = dispatch => {
+  return {
+    setGameQuests: gameQuests => dispatch(setGameQuests(gameQuests)),
+  };
+};
 
-export default QuestsList;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(QuestsList);

@@ -7,7 +7,12 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 
-import {startGame, wsConnect, wsDisconnect} from '../../store/actions/index';
+import {
+  startGame,
+  wsConnect,
+  wsDisconnect,
+  setPlayerToken,
+} from '../../store/actions/index';
 
 class LoadingScreen extends Component {
   constructor(props) {
@@ -16,7 +21,7 @@ class LoadingScreen extends Component {
 
   componentDidMount() {
     AsyncStorage.getItem('player').then(token => {
-      console.log(JSON.parse(token));
+      this.props.setPlayerToken(JSON.parse(token));
       this.props.wsConnect(JSON.parse(token));
     });
   }
@@ -85,6 +90,7 @@ const mapDispatchToProps = dispatch => {
     startGame: data => dispatch(startGame(data)),
     wsConnect: token => dispatch(wsConnect(token)),
     wsDisconnect: () => dispatch(wsDisconnect()),
+    setPlayerToken: token => dispatch(setPlayerToken(token)),
   };
 };
 

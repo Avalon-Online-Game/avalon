@@ -21,7 +21,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             return await self.close()
         else:
             await self.accept()
-        print('accepted')
         game = await db_utils.get_game(self.scope['user'])
 
         await self.channel_layer.group_add(
@@ -31,7 +30,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
 
         await db_utils.set_channel_name(self.scope['user'], self.channel_name)
         self.game = game
-        print('added to group')
         if await db_utils.start_game(self.scope['user'], game):
             await self.start_state()
         
@@ -105,7 +103,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
 
             game_state = GameState(game_code, players)
             cache.set(game_state.game, game_state)
-        print('going to send to group')
         await self.channel_layer.group_send(
                 game_code,
                 {
@@ -221,7 +218,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         current_quest.vote(player, vote)
         game_state.add_voted_player(player)
         game_state.update_current_quest(current_quest)
-        cache.set(game_state.game, game_state)
         await self.channel_layer.group_send(
             game_code,
             {
@@ -244,7 +240,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
                 game_state.update_current_quest(current_quest)
                 game_state.set_failed_voting_state()
 
-            cache.set(game_state.game, game_state)
             await self.channel_layer.group_send(
                 game_code,
                 {
@@ -252,6 +247,9 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
                     'game_state': game_state.to_json(),
                 },
             )
+            game_state.clear_voting_state()
+        
+        cache.set(game_state.game, game_state)
 
 
     async def quest(self, content):
@@ -296,11 +294,11 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
 
         score = content['score']
         current_quest.set_score(score)
+        game_state.add_scored_player(quest_player)
         if sum(current_quest.scores.values()) == current_quest.players_number:
             current_quest.set_result()
             game_state.update_current_quest(current_quest)
             game_state.set_next_quest_state()
-            cache.set(game_state.game, game_state)
 
             await self.channel_layer.group_send(
                 game_code,
@@ -311,7 +309,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             )
         
             if game_state.get_game_result():
-                cache.set(game_state.game, game_state)    
                 if game_state.state == 'end':
                     return await self.channel_layer.group_send(
                         game_code,
@@ -328,9 +325,11 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
                             'game_state': game_state.to_json(),
                         },
                     )
+            game_state.clear_quest_state()
         else:
             game_state.update_current_quest(current_quest)
-            cache.set(game_state.game, game_state)
+
+        cache.set(game_state.game, game_state)
 
     async def assassination(self, content):
         """
@@ -440,7 +439,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
                 'player': game_state.get_player_data(self.scope['user'].token),
             },
         )
-        print('send to group')
 
 
     async def game_quest_choice(self, event):

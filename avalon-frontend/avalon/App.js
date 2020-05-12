@@ -15,12 +15,16 @@ import CreateGameScreen from './src/screens/Main/CreateGame';
 import RolesList from './src/components/CreateGame/RolesList';
 import ChosenRolesList from './src/components/CreateGame/ChosenRolesList';
 import ShareGameCodeScreen from './src/screens/Main/ShareGame';
+import QuestsList from './src/components/Game/QuestsList';
+import VotingsList from './src/components/Game/VotingsList';
 import BoardScreen from './src/screens/Game/Board';
 import LoadingScreen from './src/screens/Game/Loading';
 import RoleScreen from './src/screens/Game/Role';
 import PlayersScreen from './src/screens/Game/Players';
 import VoteScreen from './src/screens/Game/Vote';
 import WaitingScreen from './src/screens/Game/Waiting';
+import VoteResultScreen from './src/screens/Game/VoteResult';
+import QuestScreen from './src/screens/Game/Quest';
 
 import configureStore from './src/store/configureStore';
 
@@ -61,6 +65,18 @@ Navigation.registerComponentWithRedux(
   store,
 );
 Navigation.registerComponentWithRedux(
+  'avalon.QuestsList',
+  () => QuestsList,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.VotingsList',
+  () => VotingsList,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
   'avalon.MainBoardScreen',
   () => BoardScreen,
   Provider,
@@ -87,6 +103,18 @@ Navigation.registerComponentWithRedux(
 Navigation.registerComponentWithRedux(
   'avalon.WaitingScreen',
   () => WaitingScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.VoteResultScreen',
+  () => VoteResultScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.QuestScreen',
+  () => QuestScreen,
   Provider,
   store,
 );

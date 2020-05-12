@@ -7,26 +7,32 @@ import {
 
 const boardView = props => {
   return (
-    <View style={[styles.container, props.style]}>
+    <View style={styles.container}>
       <Image
         resizeMode="contain"
         style={styles.image}
         source={require('../../../assets/board/board-back.png')}
       />
-      {props.children}
+      <View style={[styles.childrenContainer, props.style]}>
+        {props.children}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#0B161C',
-    height: hp('100%'),
   },
   image: {
     width: wp('100%'),
     height: hp('25%'),
+    // backgroundColor: 'green',
   },
+  // childrenContainer: {
+  //   justifyContent: 'space-between',
+  // },
 });
 
 export default boardView;
