@@ -36,4 +36,4 @@ COPY . /usr/src/app/
 
 # give permission to entrypoint
 RUN ["chmod", "+x", "/usr/src/app/entrypoint.sh"]
-RUN dos2unix ./entrypoint.sh
+# RUN dos2unix ./entrypoint.sh

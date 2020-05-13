@@ -6,8 +6,6 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {
@@ -17,17 +15,22 @@ import {
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 import {Overlay} from 'react-native-elements';
+import Toast from 'react-native-easy-toast';
 
-import RoleDataList from '../../components/Game/RoleDataList';
+import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';
-import {startGame, wsConnect, wsDisconnect} from '../../store/actions/index';
+import {wsSend} from '../../store/actions/index';
 
 class PlayersScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: true,
+      chosenPlayers: [],
     };
+    this.currentQuest = this.props.gameQuests.find(
+      quest => quest.id === this.props.currentQuestNumber,
+    );
   }
 
   dissmissHandler = () => {
@@ -37,53 +40,153 @@ class PlayersScreen extends Component {
     Navigation.dismissModal(this.props.componentId);
   };
 
+  onButtonHandler = () => {
+    if (this.props.isPlayerCommander) {
+      if (
+        this.state.chosenPlayers.length !==
+        parseInt(this.currentQuest.number, 10)
+      ) {
+        this.toast.show(`Choose exactly ${this.currentQuest.number} players`);
+        return;
+      }
+      const msg = {
+        msg_type: 'quest_choice',
+        players: this.state.chosenPlayers,
+      };
+      this.props.wsSend(msg);
+    }
+    this.setState({
+      visible: false,
+    });
+    Navigation.dismissModal(this.props.componentId);
+  };
+
+  clickOnPlayerHandler = player => {
+    if (this.props.isPlayerCommander) {
+      if (
+        this.state.chosenPlayers.filter(item => item.token === player.token)
+          .length !== 0
+      ) {
+        this.setState(prevState => {
+          return {
+            ...prevState,
+            chosenPlayers: prevState.chosenPlayers.filter(
+              item => item.token !== player.token,
+            ),
+          };
+        });
+      } else {
+        this.setState(prevState => {
+          return {
+            ...prevState,
+            chosenPlayers: prevState.chosenPlayers.concat(player),
+          };
+        });
+      }
+    }
+  };
+
   playerRenderItem = ({item}) => {
-    return (
-      <TouchableWithoutFeedback style={styles.userButtonContainer}>
-        <View style={styles.userButton}>
-          <Image
-            source={
-              avatars.find(avatar => avatar.id === item.avatar.toString()).image
-            }
-            style={styles.userImage}
-            resizeMode="contain"
-          />
-          <Text style={styles.userText}>{item.username}</Text>
+    let content =
+      this.state.chosenPlayers.filter(player => item.token === player.token)
+        .length !== 0 && this.props.isPlayerCommander ? (
+        // selected user views
+        <ImageBackground
+          style={styles.userBackgroundBorder}
+          source={require('../../assets/popups/player-back-border.png')}
+          resizeMode="contain">
+          <ImageBackground
+            source={require('../../assets/popups/player-back.png')}
+            style={styles.userBackground}
+            resizeMode="contain">
+            <Image
+              source={
+                avatars.find(avatar => avatar.id === item.avatar.toString())
+                  .image
+              }
+              style={styles.userImage}
+              resizeMode="contain"
+            />
+            <Text style={styles.userText}>{item.username}</Text>
+          </ImageBackground>
+        </ImageBackground>
+      ) : (
+        // unselected user views
+        <View
+          style={[
+            styles.userBackgroundBorder,
+            this.state.chosenPlayers.length ===
+            parseInt(this.currentQuest.number, 10)
+              ? styles.buttonDeactivate
+              : undefined,
+          ]}>
+          <ImageBackground
+            source={require('../../assets/popups/player-back.png')}
+            style={styles.userBackground}
+            resizeMode="contain">
+            <Image
+              source={
+                avatars.find(avatar => avatar.id === item.avatar.toString())
+                  .image
+              }
+              style={styles.userImage}
+              resizeMode="contain"
+            />
+            <Text style={styles.userText} numberOfLines={1}>
+              {item.username}
+            </Text>
+          </ImageBackground>
         </View>
-      </TouchableWithoutFeedback>
+      );
+    return (
+      <TouchableOpacity
+        style={styles.userButtonContainer}
+        onPressIn={() => this.clickOnPlayerHandler(item)}
+        disabled={
+          this.state.chosenPlayers.filter(player => item.token === player.token)
+            .length === 0 &&
+          this.state.chosenPlayers.length ===
+            parseInt(this.currentQuest.number, 10)
+            ? true
+            : false
+        }>
+        {content}
+      </TouchableOpacity>
     );
   };
 
   render() {
     return (
-      <Overlay
-        backdropStyle={styles.backdrop}
-        onBackdropPress={this.dissmissHandler}
-        isVisible={this.state.visible}
-        overlayStyle={styles.overlayStyle}>
-        <ImageBackground
-          style={styles.background}
-          source={require('../../assets/popups/modal-back.png')}
-          resizeMode="contain">
-          <FlatList
-            style={styles.list}
-            data={this.props.players}
-            renderItem={this.playerRenderItem}
-            keyExtractor={item => item.token}
-            numColumns={2}
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this.dissmissHandler}>
-            <ImageBackground
-              source={require('../../assets/popups/button.png')}
-              style={styles.buttonImage}
-              resizeMode="contain">
-              <Text style={styles.buttonText}>OK</Text>
-            </ImageBackground>
-          </TouchableOpacity>
-        </ImageBackground>
-      </Overlay>
+      <View>
+        <Overlay
+          backdropStyle={styles.backdrop}
+          onBackdropPress={this.dissmissHandler}
+          isVisible={this.state.visible}
+          overlayStyle={styles.overlayStyle}>
+          <ImageBackground
+            style={styles.background}
+            source={require('../../assets/popups/modal-back.png')}
+            resizeMode="contain">
+            <FlatList
+              style={styles.list}
+              data={this.props.players}
+              extraData={this.state.chosenPlayers}
+              renderItem={this.playerRenderItem}
+              keyExtractor={item => item.token}
+              numColumns={2}
+            />
+            <DefaultButton style={styles.button} onPress={this.onButtonHandler}>
+              {this.props.buttonText}
+            </DefaultButton>
+          </ImageBackground>
+        </Overlay>
+        <Toast
+          ref={ref => {
+            this.toast = ref;
+          }}
+          style={styles.toastStyle}
+        />
+      </View>
     );
   }
 }
@@ -103,34 +206,41 @@ const styles = StyleSheet.create({
   background: {
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: wp('90%'),
-    height: hp('70%'),
+    width: wp('95%'),
+    height: hp('90%'),
     backgroundColor: 'transparent',
+  },
+  list: {
+    marginTop: hp('7%'),
   },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: hp('-4%'),
+    marginBottom: hp('2.7%'),
     width: wp('60%'),
+    borderColor: '#e2d7aa',
   },
-  buttonImage: {
-    width: wp('60%'),
-    height: hp('8%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#0B161C',
-    fontSize: wp('6%'),
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontFamily: 'JosefinSans-Bold',
+  buttonDeactivate: {
+    opacity: 0.5,
   },
   userButtonContainer: {},
   userButton: {
     width: wp('20%'),
-    marginTop: hp('2%'),
     marginHorizontal: wp('5%'),
+    alignItems: 'center',
+  },
+  userBackgroundBorder: {
+    width: wp('27%'),
+    height: wp('27%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp('1.5%'),
+    marginHorizontal: wp('5%'),
+  },
+  userBackground: {
+    width: wp('26%'),
+    height: wp('26%'),
+    justifyContent: 'center',
     alignItems: 'center',
   },
   userImage: {
@@ -144,6 +254,10 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     fontFamily: 'JosefinSans-Light',
   },
+  toastStyle: {
+    borderRadius: 30,
+    backgroundColor: '#0B161C',
+  },
 });
 
 const mapStateToProps = state => {
@@ -154,14 +268,14 @@ const mapStateToProps = state => {
     numberOfPlayers: state.game.numberOfPlayers,
     role: state.game.role,
     roleData: state.game.roleData,
+    gameQuests: state.game.gameQuests,
+    currentQuestNumber: state.game.currentQuestNumber,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    startGame: data => dispatch(startGame(data)),
-    wsConnect: token => dispatch(wsConnect(token)),
-    wsDisconnect: () => dispatch(wsDisconnect()),
+    wsSend: msg => dispatch(wsSend(msg)),
   };
 };
 

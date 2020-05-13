@@ -12,6 +12,8 @@ MSG_TYPE_END = "end"
 MSG_TYPE_LEAVE = "leave"
 MSG_TYPE_DISCONNECT = "disconnect"
 MSG_TYPE_UPDATE = "update"
+MSG_TYPE_ASSASSINATION = "assassination"
+MSG_TYPE_ASSASSINATION_RESULT = "assassination_result"
 
 MESSAGE_TYPES_CHOICES = (
     (MSG_TYPE_QUEST_CHOICE, 'QUEST_CHOICE'),
@@ -23,6 +25,8 @@ MESSAGE_TYPES_CHOICES = (
     (MSG_TYPE_LEAVE, 'LEAVE'),
     (MSG_TYPE_DISCONNECT, 'DISCONNECT'),
     (MSG_TYPE_UPDATE, 'UPDATE'),
+    (MSG_TYPE_ASSASSINATION, 'ASSASSINATION'),
+    (MSG_TYPE_ASSASSINATION_RESULT, 'ASSASSINATION_RESULT'),
 )
 
 MESSAGE_TYPES_LIST = [
@@ -35,6 +39,8 @@ MESSAGE_TYPES_LIST = [
     MSG_TYPE_LEAVE,
     MSG_TYPE_DISCONNECT,
     MSG_TYPE_UPDATE,
+    MSG_TYPE_ASSASSINATION,
+    MSG_TYPE_ASSASSINATION_RESULT,
 ]
 
 class Quest():
@@ -61,14 +67,13 @@ class Quest():
         self.votes = []
         self.scores = {'success': 0, 'fail': 0}
         self.result = None
-        self.done = False
 
 
     def set_quest_players(self, game_state):
         """
         Set players going to do the quest and quest commander
         """
-        self.players = game_state.current_quest_candidates
+        self.players = game_state.quest_chosen_players
         self.commander = game_state.commander
 
     def collect_votes_result(self):
@@ -152,8 +157,7 @@ class GameState():
         quests: list of Quests
         current_quest_number: current quest number
         failed_votings: number of consecutive failed votings
-        current_quest_candidates: list of players dicts chosen by the commander for the current quest
-        doing_quest: boolean to consider if game state is stopped for doing the quest
+        quest_chosen_players: list of players dicts chosen by the commander for the current quest
         """
         self.game = game
         self.state = self.STATE['day']
@@ -167,8 +171,13 @@ class GameState():
                        for ind, x in enumerate(self.QUESTS[self.number_of_players])]
         self.current_quest_number = 1
         self.failed_votings = 0
-        self.current_quest_candidates = []
+        self.quest_chosen_players = []
+        self.quest_votes = []
+        self.quest_voted_players = []
+        self.quest_voting_result = ''
+        self.quest_scored_players = []
         self.winner = None
+
 
 
     def set_next_commander(self):
@@ -180,9 +189,34 @@ class GameState():
 
 
     def set_voting_state(self, chosen_players):
-        self.current_quest_candidates = chosen_players
+        """
+        Set voting state
+        """
+        self.quest_chosen_players = chosen_players
         self.state = self.STATE['voting']
 
+    
+    def add_voted_player(self, player):
+        """
+        Append player to voted players list
+        """
+        self.quest_voted_players.append({'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar})
+
+
+    def add_scored_player(self, player):
+        """
+        Append player to scored players list
+        """
+        self.quest_scored_players.append({'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar})
+
+    def clear_voting_state(self):
+        self.quest_chosen_players = []
+        self.quest_voted_players = []
+        self.quest_voting_result = ''
+        self.quest_votes = []
+
+    def clear_quest_state(self):
+        self.quest_scored_players = []
 
     def update_current_quest(self, quest):
         """
@@ -248,7 +282,9 @@ class GameState():
         self.state = self.STATE['end']
         if player_role[1].name == 'merlin':
             self.winner = 'evil'
-
+            return True
+        self.winner = 'good'
+        return False
 
     def to_json(self):
         """
@@ -267,4 +303,9 @@ class GameState():
             'failed_votings': self.failed_votings,
             'state': self.state,
             'winner': self.winner,
+            'quest_chosen_players': self.quest_chosen_players,
+            'quest_votes': self.quest_votes,
+            'quest_voted_players': self.quest_voted_players,
+            'quest_voting_result': self.quest_voting_result,
+            'quest_scored_players': self.quest_scored_players,
         }

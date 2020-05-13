@@ -47,6 +47,7 @@ class EntranceScreen extends Component {
                               children: [
                                 {
                                   component: {
+                                    id: 'loadingScreen',
                                     name: 'avalon.LoadingScreen',
                                   },
                                 },
@@ -63,6 +64,7 @@ class EntranceScreen extends Component {
                               children: [
                                 {
                                   component: {
+                                    id: 'mainMenuScreen',
                                     name: 'avalon.MainMenuScreen',
                                   },
                                 },
@@ -81,6 +83,7 @@ class EntranceScreen extends Component {
                             children: [
                               {
                                 component: {
+                                  id: 'mainMenuScreen',
                                   name: 'avalon.MainMenuScreen',
                                 },
                               },
@@ -98,6 +101,7 @@ class EntranceScreen extends Component {
                         children: [
                           {
                             component: {
+                              id: 'mainMenuScreen',
                               name: 'avalon.MainMenuScreen',
                             },
                           },
@@ -118,6 +122,7 @@ class EntranceScreen extends Component {
                       children: [
                         {
                           component: {
+                            id: 'mainMenuScreen',
                             name: 'avalon.MainMenuScreen',
                           },
                         },
@@ -134,6 +139,7 @@ class EntranceScreen extends Component {
                   children: [
                     {
                       component: {
+                        id: 'mainMenuScreen',
                         name: 'avalon.MainMenuScreen',
                       },
                     },
@@ -148,6 +154,7 @@ class EntranceScreen extends Component {
           Navigation.setRoot({
             root: {
               component: {
+                id: 'authScreen',
                 name: 'avalon.AuthScreen',
               },
             },
@@ -157,6 +164,7 @@ class EntranceScreen extends Component {
       Navigation.setRoot({
         root: {
           component: {
+            id: 'authScreen',
             name: 'avalon.AuthScreen',
           },
         },

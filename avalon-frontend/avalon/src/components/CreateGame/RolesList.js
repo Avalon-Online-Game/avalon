@@ -55,8 +55,8 @@ class RolesList extends Component {
               .length === 0 &&
             this.props.chosenRoles.length !==
               parseInt(this.props.numberOfPlayers, 10)
-              ? styles.bottomActive
-              : styles.bottomDeactive,
+              ? styles.buttonActive
+              : styles.buttonDeactive,
           ]}
           resizeMode="contain"
         />
@@ -104,10 +104,10 @@ const styles = StyleSheet.create({
     fontSize: wp('3.5%'),
     fontFamily: 'JosefinSans-Medium',
   },
-  bottomActive: {
+  buttonActive: {
     opacity: 1,
   },
-  bottomDeactive: {
+  buttonDeactive: {
     opacity: 0.5,
   },
 });

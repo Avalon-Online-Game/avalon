@@ -1,11 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Text,
-  Image,
-  StyleSheet,
-  ImageBackground,
-  TouchableOpacity,
-} from 'react-native';
+import {Text, Image, StyleSheet, ImageBackground} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -15,6 +9,7 @@ import {connect} from 'react-redux';
 import {Overlay} from 'react-native-elements';
 
 import RoleDataList from '../../components/Game/RoleDataList';
+import DefaultButton from '../../components/UI/Game/DefultButton';
 import {startGame, wsConnect, wsDisconnect} from '../../store/actions/index';
 
 class RoleScreen extends Component {
@@ -54,16 +49,9 @@ class RoleScreen extends Component {
             data={this.props.roleData}
             style={styles.roleDataList}
           />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this.dissmissHandler}>
-            <ImageBackground
-              source={require('../../assets/popups/button.png')}
-              style={styles.buttonImage}
-              resizeMode="contain">
-              <Text style={styles.buttonText}>Got it</Text>
-            </ImageBackground>
-          </TouchableOpacity>
+          <DefaultButton style={styles.button} onPress={this.dissmissHandler}>
+            Got it
+          </DefaultButton>
         </ImageBackground>
       </Overlay>
     );

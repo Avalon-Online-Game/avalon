@@ -21,7 +21,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             return await self.close()
         else:
             await self.accept()
-
         game = await db_utils.get_game(self.scope['user'])
 
         await self.channel_layer.group_add(
@@ -31,7 +30,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
 
         await db_utils.set_channel_name(self.scope['user'], self.channel_name)
         self.game = game
-        
         if await db_utils.start_game(self.scope['user'], game):
             await self.start_state()
         
@@ -44,19 +42,18 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             
             await db_utils.remove_channel_name(self.scope['user'])
             
-            game = await db_utils.get_game(self.scope['user'])
-
+            game_code = self.game.code
+            player = self.scope['user']
             await self.channel_layer.group_send(
-                game.code,
+                game_code,
                 {
                     'type': 'game.disconnect',
-                    'game': game.code,
-                    'player': self.scope['user'].token,
+                    'player': {'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar},
                 }
             )
 
             await self.channel_layer.group_discard(
-                game.code,
+                game_code,
                 self.channel_name,
             )
 
@@ -106,7 +103,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
 
             game_state = GameState(game_code, players)
             cache.set(game_state.game, game_state)
-        
         await self.channel_layer.group_send(
                 game_code,
                 {
@@ -165,8 +161,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             game_code,
             {
                 'type': 'game.quest_choice',
-                'players': chosen_players,
-                'commander': game_state.commander,
                 'game_state': game_state.to_json(),
             },
         )
@@ -222,13 +216,12 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             ),
 
         current_quest.vote(player, vote)
+        game_state.add_voted_player(player)
         game_state.update_current_quest(current_quest)
-        cache.set(game_state.game, game_state)
         await self.channel_layer.group_send(
             game_code,
             {
                 'type': 'game.quest_vote',
-                'quest_players': game_state.current_quest_candidates,
                 'player': {'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar},
                 'game_state': game_state.to_json(),
             },
@@ -236,28 +229,27 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
 
         if current_quest.is_vote_complete(game_state):
             vote_result = current_quest.collect_votes_result()
+            game_state.quest_votes = current_quest.votes
+            game_state.quest_voting_result = vote_result
             if vote_result == 'approve':
                 current_quest.set_quest_players(game_state)
-                players_vote = current_quest.votes
                 game_state.update_current_quest(current_quest)
                 game_state.set_quest_state()
             else:
-                players_vote = current_quest.votes
                 current_quest.votes = []
                 game_state.update_current_quest(current_quest)
                 game_state.set_failed_voting_state()
 
-            cache.set(game_state.game, game_state)
             await self.channel_layer.group_send(
                 game_code,
                 {
                     'type': 'game.quest_vote_result',
-                    'quest_players': game_state.current_quest_candidates,
-                    'players_vote': players_vote,
-                    'voting_result': vote_result,
                     'game_state': game_state.to_json(),
                 },
             )
+            game_state.clear_voting_state()
+        
+        cache.set(game_state.game, game_state)
 
 
     async def quest(self, content):
@@ -300,46 +292,55 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
                 },
             )
 
+        if quest_player.token in [player['token'] for player in game_state.quest_scored_players]:
+            return await self.send_json(
+                {
+                    'error': 'player has already scored the quest'
+                },
+            )
+
         score = content['score']
         current_quest.set_score(score)
+        game_state.add_scored_player(quest_player)
         if sum(current_quest.scores.values()) == current_quest.players_number:
             current_quest.set_result()
             game_state.update_current_quest(current_quest)
             game_state.set_next_quest_state()
-            cache.set(game_state.game, game_state)
 
             await self.channel_layer.group_send(
                 game_code,
                 {
                     'type': 'game.quest_result',
-                    'quest_result': current_quest.result,
                     'game_state': game_state.to_json(),
                 },
             )
         
             if game_state.get_game_result():
-                cache.set(game_state.game, game_state)    
                 if game_state.state == 'end':
-                    return await self.channel_layer.group_send(
+                    players_roles = [(player, role.name) for player, role in game_state.players_roles]
+                    await self.channel_layer.group_send(
                         game_code,
                         {
                             'type': 'game.end',
-                            'winner': game_state.winner,
+                            'players_roles': players_roles,
                             'game_state': game_state.to_json(),
                         },
                     )
                 if game_state.state == 'assassination':
-                    return await self.channel_layer.group_send(
+                    assassination_choices = [player for player, role in game_state.players_roles if role.side == 'good']
+                    await self.channel_layer.group_send(
                         game_code,
                         {
-                            'type': 'game.update_state',
-                            'state': game_state.state,
+                            'type': 'game.assassination',
+                            'assassination_choices': assassination_choices,
                             'game_state': game_state.to_json(),
                         },
                     )
+            game_state.clear_quest_state()
         else:
             game_state.update_current_quest(current_quest)
-            cache.set(game_state.game, game_state)
+
+        cache.set(game_state.game, game_state)
 
     async def assassination(self, content):
         """
@@ -384,16 +385,26 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
                 }
             )
         
-        game_state.assassinate(chosen_player_role)
+        assassination_result = game_state.assassinate(chosen_player_role)
+        await self.channel_layer.group_send(
+            game_code,
+            {
+                'type': 'game.assassination_result',
+                'assassination_result': assassination_result,
+                'assassinated_player': chosen_player_role[0],
+                'game_state': game_state.to_json(),
+            },
+        )
+        players_roles = [(player, role.name) for player, role in game_state.players_roles]
+        await self.channel_layer.group_send(
+            game_code,
+            {
+                'type': 'game.end',
+                'players_roles': players_roles,
+                'game_state': game_state.to_json(),
+            },
+        )
         cache.set(game_state.game, game_state)
-        return await self.channel_layer.group_send(
-                game_code,
-                {
-                    'type': 'game.end',
-                    'winner': game_state.winner,
-                    'game_state': game_state.to_json(),
-                },
-            )
 
 
     async def update_state(self, content):
@@ -418,20 +429,18 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
 
         await db_utils.remove_channel_name(self.scope['user'])
 
-        game = await db_utils.get_game(self.scope['user'])
-
+        game_code = self.game.code
+        player = self.scope['user']
         await self.channel_layer.group_send(
                 game.code,
                 {
                     'type': 'game.leave',
-                    'game': game.code,
-                    'player': self.scope['user'].token,
-
+                    'player': {'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar},
                 }
             )
 
         await self.channel_layer.group_discard(
-            game.code,
+            game_code,
             self.channel_name,
         )
 
@@ -440,7 +449,8 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
     async def game_start(self, event):
         """
         Called when all players have joined the game.
-        event: (game_state, )
+        event:
+            game: game code
         """
         game_state = cache.get(event['game'])
         await self.send_json(
@@ -459,8 +469,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(
             {
                 'msg_type': state.MSG_TYPE_QUEST_CHOICE,
-                'quest_players': event['players'],
-                'commander': event['commander'],
                 'game_state': event['game_state'],
             },
         )
@@ -473,7 +481,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(
             {
                 'msg_type': state.MSG_TYPE_QUEST_VOTE,
-                'quest_players': event['quest_players'],
                 'voted_player': event['player'],
                 'game_state': event['game_state'],
             }
@@ -487,9 +494,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(
             {
                 'msg_type': state.MSG_TYPE_QUEST_VOTE_RESULT,
-                'quest_players': event['quest_players'],
-                'players_vote': event['players_vote'],
-                'voting_result': event['voting_result'],
                 'game_state': event['game_state'],
             }
         )
@@ -502,7 +506,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(
             {
                 'msg_type': state.MSG_TYPE_QUEST_RESULT,
-                'quest_result': event['quest_result'],
                 'game_state': event['game_state'],
             },
         )
@@ -515,11 +518,35 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(
             {
                 'msg_type': state.MSG_TYPE_UPDATE,
-                'state': event['state'],
                 'game_state': event['game_state'],
             }
         )
 
+
+    async def game_assassination(self, event):
+        """
+        Send assassination state.
+        """
+        await self.send_json(
+            {
+                'msg_type': state.MSG_TYPE_ASSASSINATION,
+                'assassination_choices': event['assassination_choices'],
+                'game_state': event['game_state'],
+            },
+        )
+
+    async def game_assassination_result(self, event):
+        """
+        Send assassination result and end of the game state.
+        """
+        await self.send_json(
+            {
+                'msg_type': state.MSG_TYPE_ASSASSINATION_RESULT,
+                'assassination_result': event['assassination_result'],
+                'assassinated_player': event['assassinated_player'],
+                'game_state': event['game_state'],
+            },
+        )
 
     async def game_end(self, event):
         """
@@ -528,7 +555,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(
             {
                 'msg_type': state.MSG_TYPE_END,
-                'winner': event['winner'],
+                'players_roles': event['players_roles'],
                 'game_state': event['game_state'],
             },
         )
@@ -541,8 +568,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(
             {
                 'msg_type': state.MSG_TYPE_LEAVE,
-                'game_code': event['game'],
-                'player_token': event['player'],
+                'player': event['player'],
             },
         )
 
@@ -554,7 +580,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(
             {
                 'msg_type': state.MSG_TYPE_DISCONNECT,
-                'game_code': event['game'],
-                'player_token': event['player'],
+                'player': event['player'],
             },
         )

@@ -44,5 +44,6 @@ class TokenAuthMiddlewareInstance:
 
         inner = self.inner(self.scope)
         return await inner(receive, send)
+        # return self.inner(self.scope)
 
 TokenAuthMiddlewareStack = lambda inner: TokenAuthMiddleware(AuthMiddlewareStack(inner))
