@@ -12,6 +12,7 @@ MSG_TYPE_END = "end"
 MSG_TYPE_LEAVE = "leave"
 MSG_TYPE_DISCONNECT = "disconnect"
 MSG_TYPE_UPDATE = "update"
+MSG_TYPE_ASSASSINATION = "assassination"
 MSG_TYPE_ASSASSINATION_RESULT = "assassination_result"
 
 MESSAGE_TYPES_CHOICES = (
@@ -24,6 +25,7 @@ MESSAGE_TYPES_CHOICES = (
     (MSG_TYPE_LEAVE, 'LEAVE'),
     (MSG_TYPE_DISCONNECT, 'DISCONNECT'),
     (MSG_TYPE_UPDATE, 'UPDATE'),
+    (MSG_TYPE_ASSASSINATION, 'ASSASSINATION'),
     (MSG_TYPE_ASSASSINATION_RESULT, 'ASSASSINATION_RESULT'),
 )
 
@@ -37,6 +39,7 @@ MESSAGE_TYPES_LIST = [
     MSG_TYPE_LEAVE,
     MSG_TYPE_DISCONNECT,
     MSG_TYPE_UPDATE,
+    MSG_TYPE_ASSASSINATION,
     MSG_TYPE_ASSASSINATION_RESULT,
 ]
 
@@ -279,7 +282,9 @@ class GameState():
         self.state = self.STATE['end']
         if player_role[1].name == 'merlin':
             self.winner = 'evil'
-
+            return True
+        self.winner = 'good'
+        return False
 
     def to_json(self):
         """

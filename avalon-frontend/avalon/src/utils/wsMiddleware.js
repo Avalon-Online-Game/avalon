@@ -7,6 +7,7 @@ import {
   setQuestVotedPlayers,
   setQuestVoteResult,
   setQuestResult,
+  setAssassinationState,
   setAssassinationResult,
   setEndGame,
 } from '../store/actions/index';
@@ -51,6 +52,9 @@ const socketMiddleware = () => {
         break;
       case 'quest_result':
         store.dispatch(setQuestResult(payload));
+        break;
+      case 'assassination':
+        store.dispatch(setAssassinationState(payload));
         break;
       case 'assassination_result':
         store.dispatch(setAssassinationResult(payload));

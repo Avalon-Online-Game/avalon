@@ -25,6 +25,10 @@ import VoteScreen from './src/screens/Game/Vote';
 import WaitingScreen from './src/screens/Game/Waiting';
 import VoteResultScreen from './src/screens/Game/VoteResult';
 import QuestScreen from './src/screens/Game/Quest';
+import QuestResultScreen from './src/screens/Game/QuestResult';
+import AssassinationScreen from './src/screens/Game/Assassination';
+import AssassinationConfirmationScreen from './src/screens/Game/AssassinationConfirmation';
+import EndScreen from './src/screens/Game/End';
 
 import configureStore from './src/store/configureStore';
 
@@ -115,6 +119,30 @@ Navigation.registerComponentWithRedux(
 Navigation.registerComponentWithRedux(
   'avalon.QuestScreen',
   () => QuestScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.QuestResultScreen',
+  () => QuestResultScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.AssassinationScreen',
+  () => AssassinationScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.AssassinationConfirmationScreen',
+  () => AssassinationConfirmationScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.EndScreen',
+  () => EndScreen,
   Provider,
   store,
 );

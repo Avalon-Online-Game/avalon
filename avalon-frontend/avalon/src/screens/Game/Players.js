@@ -15,7 +15,7 @@ import {
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 import {Overlay} from 'react-native-elements';
-import Toast, {DURATION} from 'react-native-easy-toast';
+import Toast from 'react-native-easy-toast';
 
 import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';

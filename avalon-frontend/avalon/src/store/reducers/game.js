@@ -6,6 +6,7 @@ import {SET_QUEST_CHOSEN_PLAYERS} from '../actions/actionTypes';
 import {SET_QUEST_VOTED_PLAYERS} from '../actions/actionTypes';
 import {SET_QUEST_VOTE_RESULT} from '../actions/actionTypes';
 import {SET_QUEST_RESULT} from '../actions/actionTypes';
+import {SET_ASSASSINATION_STATE} from '../actions/actionTypes';
 import {SET_ASSASSINATION_RESULT} from '../actions/actionTypes';
 import {SET_END_GAME} from '../actions/actionTypes';
 
@@ -29,6 +30,7 @@ const initialState = {
   questPlayersVotes: [],
   questScores: undefined,
   questResult: '',
+  assassinationChoices: [],
   assassinatedPlayer: undefined,
   assassinationResult: '',
   gameQuests: [],
@@ -134,11 +136,18 @@ const reducer = (state = initialState, action) => {
         // winner: action.data.game_state.winner,
       };
     }
+    case SET_ASSASSINATION_STATE: {
+      return {
+        ...state,
+        assassinationChoices: action.data.assassination_choices,
+        gameState: action.data.game_state.state,
+      };
+    }
     case SET_ASSASSINATION_RESULT: {
       return {
         ...state,
         assassinatedPlayer: action.data.assassinated_player,
-        winner: action.data.game_state.winner,
+        assassinationResult: action.data.assassination_result,
         gameState: action.data.game_state.state,
       };
     }
@@ -146,6 +155,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         winner: action.data.game_state.winner,
+        playersRoles: action.data.players_roles,
         gameState: action.data.game_state.state,
       };
     }

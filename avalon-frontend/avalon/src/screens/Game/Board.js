@@ -7,7 +7,6 @@ import {
 } from 'react-native-responsive-screen';
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import BoardView from '../../components/UI/Game/BoardView';
 import BottomButton from '../../components/UI/Game/BottomButton';
@@ -19,6 +18,7 @@ class BoardScreen extends Component {
     super(props);
     this.questWaitMessage = 'heroes are in quest';
     this.votingWaitMessage = 'other players are voting';
+    this.assassinationWaitMessage = 'assassin is choosing a player';
   }
 
   isPlayerCommander = () => {
@@ -59,6 +59,7 @@ class BoardScreen extends Component {
         break;
       }
       case 'quest': {
+        console.log(this.props.questChosenPlayers);
         if (
           this.props.questChosenPlayers.find(
             player => player.token === this.props.playerToken,
@@ -87,6 +88,52 @@ class BoardScreen extends Component {
             },
           });
         }
+        break;
+      }
+      case 'assassination': {
+        if (this.props.role.id === 'assassin') {
+          Navigation.showModal({
+            component: {
+              id: 'assassinationScreen',
+              name: 'avalon.AssassinationScreen',
+              options: {
+                modalTransitionStyle: 'crossDissolve',
+                modalPresentationStyle: 'overCurrentContext',
+              },
+            },
+          });
+        } else {
+          Navigation.showModal({
+            component: {
+              id: 'assassinationWaitScreen',
+              name: 'avalon.WaitingScreen',
+              options: {
+                modalTransitionStyle: 'crossDissolve',
+                modalPresentationStyle: 'overCurrentContext',
+              },
+              passProps: {
+                message: this.assassinationWaitMessage,
+              },
+            },
+          });
+        }
+        break;
+      }
+      case 'end': {
+        Navigation.showModal({
+          component: {
+            id: 'endScreen',
+            name: 'avalon.EndScreen',
+            options: {
+              modalTransitionStyle: 'crossDissolve',
+              modalPresentationStyle: 'overCurrentContext',
+            },
+            passProps: {
+              message: this.assassinationWaitMessage,
+            },
+          },
+        });
+        break;
       }
     }
 
@@ -112,7 +159,7 @@ class BoardScreen extends Component {
         case 'questScreen': {
           Navigation.showModal({
             component: {
-              id: 'votingWaitScreen',
+              id: 'questWaitScreen',
               name: 'avalon.WaitingScreen',
               options: {
                 modalTransitionStyle: 'crossDissolve',
@@ -144,21 +191,17 @@ class BoardScreen extends Component {
             });
             break;
           }
-          case 'votingResultScreen': {
+          case 'voteResultScreen': {
             if (this.props.gameState === 'quest') {
               if (
                 this.props.questChosenPlayers.find(
                   player => player.token === this.props.playerToken,
                 ) !== undefined
               ) {
-                Navigation.showModal({
+                Navigation.push(this.props.componentId, {
                   component: {
                     id: 'questScreen',
                     name: 'avalon.QuestScreen',
-                    options: {
-                      modalTransitionStyle: 'crossDissolve',
-                      modalPresentationStyle: 'overCurrentContext',
-                    },
                   },
                 });
               } else {
@@ -221,13 +264,51 @@ class BoardScreen extends Component {
           });
           break;
         }
-        // case 'quest': {
-        //   Navigation.push(this.props.componentId, {
-        //     component: {
-        //       name: 'avalon.VoteResultScreen',
-        //     },
-        //   });
-        // }
+        case 'assassination': {
+          if (this.props.role.id === 'assassin') {
+            Navigation.showModal({
+              component: {
+                id: 'assassinationScreen',
+                name: 'avalon.AssassinationScreen',
+                options: {
+                  modalTransitionStyle: 'crossDissolve',
+                  modalPresentationStyle: 'overCurrentContext',
+                },
+              },
+            });
+          } else {
+            Navigation.showModal({
+              component: {
+                id: 'assassinationWaitScreen',
+                name: 'avalon.WaitingScreen',
+                options: {
+                  modalTransitionStyle: 'crossDissolve',
+                  modalPresentationStyle: 'overCurrentContext',
+                },
+                passProps: {
+                  message: this.assassinationWaitMessage,
+                },
+              },
+            });
+          }
+          break;
+        }
+        case 'end': {
+          Navigation.showModal({
+            component: {
+              id: 'endScreen',
+              name: 'avalon.EndScreen',
+              options: {
+                modalTransitionStyle: 'crossDissolve',
+                modalPresentationStyle: 'overCurrentContext',
+              },
+              passProps: {
+                message: this.assassinationWaitMessage,
+              },
+            },
+          });
+          break;
+        }
       }
     }
   }

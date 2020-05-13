@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import {View, Text, Image, ImageBackground, StyleSheet} from 'react-native';
+import {Text, Image, ImageBackground, StyleSheet} from 'react-native';
 import {Overlay} from 'react-native-elements';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import AsyncStorage from '@react-native-community/async-storage';
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 
@@ -15,6 +14,12 @@ class WaitingScreen extends Component {
     this.state = {
       visible: true,
     };
+  }
+
+  componentDidMount() {
+    if (this.props.gameState === 'day') {
+      this.dissmissHandler();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -34,7 +39,7 @@ class WaitingScreen extends Component {
     return (
       <Overlay
         backdropStyle={styles.backdrop}
-        onBackdropPress={this.dissmissHandler}
+        // onBackdropPress={this.dissmissHandler}
         isVisible={this.state.visible}
         overlayStyle={styles.overlayStyle}>
         <ImageBackground

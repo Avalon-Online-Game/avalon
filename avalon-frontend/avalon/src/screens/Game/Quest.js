@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -17,10 +17,19 @@ class VoteScreen extends Component {
     this.questTitle = `Quest ${this.props.currentQuestNumber}`;
   }
 
-  questHandler = score => {
+  successHandler = () => {
     const msg = {
       msg_type: 'quest',
-      score: score,
+      score: 'success',
+    };
+    this.props.wsSend(msg);
+    Navigation.pop(this.props.componentId);
+  };
+
+  failHandler = () => {
+    const msg = {
+      msg_type: 'quest',
+      score: 'fail',
     };
     this.props.wsSend(msg);
     Navigation.pop(this.props.componentId);
@@ -35,13 +44,13 @@ class VoteScreen extends Component {
           <DefaultButton
             buttonStyle={styles.button}
             backgroundStyle={styles.buttonBackground}
-            onPress={() => this.questHandler('success')}>
+            onPress={this.successHandler}>
             Success
           </DefaultButton>
           <DefaultButton
             buttonStyle={styles.button}
             backgroundStyle={styles.buttonBackground}
-            onPress={() => this.questHandler('fail')}>
+            onPress={this.failHandler}>
             Fail
           </DefaultButton>
         </View>
