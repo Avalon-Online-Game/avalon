@@ -16,9 +16,11 @@ class WelcomeScreen extends Component {
     Navigation.setRoot({
       root: {
         stack: {
+          id: 'main',
           children: [
             {
               component: {
+                id: 'mainMenuScreen',
                 name: 'avalon.MainMenuScreen',
               },
             },
@@ -33,7 +35,7 @@ class WelcomeScreen extends Component {
       <EntranceView>
         <Image
           style={styles.tickImage}
-          source={require('../../assets/welcome.png')}
+          source={require('../../assets/main/welcome.png')}
         />
         <DefaultButton
           buttonStyle={styles.tutorialButton}
@@ -64,6 +66,9 @@ const styles = StyleSheet.create({
   },
   tutorialButton: {
     marginTop: hp('40%'),
+  },
+  skipButton: {
+    marginTop: hp('5%'),
   },
   skipButtonText: {
     color: '#e2d7aa',

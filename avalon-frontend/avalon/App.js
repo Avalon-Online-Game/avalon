@@ -15,6 +15,20 @@ import CreateGameScreen from './src/screens/Main/CreateGame';
 import RolesList from './src/components/CreateGame/RolesList';
 import ChosenRolesList from './src/components/CreateGame/ChosenRolesList';
 import ShareGameCodeScreen from './src/screens/Main/ShareGame';
+import QuestsList from './src/components/Game/QuestsList';
+import VotingsList from './src/components/Game/VotingsList';
+import BoardScreen from './src/screens/Game/Board';
+import LoadingScreen from './src/screens/Game/Loading';
+import RoleScreen from './src/screens/Game/Role';
+import PlayersScreen from './src/screens/Game/Players';
+import VoteScreen from './src/screens/Game/Vote';
+import WaitingScreen from './src/screens/Game/Waiting';
+import VoteResultScreen from './src/screens/Game/VoteResult';
+import QuestScreen from './src/screens/Game/Quest';
+import QuestResultScreen from './src/screens/Game/QuestResult';
+import AssassinationScreen from './src/screens/Game/Assassination';
+import AssassinationConfirmationScreen from './src/screens/Game/AssassinationConfirmation';
+import EndScreen from './src/screens/Game/End';
 
 import configureStore from './src/store/configureStore';
 
@@ -48,8 +62,95 @@ Navigation.registerComponent(
   'avalon.ShareGameCodeScreen',
   () => ShareGameCodeScreen,
 );
+Navigation.registerComponentWithRedux(
+  'avalon.LoadingScreen',
+  () => LoadingScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.QuestsList',
+  () => QuestsList,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.VotingsList',
+  () => VotingsList,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.MainBoardScreen',
+  () => BoardScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.RoleScreen',
+  () => RoleScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.PlayersScreen',
+  () => PlayersScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.VoteScreen',
+  () => VoteScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.WaitingScreen',
+  () => WaitingScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.VoteResultScreen',
+  () => VoteResultScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.QuestScreen',
+  () => QuestScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.QuestResultScreen',
+  () => QuestResultScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.AssassinationScreen',
+  () => AssassinationScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.AssassinationConfirmationScreen',
+  () => AssassinationConfirmationScreen,
+  Provider,
+  store,
+);
+Navigation.registerComponentWithRedux(
+  'avalon.EndScreen',
+  () => EndScreen,
+  Provider,
+  store,
+);
 
-Promise.all([Icon.getImageSource('ios-arrow-back', wp('8%'))]).then(icons => {
+Promise.all([
+  Icon.getImageSource('ios-arrow-back', wp('8%')),
+  Icon.getImageSource('ios-log-out', wp('8%')),
+]).then(icons => {
   Navigation.setDefaultOptions({
     animations: {
       setRoot: {
@@ -67,11 +168,11 @@ Promise.all([Icon.getImageSource('ios-arrow-back', wp('8%'))]).then(icons => {
       title: {
         text: 'AVALON',
         color: '#e2d7aa',
-        fontSize: wp('8%'),
+        fontSize: hp('4.5%'),
         fontFamily: 'JosefinSans-Bold',
         alignment: 'center',
       },
-      height: hp('10%'),
+      height: hp('8%'),
       background: {
         color: '#0b161c',
       },
@@ -79,6 +180,42 @@ Promise.all([Icon.getImageSource('ios-arrow-back', wp('8%'))]).then(icons => {
         icon: icons[0],
         color: '#e2d7aa',
       },
+      // leftButtons: [
+      //   {
+      //     id: 'logOutButton',
+      //     icon: icons[0],
+      //     color: '#e2d7aa',
+      //   },
+      // ],
+    },
+  });
+});
+
+Promise.all([Icon.getImageSource('ios-log-out', wp('8%'))]).then(icons => {
+  Navigation.mergeOptions('mainMenuScreen', {
+    animations: {
+      setRoot: {
+        waitForRender: true,
+      },
+      put: {
+        waitForRender: true,
+      },
+      push: {
+        waitForRender: true,
+      },
+      setStackRoot: {
+        waitForRender: true,
+      },
+    },
+    topBar: {
+      animate: true,
+      leftButtons: [
+        {
+          id: 'logOutButton',
+          icon: icons[0],
+          color: '#e2d7aa',
+        },
+      ],
     },
   });
 });
@@ -87,6 +224,7 @@ Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
     root: {
       component: {
+        id: 'entranceScreen',
         name: 'avalon.EntranceScreen',
       },
     },
