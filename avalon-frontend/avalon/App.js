@@ -147,7 +147,10 @@ Navigation.registerComponentWithRedux(
   store,
 );
 
-Promise.all([Icon.getImageSource('ios-arrow-back', wp('8%'))]).then(icons => {
+Promise.all([
+  Icon.getImageSource('ios-arrow-back', wp('8%')),
+  Icon.getImageSource('ios-log-out', wp('8%')),
+]).then(icons => {
   Navigation.setDefaultOptions({
     animations: {
       setRoot: {
@@ -177,6 +180,42 @@ Promise.all([Icon.getImageSource('ios-arrow-back', wp('8%'))]).then(icons => {
         icon: icons[0],
         color: '#e2d7aa',
       },
+      // leftButtons: [
+      //   {
+      //     id: 'logOutButton',
+      //     icon: icons[0],
+      //     color: '#e2d7aa',
+      //   },
+      // ],
+    },
+  });
+});
+
+Promise.all([Icon.getImageSource('ios-log-out', wp('8%'))]).then(icons => {
+  Navigation.mergeOptions('mainMenuScreen', {
+    animations: {
+      setRoot: {
+        waitForRender: true,
+      },
+      put: {
+        waitForRender: true,
+      },
+      push: {
+        waitForRender: true,
+      },
+      setStackRoot: {
+        waitForRender: true,
+      },
+    },
+    topBar: {
+      animate: true,
+      leftButtons: [
+        {
+          id: 'logOutButton',
+          icon: icons[0],
+          color: '#e2d7aa',
+        },
+      ],
     },
   });
 });
@@ -185,6 +224,7 @@ Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
     root: {
       component: {
+        id: 'entranceScreen',
         name: 'avalon.EntranceScreen',
       },
     },

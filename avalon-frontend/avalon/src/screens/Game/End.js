@@ -12,9 +12,11 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {Navigation} from 'react-native-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 import {Overlay} from 'react-native-elements';
 
+import API from '../../utils/API';
 import avatars from '../../utils/avatars';
 import roles from '../../utils/roles';
 
@@ -33,15 +35,25 @@ class EndScreen extends Component {
       this.props.winner === 'good' ? 'Good Side Won!' : 'Evil Side Won!';
   }
 
-  dissmissHandler = () => {
+  dissmissHandler = async () => {
     this.setState({
       visible: false,
     });
     Navigation.dismissModal(this.props.componentId);
-    Navigation.setStackRoot(this.props.componentId, {
+    Navigation.setStackRoot('main', {
       component: {
+        id: 'mainMenuScreen',
         name: 'avalon.MainMenuScreen',
       },
+    });
+    const userToken = JSON.parse(await AsyncStorage.getItem('user')).key;
+    const gameCode = JSON.parse(await AsyncStorage.getItem('game'));
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${userToken}`,
+    };
+    API.delete(`games/game/${gameCode}`, {
+      headers: headers,
     });
   };
 

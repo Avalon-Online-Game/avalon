@@ -20,6 +20,7 @@ class WelcomeScreen extends Component {
           children: [
             {
               component: {
+                id: 'mainMenuScreen',
                 name: 'avalon.MainMenuScreen',
               },
             },
