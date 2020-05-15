@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet} from 'react-native';
-import {Navigation} from 'react-native-navigation';
+import {Image, Text, StyleSheet} from 'react-native';
 
 import EntranceView from '../../components/UI/Entrance/EntranceView';
 import DefaultButton from '../../components/UI/Main/DefaultButton';
@@ -8,26 +7,16 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {connect} from 'react-redux';
+
+import AvatarsList from '../../components/Main/AvatarsList';
+import {goMainMenu} from '../../utils/navigation';
 
 class WelcomeScreen extends Component {
   tutorialHandler = () => {};
 
   skipHandler = () => {
-    Navigation.setRoot({
-      root: {
-        stack: {
-          id: 'main',
-          children: [
-            {
-              component: {
-                id: 'mainMenuScreen',
-                name: 'avalon.MainMenuScreen',
-              },
-            },
-          ],
-        },
-      },
-    });
+    goMainMenu();
   };
 
   render() {
@@ -37,6 +26,15 @@ class WelcomeScreen extends Component {
           style={styles.tickImage}
           source={require('../../assets/main/welcome.png')}
         />
+        <Image
+          style={styles.chosenAvatarImage}
+          source={this.props.chosenAvatar.image}
+          resizeMode="contain"
+        />
+        <Text style={styles.avatarsListText}>
+          Choose an avatar for yourself
+        </Text>
+        <AvatarsList style={styles.avatarsList} />
         <DefaultButton
           buttonStyle={styles.tutorialButton}
           onPress={this.tutorialHandler}>
@@ -78,4 +76,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WelcomeScreen;
+const mapStateToProps = state => {
+  return {
+    chosenAvatar: state.user.chosenAvatar,
+  };
+};
+
+export default connect(mapStateToProps)(WelcomeScreen);

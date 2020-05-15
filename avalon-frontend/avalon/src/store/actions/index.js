@@ -1,3 +1,5 @@
+export {chooseAvatar} from './user';
+
 export {chooseRole} from './roles';
 export {removeRole} from './roles';
 export {increaseNumberOfPlayers} from './roles';

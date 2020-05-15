@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Navigation} from 'react-native-navigation';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -13,6 +12,7 @@ import DefaultButton from '../../components/UI/Entrance/DefaultButton';
 import TabButton from '../../components/UI/Entrance/TabButton';
 import DefaultInput from '../../components/UI/Entrance/DefaultInput';
 import API from '../../utils/API';
+import {goWelcome} from '../../utils/navigation';
 
 class AuthScreen extends Component {
   constructor() {
@@ -34,13 +34,7 @@ class AuthScreen extends Component {
   }
 
   startMainScreen = () => {
-    Navigation.setRoot({
-      root: {
-        component: {
-          name: 'avalon.WelcomeScreen',
-        },
-      },
-    });
+    goWelcome();
   };
 
   signupHandler = () => {
