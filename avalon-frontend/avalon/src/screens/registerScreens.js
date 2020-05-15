@@ -9,6 +9,7 @@ import EntranceScreen from './Entrance/Entrance';
 import AuthScreen from './Entrance/Auth';
 import WelcomeScreen from './Main/Welcome';
 import AvatarsList from '../components/Main/AvatarsList';
+import LogoutScreen from '../screens/Main/Logout';
 import MainMenuScreen from './Main/MainMenu';
 import JoinGameScreen from './Main/JoinGame';
 import CreateGameScreen from './Main/CreateGame';
@@ -49,6 +50,7 @@ export const registerScreens = () => {
     Provider,
     store,
   );
+  Navigation.registerComponent('avalon.LogoutScreen', () => LogoutScreen);
   Navigation.registerComponent('avalon.MainMenuScreen', () => MainMenuScreen);
   Navigation.registerComponent('avalon.JoinGameScreen', () => JoinGameScreen);
   Navigation.registerComponentWithRedux(
@@ -158,36 +160,6 @@ export const registerScreens = () => {
     store,
   );
 
-  Navigation.mergeOptions('mainMenuScreen', {
-    animations: {
-      setRoot: {
-        waitForRender: true,
-      },
-      put: {
-        waitForRender: true,
-      },
-      push: {
-        waitForRender: true,
-      },
-      setStackRoot: {
-        waitForRender: true,
-      },
-    },
-    //   topBar: {
-    //     animate: true,
-    // leftButtons: [
-    //   {
-    //     id: 'logOutButton',
-    //     icon: icons[1],
-    //     color: '#e2d7aa',
-    //   },
-    // ],
-    //     backButton: {
-    //       icon: icons[0],
-    //       color: '#e2d7aa',
-    //     },
-    //   },
-  });
   Navigation.setDefaultOptions({
     animations: {
       setRoot: {
@@ -213,17 +185,6 @@ export const registerScreens = () => {
       background: {
         color: '#0b161c',
       },
-      // backButton: {
-      //   icon: icons[0],
-      //   color: '#e2d7aa',
-      // },
-      // leftButtons: [
-      //   {
-      //     id: 'logOutButton',
-      //     icon: icons[0],
-      //     color: '#e2d7aa',
-      //   },
-      // ],
     },
   });
 };

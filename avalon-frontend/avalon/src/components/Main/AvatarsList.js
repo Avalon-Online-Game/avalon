@@ -18,15 +18,10 @@ import {chooseAvatar} from '../../store/actions/index';
 class AvatarsList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      chosenAvatar: undefined,
-    };
   }
 
   chooseAvatarHandler = avatar => {
-    this.setState({
-      chosenAvatar: avatar,
-    });
+    this.props.chooseAvatar(avatar);
   };
 
   avatarRenderItem = ({item}) => {
@@ -34,14 +29,14 @@ class AvatarsList extends Component {
       <TouchableOpacity
         style={styles.avatarButton}
         onPressIn={() => this.chooseAvatarHandler(item)}
-        disabled={this.state.chosenAvatar === item ? true : false}>
+        disabled={this.props.chosenAvatar === item ? true : false}>
         <Image
           source={item.image}
           style={[
             styles.avatarImage,
-            this.state.chosenAvatar === item
-              ? styles.avatarActive
-              : styles.avatarDeactive,
+            this.props.chosenAvatar === item
+              ? styles.avatarDeactive
+              : styles.avatarActive,
           ]}
           resizeMode="contain"
         />
@@ -79,8 +74,8 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('3%'),
   },
   avatarImage: {
-    height: hp('15%'),
-    width: hp('15%'),
+    width: hp('12%'),
+    height: hp('12%'),
   },
   roleText: {
     color: '#e2d7aa',

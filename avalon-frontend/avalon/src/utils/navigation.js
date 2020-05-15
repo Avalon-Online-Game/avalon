@@ -27,43 +27,54 @@ export const goWelcome = () => {
   });
 };
 
-export const goMainMenu = () => {
-  Promise.all([
-    Icon.getImageSource('ios-arrow-back', wp('8%')),
-    Icon.getImageSource('ios-log-out', wp('8%')),
-  ]).then(icons => {
-    Navigation.setRoot({
-      root: {
-        stack: {
-          id: 'main',
-          children: [
-            {
-              component: {
-                id: 'mainMenuScreen',
-                name: 'avalon.MainMenuScreen',
-              },
-            },
-          ],
-          options: {
-            topBar: {
-              leftButtons: [
-                {
-                  id: 'logOutButton',
-                  icon: icons[1],
-                  color: '#e2d7aa',
-                  showAsAction: 'ifRoom',
+export const goMainMenu = async () => {
+  const backIcon = await Icon.getImageSource('ios-arrow-back', wp('8%'));
+  const logoutIcon = await Icon.getImageSource('ios-log-out', wp('8%'));
+  const settingsIcon = await Icon.getImageSource('ios-settings', wp('8%'));
+  Navigation.setRoot({
+    root: {
+      sideMenu: {
+        center: {
+          stack: {
+            id: 'mainStack',
+            children: [
+              {
+                component: {
+                  id: 'mainMenuScreen',
+                  name: 'avalon.MainMenuScreen',
+                  options: {
+                    topBar: {
+                      leftButtons: [
+                        {
+                          id: 'logoutButton',
+                          icon: logoutIcon,
+                          color: '#e2d7aa',
+                        },
+                      ],
+                      rightButtons: [
+                        {
+                          id: 'settingsButton',
+                          icon: settingsIcon,
+                          color: '#e2d7aa',
+                        },
+                      ],
+                    },
+                  },
                 },
-              ],
-              backButton: {
-                icon: icons[0],
-                color: '#e2d7aa',
-                visible: true,
+              },
+            ],
+            options: {
+              topBar: {
+                backButton: {
+                  icon: backIcon,
+                  color: '#e2d7aa',
+                },
               },
             },
           },
         },
       },
-    });
+    },
   });
 };
 
@@ -71,7 +82,7 @@ export const goLoading = () => {
   Navigation.setRoot({
     root: {
       stack: {
-        id: 'main',
+        id: 'mainStack',
         children: [
           {
             component: {

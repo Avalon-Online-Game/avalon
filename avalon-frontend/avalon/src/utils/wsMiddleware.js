@@ -32,7 +32,7 @@ const socketMiddleware = () => {
     switch (payload.msg_type) {
       case 'start':
         store.dispatch(startGame(payload));
-        Navigation.setStackRoot('main', {
+        Navigation.setStackRoot('mainStack', {
           component: {
             name: 'avalon.MainBoardScreen',
           },

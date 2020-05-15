@@ -10,6 +10,29 @@ import {
 } from 'react-native-responsive-screen';
 
 class MainMenuScreen extends Component {
+  constructor(props) {
+    super(props);
+    Navigation.events().bindComponent(this);
+  }
+
+  navigationButtonPressed({buttonId}) {
+    switch (buttonId) {
+      case 'logoutButton': {
+        Navigation.showModal({
+          component: {
+            id: 'logoutScreen',
+            name: 'avalon.LogoutScreen',
+            options: {
+              modalTransitionStyle: 'crossDissolve',
+              modalPresentationStyle: 'overCurrentContext',
+            },
+          },
+        });
+        break;
+      }
+    }
+  }
+
   createGameHandler = () => {
     Navigation.push(this.props.componentId, {
       component: {

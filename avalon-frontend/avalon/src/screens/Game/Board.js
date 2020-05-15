@@ -33,7 +33,6 @@ class BoardScreen extends Component {
             player => player.token === this.props.playerToken,
           ) !== undefined
         ) {
-          // the player has already voted and must wait for other players to vote
           Navigation.showModal({
             component: {
               id: 'votingWaitScreen',
@@ -48,7 +47,6 @@ class BoardScreen extends Component {
             },
           });
         } else {
-          // the player must vote for the quest
           Navigation.push(this.props.componentId, {
             component: {
               id: 'voteScreen',
@@ -65,7 +63,6 @@ class BoardScreen extends Component {
             player => player.token === this.props.playerToken,
           ) !== undefined
         ) {
-          // the player is among heroes for quest
           Navigation.push(this.props.componentId, {
             component: {
               id: 'questScreen',
@@ -73,7 +70,6 @@ class BoardScreen extends Component {
             },
           });
         } else {
-          // the player must wait for the quest result
           Navigation.showModal({
             component: {
               id: 'questWaitScreen',
@@ -235,17 +231,6 @@ class BoardScreen extends Component {
             });
             break;
           }
-          // case 'questChoiceScreen': {
-          //   if (this.props.gameState === 'voting') {
-          //     Navigation.push(this.props.componentId, {
-          //       component: {
-          //         id: 'voteScreen',
-          //         name: 'avalon.VoteScreen',
-          //       },
-          //     });
-          //   }
-          //   break;
-          // }
         }
       },
     );

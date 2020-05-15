@@ -47,7 +47,7 @@ class JoinGameScreen extends Component {
           ['game', JSON.stringify(res.data.game.code)],
           ['player', JSON.stringify(res.data.token)],
         ]).then(
-          Navigation.setStackRoot('main', {
+          Navigation.setStackRoot('mainStack', {
             component: {
               name: 'avalon.LoadingScreen',
             },
