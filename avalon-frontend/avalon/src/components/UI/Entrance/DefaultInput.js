@@ -11,6 +11,7 @@ const defaultInput = props => (
       {...props}
       placeholderTextColor="#e2d7aa"
       style={[styles.input, props.style]}
+      onEndEditing={props.onEndEditing}
     />
   </View>
 );
