@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
-import {Text, StyleSheet} from 'react-native';
+import {Text, Image, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 import EntranceView from '../../components/UI/Entrance/EntranceView';
-import DefaultButton from '../../components/UI/Entrance/DefaultButton';
 import API from '../../utils/API';
 import {goAuth, goLoading, goMainMenu} from '../../utils/navigation';
 
@@ -22,6 +25,8 @@ class EntranceScreen extends Component {
         await this.isPlayerValid();
       }
     }
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    this.navigationFunction();
   }
 
   isUserValid = async () => {
@@ -101,19 +106,15 @@ class EntranceScreen extends Component {
     }
   };
 
-  skipEntranceHandler = () => {
-    this.navigationFunction();
-  };
-
   render() {
     return (
       <EntranceView>
         <Text style={styles.mainText}>AVALON</Text>
-        <DefaultButton
-          buttonStyle={styles.skipButton}
-          onPress={this.skipEntranceHandler}>
-          Skip
-        </DefaultButton>
+        <Image
+          style={styles.castleImage}
+          source={require('../../assets/main/castle.png')}
+          resizeMode="contain"
+        />
       </EntranceView>
     );
   }
@@ -127,11 +128,16 @@ const styles = StyleSheet.create({
   mainText: {
     color: '#e4d7aa',
     fontFamily: 'JosefinSans-Bold',
-    fontSize: 50,
-    marginTop: '20%',
+    fontSize: wp('15%'),
+    marginTop: hp('20%'),
+  },
+  castleImage: {
+    width: wp('60%'),
+    height: hp('30%'),
+    marginTop: hp('10%'),
   },
   skipButton: {
-    marginTop: '90%',
+    marginTop: hp('10%'),
   },
 });
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
@@ -258,6 +258,11 @@ class AuthScreen extends Component {
 
     return (
       <EntranceView>
+        <Image
+          style={styles.castleImage}
+          source={require('../../assets/main/castle.png')}
+          resizeMode="contain"
+        />
         <View style={styles.container}>
           <View style={styles.tabButtons}>
             <TabButton
@@ -281,11 +286,13 @@ class AuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: hp('2%'),
+  container: {},
+  castleImage: {
+    width: wp('60%'),
+    height: hp('30%'),
+    marginTop: hp('5%'),
   },
   inner: {
-    // alignItems: 'center',
     width: '100%',
     marginTop: hp('5%'),
   },
@@ -305,6 +312,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: wp('90%'),
+    marginTop: hp('2%'),
   },
   googleIcon: {
     width: wp('10%'),
