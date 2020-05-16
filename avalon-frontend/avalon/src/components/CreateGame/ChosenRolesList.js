@@ -4,6 +4,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  Image,
   ImageBackground,
 } from 'react-native';
 import {
@@ -12,6 +13,7 @@ import {
 } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
+
 import {removeRole} from '../../store/actions/index';
 
 const extractKey = ({id}) => id;
@@ -26,20 +28,30 @@ class ChosenRolesList extends Component {
   };
 
   chosenRoleRenderItem = ({item}) => {
-    return (
-      <View style={styles.chosenRole}>
-        <ImageBackground
-          source={item.image}
-          style={styles.chosenRoleImage}
-          resizeMode="contain">
-          <TouchableOpacity
-            style={styles.chosenRoleRemoveButton}
-            onPress={() => this.removeRoleHandler(item)}>
-            <Icon name="ios-remove-circle" color="#e2d7aa" size={wp('8%')} />
-          </TouchableOpacity>
-        </ImageBackground>
-      </View>
-    );
+    const content =
+      'required' in item ? (
+        <View style={styles.chosenRole}>
+          <Image
+            source={item.image}
+            style={styles.chosenRoleImage}
+            resizeMode="contain"
+          />
+        </View>
+      ) : (
+        <View style={styles.chosenRole}>
+          <ImageBackground
+            source={item.image}
+            style={styles.chosenRoleImage}
+            resizeMode="contain">
+            <TouchableOpacity
+              style={styles.chosenRoleRemoveButton}
+              onPress={() => this.removeRoleHandler(item)}>
+              <Icon name="ios-remove-circle" color="#e2d7aa" size={wp('8%')} />
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
+      );
+    return content;
   };
 
   render() {

@@ -5,6 +5,7 @@ const roles = () => {
       side: 'good',
       text: 'Merlin',
       image: require('../assets/goods/merlin.png'),
+      required: true,
     },
     {
       id: 'percival',
@@ -43,10 +44,11 @@ const roles = () => {
       image: require('../assets/goods/loyal5.png'),
     },
     {
-      id: 'mordred',
+      id: 'assassin',
       side: 'evil',
-      text: 'Mordred',
-      image: require('../assets/evils/mordred.png'),
+      text: 'Assassin',
+      image: require('../assets/evils/assassin.png'),
+      required: true,
     },
     {
       id: 'morgana',
@@ -55,16 +57,16 @@ const roles = () => {
       image: require('../assets/evils/morgana.png'),
     },
     {
+      id: 'mordred',
+      side: 'evil',
+      text: 'Mordred',
+      image: require('../assets/evils/mordred.png'),
+    },
+    {
       id: 'oberon',
       side: 'evil',
       text: 'Oberon',
       image: require('../assets/evils/oberon.png'),
-    },
-    {
-      id: 'assassin',
-      side: 'evil',
-      text: 'Assassin',
-      image: require('../assets/evils/assassin.png'),
     },
     {
       id: 'minion1',

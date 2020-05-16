@@ -34,7 +34,7 @@ class WelcomeScreen extends Component {
       headers: headers,
     })
       .then(res => {
-        AsyncStorage.setItem('user', JSON.stringify(res.data));
+        AsyncStorage.mergeItem('user', JSON.stringify(res.data));
         goMainMenu();
       })
       .catch(err => {

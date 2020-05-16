@@ -39,6 +39,7 @@ class EntranceScreen extends Component {
         await API.get('users/rest-auth/user/', {
           headers: headers,
         });
+        this.navigationFunction = goMainMenu;
         return true;
       } catch (error) {
         AsyncStorage.removeItem('user');
