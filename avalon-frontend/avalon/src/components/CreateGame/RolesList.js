@@ -38,8 +38,6 @@ class RolesList extends Component {
   };
 
   isRoleDisabled = item => {
-    console.log(this.props.chosenRoles.filter(role => role.side === item.side));
-    console.log(this.game[item.side]);
     if (
       this.props.chosenRoles.filter(role => role.id === item.id).length !== 0 ||
       this.props.chosenRoles.length ===

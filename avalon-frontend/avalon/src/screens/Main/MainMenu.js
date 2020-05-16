@@ -8,6 +8,9 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import {goAuth} from '../../utils/navigation';
 
 class MainMenuScreen extends Component {
   constructor(props) {
@@ -21,10 +24,17 @@ class MainMenuScreen extends Component {
         Navigation.showModal({
           component: {
             id: 'logoutScreen',
-            name: 'avalon.LogoutScreen',
+            name: 'avalon.ConfirmScreen',
             options: {
               modalTransitionStyle: 'crossDissolve',
               modalPresentationStyle: 'overCurrentContext',
+            },
+            passProps: {
+              message: 'Are you sure you want to logout?',
+              confirmFunction: () => {
+                AsyncStorage.removeItem('user');
+                goAuth();
+              },
             },
           },
         });

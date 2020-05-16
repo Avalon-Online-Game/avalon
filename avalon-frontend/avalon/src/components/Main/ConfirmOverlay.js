@@ -8,10 +8,10 @@ import {
 import {Navigation} from 'react-native-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import DefaultButton from '../../components/UI/Main/DefaultButton';
+import DefaultButton from '../UI/Main/DefaultButton';
 import {goAuth} from '../../utils/navigation';
 
-class LogoutScreen extends Component {
+class ConfirmOverlay extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,8 +24,7 @@ class LogoutScreen extends Component {
       visible: false,
     });
     Navigation.dismissModal(this.props.componentId);
-    AsyncStorage.removeItem('user');
-    goAuth();
+    this.props.confirmFunction();
   };
 
   dissmissHandler = () => {
@@ -46,7 +45,7 @@ class LogoutScreen extends Component {
           style={styles.background}
           source={require('../../assets/popups/popup-back.png')}
           resizeMode="contain">
-          <Text style={styles.titleText}>Are you sure you want to logout?</Text>
+          <Text style={styles.titleText}>{this.props.message}</Text>
           <View style={styles.buttonsContainer}>
             <DefaultButton
               buttonStyle={styles.button}
@@ -92,7 +91,9 @@ const styles = StyleSheet.create({
     color: '#e2d7aa',
     fontSize: wp('7%'),
     textAlign: 'center',
-    fontFamily: 'JosefinSans-Medium',
+    fontFamily: 'JosefinSans-Regular',
+    width: wp('85%'),
+    lineHeight: hp('5%'),
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -109,4 +110,4 @@ const styles = StyleSheet.create({
   buttonText: {},
 });
 
-export default LogoutScreen;
+export default ConfirmOverlay;

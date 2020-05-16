@@ -432,7 +432,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         game_code = self.game.code
         player = self.scope['user']
         await self.channel_layer.group_send(
-                game.code,
+                game_code,
                 {
                     'type': 'game.leave',
                     'player': {'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar},
@@ -443,6 +443,8 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             game_code,
             self.channel_name,
         )
+
+        return await self.close()
 
 
 ##### Handlers for messages sent over the channel layer #####

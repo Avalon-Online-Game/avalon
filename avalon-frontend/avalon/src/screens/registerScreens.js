@@ -9,7 +9,7 @@ import EntranceScreen from './Entrance/Entrance';
 import AuthScreen from './Entrance/Auth';
 import WelcomeScreen from './Main/Welcome';
 import AvatarsList from '../components/Main/AvatarsList';
-import LogoutScreen from '../screens/Main/Logout';
+import ConfirmOverlay from '../components/Main/ConfirmOverlay';
 import MainMenuScreen from './Main/MainMenu';
 import JoinGameScreen from './Main/JoinGame';
 import CreateGameScreen from './Main/CreateGame';
@@ -50,7 +50,7 @@ export const registerScreens = () => {
     Provider,
     store,
   );
-  Navigation.registerComponent('avalon.LogoutScreen', () => LogoutScreen);
+  Navigation.registerComponent('avalon.ConfirmScreen', () => ConfirmOverlay);
   Navigation.registerComponent('avalon.MainMenuScreen', () => MainMenuScreen);
   Navigation.registerComponent('avalon.JoinGameScreen', () => JoinGameScreen);
   Navigation.registerComponentWithRedux(
