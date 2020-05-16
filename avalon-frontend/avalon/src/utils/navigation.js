@@ -78,7 +78,8 @@ export const goMainMenu = async () => {
   });
 };
 
-export const goLoading = () => {
+export const goLoading = async () => {
+  const backIcon = await Icon.getImageSource('ios-arrow-back', wp('8%'));
   Navigation.setRoot({
     root: {
       stack: {
@@ -88,9 +89,57 @@ export const goLoading = () => {
             component: {
               id: 'loadingScreen',
               name: 'avalon.LoadingScreen',
+              options: {
+                topBar: {
+                  leftButtons: [
+                    {
+                      id: 'leaveButton',
+                      icon: backIcon,
+                      color: '#e2d7aa',
+                    },
+                  ],
+                },
+              },
             },
           },
         ],
+        options: {
+          topBar: {
+            backButton: {
+              icon: backIcon,
+              color: '#e2d7aa',
+            },
+          },
+        },
+      },
+    },
+  });
+};
+
+export const goBoard = async () => {
+  const logoutIcon = await Icon.getImageSource('ios-log-out', wp('8%'));
+  const settingsIcon = await Icon.getImageSource('ios-settings', wp('8%'));
+  Navigation.setStackRoot('mainStack', {
+    component: {
+      id: 'boardScreen',
+      name: 'avalon.MainBoardScreen',
+      options: {
+        topBar: {
+          leftButtons: [
+            {
+              id: 'logoutButton',
+              icon: logoutIcon,
+              color: '#e2d7aa',
+            },
+          ],
+          rightButtons: [
+            {
+              id: 'settingsButton',
+              icon: settingsIcon,
+              color: '#e2d7aa',
+            },
+          ],
+        },
       },
     },
   });

@@ -171,6 +171,9 @@ export const registerScreens = () => {
       push: {
         waitForRender: true,
       },
+      setStackRoot: {
+        waitForRender: true,
+      },
     },
     topBar: {
       animate: true,

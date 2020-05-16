@@ -11,7 +11,8 @@ import {
   setAssassinationResult,
   setEndGame,
 } from '../store/actions/index';
-import {Navigation} from 'react-native-navigation';
+
+import {goBoard} from '../utils/navigation';
 
 const socketMiddleware = () => {
   let socket = null;
@@ -32,11 +33,7 @@ const socketMiddleware = () => {
     switch (payload.msg_type) {
       case 'start':
         store.dispatch(startGame(payload));
-        Navigation.setStackRoot('mainStack', {
-          component: {
-            name: 'avalon.MainBoardScreen',
-          },
-        });
+        goBoard();
         break;
       case 'update':
         store.dispatch(updateGame(payload));
