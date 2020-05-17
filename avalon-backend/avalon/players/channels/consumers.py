@@ -44,17 +44,13 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             
             game_code = self.game.code
             player = self.scope['user']
+
             await self.channel_layer.group_send(
                 game_code,
                 {
                     'type': 'game.disconnect',
                     'player': {'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar},
                 }
-            )
-
-            await self.channel_layer.group_discard(
-                game_code,
-                self.channel_name,
             )
 
         except:
@@ -89,6 +85,40 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
         except ClientError as e:
             await self.send_json({'error': e.code})
 
+
+    async def leave(self, content):
+        """
+        Called by receive_json when someone sent a leave command.
+        """
+        if self.scope['user'] is AnonymousUser:
+            return
+
+        await db_utils.remove_channel_name(self.scope['user'])
+            
+        game_code = self.game.code
+        player = self.scope['user']
+
+        game_state = cache.get(game_code)
+        if game_state != None:
+            await self.channel_layer.group_send(
+                game_code,
+                {
+                    'type': 'game.leave',
+                    'player': {'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar},
+                }
+            )
+        
+        await db_utils.delete_player(player.token)
+        if self.game.creator.id == player.user.id:
+            await db_utils.delete_game(game_code)
+            await self.channel_layer.group_send(
+                game_code,
+                {
+                    'type': 'game.leave',
+                    'player': {'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar},
+                }
+            )
+        await self.close()
 
     async def start_state(self):
         game_code = self.game.code
@@ -418,33 +448,6 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
                 'game_state': game_state.to_json(),
             },
         )
-
-
-    async def leave(self, game_code):
-        """
-        Called by receive_json when someone sent a leave command.
-        """
-        if self.scope['user'] is AnonymousUser:
-            return
-
-        await db_utils.remove_channel_name(self.scope['user'])
-
-        game_code = self.game.code
-        player = self.scope['user']
-        await self.channel_layer.group_send(
-                game_code,
-                {
-                    'type': 'game.leave',
-                    'player': {'token': player.token, 'username': player.user.username, 'avatar': player.user.avatar},
-                }
-            )
-
-        await self.channel_layer.group_discard(
-            game_code,
-            self.channel_name,
-        )
-
-        return await self.close()
 
 
 ##### Handlers for messages sent over the channel layer #####

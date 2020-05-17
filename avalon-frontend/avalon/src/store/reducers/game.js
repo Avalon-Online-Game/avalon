@@ -9,6 +9,8 @@ import {SET_QUEST_RESULT} from '../actions/actionTypes';
 import {SET_ASSASSINATION_STATE} from '../actions/actionTypes';
 import {SET_ASSASSINATION_RESULT} from '../actions/actionTypes';
 import {SET_END_GAME} from '../actions/actionTypes';
+import {SET_PLAYER_LEFT} from '../actions/actionTypes';
+import {SET_PLAYER_DISCONNECTED} from '../actions/actionTypes';
 
 import roles from '../../utils/roles';
 
@@ -34,8 +36,8 @@ const initialState = {
   assassinatedPlayer: undefined,
   assassinationResult: '',
   gameQuests: [],
-  // disconnectedPlayers: [],
-  // leftPlayers: [],
+  disconnectedPlayers: [],
+  leftPlayers: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -68,6 +70,8 @@ const reducer = (state = initialState, action) => {
         roleData: action.data.player.role_data,
         questChosenPlayers: action.data.game_state.quest_chosen_players,
         questVotedPlayers: action.data.game_state.quest_voted_players,
+        disconnectedPlayers: [],
+        leftPlayers: [],
       };
     }
     case UPDATE_GAME: {
@@ -159,20 +163,20 @@ const reducer = (state = initialState, action) => {
         gameState: action.data.game_state.state,
       };
     }
-    // case SET_DISCONNECTED_PLAYERS: {
-    //   return {
-    //     ...state,
-    //     disconnectedPlayers: state.disconnectedPlayers.push(action.data.player),
-    //     gameState: action.data.game_state.state,
-    //   };
-    // }
-    // case SET_LEFT_PLAYERS: {
-    //   return {
-    //     ...state,
-    //     leftPlayers: state.leftPlayers.push(action.data.player),
-    //     gameState: action.data.game_state.state,
-    //   };
-    // }
+    case SET_PLAYER_LEFT: {
+      return {
+        ...state,
+        leftPlayers: state.leftPlayers.concat(action.data.player),
+      };
+    }
+    case SET_PLAYER_DISCONNECTED: {
+      return {
+        ...state,
+        disconnectedPlayers: state.disconnectedPlayers.concat(
+          action.data.player,
+        ),
+      };
+    }
     default:
       return state;
   }

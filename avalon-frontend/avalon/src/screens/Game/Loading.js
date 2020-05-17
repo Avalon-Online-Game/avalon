@@ -14,7 +14,12 @@ import {
   setPlayerToken,
   wsSend,
 } from '../../store/actions/index';
-import {goMainMenu} from '../../utils/navigation';
+import {
+  showLeave,
+  showPlayerLeft,
+  goMainMenu,
+  goBoard,
+} from '../../utils/navigation';
 
 class LoadingScreen extends Component {
   constructor(props) {
@@ -25,24 +30,15 @@ class LoadingScreen extends Component {
   navigationButtonPressed({buttonId}) {
     switch (buttonId) {
       case 'leaveButton': {
-        Navigation.showModal({
-          component: {
-            id: 'leaveScreen',
-            name: 'avalon.ConfirmScreen',
-            options: {
-              modalTransitionStyle: 'crossDissolve',
-              modalPresentationStyle: 'overCurrentContext',
-            },
-            passProps: {
-              message: 'Are you sure you want to leave the game?',
-              confirmFunction: () => {
-                AsyncStorage.multiRemove(['game', 'player']);
-
-                goMainMenu();
-              },
-            },
-          },
-        });
+        const confirmFunction = () => {
+          const msg = {
+            msg_type: 'leave',
+          };
+          this.props.wsSend(msg);
+          AsyncStorage.multiRemove(['game', 'player']);
+          goMainMenu();
+        };
+        showLeave(confirmFunction);
         break;
       }
     }
@@ -53,6 +49,17 @@ class LoadingScreen extends Component {
       this.props.setPlayerToken(JSON.parse(token));
       this.props.wsConnect(JSON.parse(token));
     });
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.leftPlayers.length !== this.props.leftPlayers.length) {
+      showPlayerLeft(this.props.leftPlayers[this.props.leftPlayers.length - 1]);
+      return;
+    }
+    if (prevProps.gameState !== this.props.gameState) {
+      goBoard();
+      return;
+    }
   }
 
   render() {
@@ -103,6 +110,13 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapStateToProps = state => {
+  return {
+    gameState: state.game.gameState,
+    leftPlayers: state.game.leftPlayers,
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     wsConnect: token => dispatch(wsConnect(token)),
@@ -113,6 +127,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(LoadingScreen);

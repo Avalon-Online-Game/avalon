@@ -5,12 +5,12 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Navigation} from 'react-native-navigation';
 import Toast, {DURATION} from 'react-native-easy-toast';
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
 import API from '../../utils/API';
+import {goLoading} from '../../utils/navigation';
 
 class JoinGameScreen extends Component {
   constructor() {
@@ -28,18 +28,20 @@ class JoinGameScreen extends Component {
     this.setState({
       code: code,
     });
-    switch (index) {
-      case 1:
-        this.input_2.focus();
-        break;
-      case 2:
-        this.input_3.focus();
-        break;
-      case 3:
-        this.input_4.focus();
-        break;
-      default:
-        break;
+    if (number.length > 0) {
+      switch (index) {
+        case 1:
+          this.input_2.focus();
+          break;
+        case 2:
+          this.input_3.focus();
+          break;
+        case 3:
+          this.input_4.focus();
+          break;
+        default:
+          break;
+      }
     }
   };
 
@@ -62,13 +64,7 @@ class JoinGameScreen extends Component {
         AsyncStorage.multiSet([
           ['game', JSON.stringify(res.data.game.code)],
           ['player', JSON.stringify(res.data.token)],
-        ]).then(
-          Navigation.setStackRoot('mainStack', {
-            component: {
-              name: 'avalon.LoadingScreen',
-            },
-          }),
-        );
+        ]).then(goLoading());
       })
       .catch(err => {
         if (err.response.status === 404) {
@@ -78,6 +74,13 @@ class JoinGameScreen extends Component {
         if (err.response.status === 406) {
           console.log('Game is full: 406');
           this.toast.show('Game is out of capacity', DURATION.LONG_LENGTH);
+        }
+        if (err.response.status === 400) {
+          console.log(`${JSON.stringify(err.response.data)}: 400`);
+          this.toast.show(
+            'Whoops... something went wrong!',
+            DURATION.LONG_LENGTH,
+          );
         }
       });
   };

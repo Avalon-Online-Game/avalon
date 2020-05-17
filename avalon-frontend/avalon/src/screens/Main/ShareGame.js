@@ -4,10 +4,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Navigation} from 'react-native-navigation';
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
+import {goLoading} from '../../utils/navigation';
 
 class ShareGameScreen extends Component {
   constructor(props) {
@@ -15,11 +15,7 @@ class ShareGameScreen extends Component {
   }
 
   nextHandler = () => {
-    Navigation.setStackRoot(this.props.componentId, {
-      component: {
-        name: 'avalon.LoadingScreen',
-      },
-    });
+    goLoading();
   };
 
   render() {

@@ -7,18 +7,52 @@ import {
 } from 'react-native-responsive-screen';
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import BoardView from '../../components/UI/Game/BoardView';
 import BottomButton from '../../components/UI/Game/BottomButton';
 import QuestList from '../../components/Game/QuestsList';
 import VotingsList from '../../components/Game/VotingsList';
+import {
+  goMainMenu,
+  showRole,
+  showLeave,
+  pushVote,
+  showVotingWait,
+  showVotingResult,
+  pushQuest,
+  showQuestWait,
+  showQuestResult,
+  showAssassination,
+  showAssassinationWait,
+  showEnd,
+  showPlayerDisconnected,
+  showPlayerLeft,
+  dissmissPlayerDisconnected,
+} from '../../utils/navigation';
+import {wsSend} from '../../store/actions/index';
 
 class BoardScreen extends Component {
   constructor(props) {
     super(props);
-    this.questWaitMessage = 'heroes are in quest';
-    this.votingWaitMessage = 'other players are voting';
-    this.assassinationWaitMessage = 'assassin is choosing a player';
+    Navigation.events().bindComponent(this);
+  }
+
+  navigationButtonPressed({buttonId}) {
+    switch (buttonId) {
+      case 'leaveButton': {
+        const confirmFunction = () => {
+          const msg = {
+            msg_type: 'leave',
+          };
+          this.props.wsSend(msg);
+          AsyncStorage.multiRemove(['game', 'player']);
+          goMainMenu();
+        };
+        showLeave(confirmFunction);
+        break;
+      }
+    }
   }
 
   isPlayerCommander = () => {
@@ -27,108 +61,43 @@ class BoardScreen extends Component {
 
   async componentDidMount() {
     switch (this.props.gameState) {
+      case 'day': {
+        showRole();
+        break;
+      }
       case 'voting': {
         if (
           this.props.questVotedPlayers.find(
             player => player.token === this.props.playerToken,
           ) !== undefined
         ) {
-          Navigation.showModal({
-            component: {
-              id: 'votingWaitScreen',
-              name: 'avalon.WaitingScreen',
-              options: {
-                modalTransitionStyle: 'crossDissolve',
-                modalPresentationStyle: 'overCurrentContext',
-              },
-              passProps: {
-                message: this.votingWaitMessage,
-              },
-            },
-          });
+          showVotingWait();
         } else {
-          Navigation.push(this.props.componentId, {
-            component: {
-              id: 'voteScreen',
-              name: 'avalon.VoteScreen',
-            },
-          });
+          pushVote(this.props.componentId);
         }
         break;
       }
       case 'quest': {
-        console.log(this.props.questChosenPlayers);
         if (
           this.props.questChosenPlayers.find(
             player => player.token === this.props.playerToken,
           ) !== undefined
         ) {
-          Navigation.push(this.props.componentId, {
-            component: {
-              id: 'questScreen',
-              name: 'avalon.QuestScreen',
-            },
-          });
+          pushQuest(this.props.componentId);
         } else {
-          Navigation.showModal({
-            component: {
-              id: 'questWaitScreen',
-              name: 'avalon.WaitingScreen',
-              options: {
-                modalTransitionStyle: 'crossDissolve',
-                modalPresentationStyle: 'overCurrentContext',
-              },
-              passProps: {
-                message: this.questWaitMessage,
-              },
-            },
-          });
+          showQuestWait();
         }
         break;
       }
       case 'assassination': {
         if (this.props.role.id === 'assassin') {
-          Navigation.showModal({
-            component: {
-              id: 'assassinationScreen',
-              name: 'avalon.AssassinationScreen',
-              options: {
-                modalTransitionStyle: 'crossDissolve',
-                modalPresentationStyle: 'overCurrentContext',
-              },
-            },
-          });
         } else {
-          Navigation.showModal({
-            component: {
-              id: 'assassinationWaitScreen',
-              name: 'avalon.WaitingScreen',
-              options: {
-                modalTransitionStyle: 'crossDissolve',
-                modalPresentationStyle: 'overCurrentContext',
-              },
-              passProps: {
-                message: this.assassinationWaitMessage,
-              },
-            },
-          });
+          showAssassinationWait();
         }
         break;
       }
       case 'end': {
-        Navigation.showModal({
-          component: {
-            id: 'endScreen',
-            name: 'avalon.EndScreen',
-            options: {
-              modalTransitionStyle: 'crossDissolve',
-              modalPresentationStyle: 'overCurrentContext',
-            },
-            passProps: {
-              message: this.assassinationWaitMessage,
-            },
-          },
-        });
+        showEnd();
         break;
       }
     }
@@ -136,36 +105,12 @@ class BoardScreen extends Component {
     Navigation.events().registerScreenPoppedListener(({componentId}) => {
       switch (componentId) {
         case 'voteScreen': {
-          console.log('opening vote waiting');
-          Navigation.showModal({
-            component: {
-              id: 'votingWaitScreen',
-              name: 'avalon.WaitingScreen',
-              options: {
-                modalTransitionStyle: 'crossDissolve',
-                modalPresentationStyle: 'overCurrentContext',
-              },
-              passProps: {
-                message: this.votingWaitMessage,
-              },
-            },
-          });
+          showVotingWait();
           break;
         }
         case 'questScreen': {
-          Navigation.showModal({
-            component: {
-              id: 'questWaitScreen',
-              name: 'avalon.WaitingScreen',
-              options: {
-                modalTransitionStyle: 'crossDissolve',
-                modalPresentationStyle: 'overCurrentContext',
-              },
-              passProps: {
-                message: this.questWaitMessage,
-              },
-            },
-          });
+          showQuestWait();
+          break;
         }
       }
     });
@@ -175,16 +120,7 @@ class BoardScreen extends Component {
         switch (componentId) {
           case 'votingWaitScreen': {
             console.log('opening vote result');
-            Navigation.showModal({
-              component: {
-                id: 'voteResultScreen',
-                name: 'avalon.VoteResultScreen',
-                options: {
-                  modalTransitionStyle: 'crossDissolve',
-                  modalPresentationStyle: 'overCurrentContext',
-                },
-              },
-            });
+            showVotingResult();
             break;
           }
           case 'voteResultScreen': {
@@ -194,41 +130,15 @@ class BoardScreen extends Component {
                   player => player.token === this.props.playerToken,
                 ) !== undefined
               ) {
-                Navigation.push(this.props.componentId, {
-                  component: {
-                    id: 'questScreen',
-                    name: 'avalon.QuestScreen',
-                  },
-                });
+                pushQuest(this.props.componentId);
               } else {
-                Navigation.showModal({
-                  component: {
-                    id: 'questWaitScreen',
-                    name: 'avalon.WaitingScreen',
-                    options: {
-                      modalTransitionStyle: 'crossDissolve',
-                      modalPresentationStyle: 'overCurrentContext',
-                    },
-                    passProps: {
-                      message: this.questWaitMessage,
-                    },
-                  },
-                });
+                showQuestWait();
               }
             }
             break;
           }
           case 'questWaitScreen': {
-            Navigation.showModal({
-              component: {
-                id: 'questResultScreen',
-                name: 'avalon.QuestResultScreen',
-                options: {
-                  modalTransitionStyle: 'crossDissolve',
-                  modalPresentationStyle: 'overCurrentContext',
-                },
-              },
-            });
+            showQuestResult();
             break;
           }
         }
@@ -237,61 +147,38 @@ class BoardScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props.gameState);
+    if (this.props.disconnectedPlayers.length === 1) {
+      showPlayerDisconnected(
+        this.props.disconnectedPlayers[
+          this.props.disconnectedPlayers.length - 1
+        ],
+      );
+      return;
+    }
+    if (this.props.disconnectedPlayers.length === 0) {
+      dissmissPlayerDisconnected();
+      return;
+    }
+    if (prevProps.leftPlayers.length !== this.props.leftPlayers.length) {
+      showPlayerLeft(this.props.leftPlayers[this.props.leftPlayers.length - 1]);
+      return;
+    }
     if (this.props.gameState !== prevProps.gameState) {
       switch (this.props.gameState) {
         case 'voting': {
-          Navigation.push(this.props.componentId, {
-            component: {
-              id: 'voteScreen',
-              name: 'avalon.VoteScreen',
-            },
-          });
+          pushVote(this.props.componentId);
           break;
         }
         case 'assassination': {
           if (this.props.role.id === 'assassin') {
-            Navigation.showModal({
-              component: {
-                id: 'assassinationScreen',
-                name: 'avalon.AssassinationScreen',
-                options: {
-                  modalTransitionStyle: 'crossDissolve',
-                  modalPresentationStyle: 'overCurrentContext',
-                },
-              },
-            });
+            showAssassination();
           } else {
-            Navigation.showModal({
-              component: {
-                id: 'assassinationWaitScreen',
-                name: 'avalon.WaitingScreen',
-                options: {
-                  modalTransitionStyle: 'crossDissolve',
-                  modalPresentationStyle: 'overCurrentContext',
-                },
-                passProps: {
-                  message: this.assassinationWaitMessage,
-                },
-              },
-            });
+            showAssassinationWait();
           }
           break;
         }
         case 'end': {
-          Navigation.showModal({
-            component: {
-              id: 'endScreen',
-              name: 'avalon.EndScreen',
-              options: {
-                modalTransitionStyle: 'crossDissolve',
-                modalPresentationStyle: 'overCurrentContext',
-              },
-              passProps: {
-                message: this.assassinationWaitMessage,
-              },
-            },
-          });
+          showEnd();
           break;
         }
       }
@@ -320,15 +207,7 @@ class BoardScreen extends Component {
   };
 
   watchRoleHandler = () => {
-    Navigation.showModal({
-      component: {
-        name: 'avalon.RoleScreen',
-        options: {
-          modalTransitionStyle: 'crossDissolve',
-          modalPresentationStyle: 'overCurrentContext',
-        },
-      },
-    });
+    showRole();
   };
 
   render() {
@@ -468,7 +347,18 @@ const mapStateToProps = state => {
     questResult: state.game.questResult,
     assassinatedPlayer: state.game.assassinatedPlayer,
     assassinationResult: state.game.assassinationResult,
+    disconnectedPlayers: state.game.disconnectedPlayers,
+    leftPlayers: state.game.leftPlayers,
   };
 };
 
-export default connect(mapStateToProps)(BoardScreen);
+const mapDispatchToProps = dispatch => {
+  return {
+    wsSend: msg => dispatch(wsSend(msg)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(BoardScreen);

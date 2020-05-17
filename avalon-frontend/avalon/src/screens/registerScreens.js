@@ -20,6 +20,7 @@ import QuestsList from '../components/Game/QuestsList';
 import VotingsList from '../components/Game/VotingsList';
 import BoardScreen from './Game/Board';
 import LoadingScreen from './Game/Loading';
+import InterruptOverlay from '../components/Game/InterruptOverlay';
 import RoleScreen from './Game/Role';
 import PlayersScreen from './Game/Players';
 import VoteScreen from './Game/Vote';
@@ -80,6 +81,10 @@ export const registerScreens = () => {
     () => LoadingScreen,
     Provider,
     store,
+  );
+  Navigation.registerComponent(
+    'avalon.InterruptScreen',
+    () => InterruptOverlay,
   );
   Navigation.registerComponentWithRedux(
     'avalon.QuestsList',
