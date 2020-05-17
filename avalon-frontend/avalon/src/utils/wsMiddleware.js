@@ -1,5 +1,10 @@
 import {WS_CONNECT, WS_DISCONNECT, WS_SEND} from '../store/actions/actionTypes';
-import {wsConnected, wsDisconnected} from '../store/actions/index';
+import {
+  wsConnected,
+  wsDisconnected,
+  wsDisconnect,
+  wsSend,
+} from '../store/actions/index';
 import {
   startGame,
   updateGame,
@@ -10,8 +15,9 @@ import {
   setAssassinationState,
   setAssassinationResult,
   setEndGame,
+  setPlayerLeft,
+  setPlayerDisconnected,
 } from '../store/actions/index';
-import {Navigation} from 'react-native-navigation';
 
 const socketMiddleware = () => {
   let socket = null;
@@ -32,11 +38,6 @@ const socketMiddleware = () => {
     switch (payload.msg_type) {
       case 'start':
         store.dispatch(startGame(payload));
-        Navigation.setStackRoot('main', {
-          component: {
-            name: 'avalon.MainBoardScreen',
-          },
-        });
         break;
       case 'update':
         store.dispatch(updateGame(payload));
@@ -61,6 +62,17 @@ const socketMiddleware = () => {
         break;
       case 'end':
         store.dispatch(setEndGame(payload));
+        break;
+      case 'leave': {
+        store.dispatch(setPlayerLeft(payload));
+        const msg = {
+          msg_type: 'leave',
+        };
+        store.dispatch(wsSend(msg));
+        break;
+      }
+      case 'disconnect':
+        store.dispatch(setPlayerDisconnected(payload));
         break;
       default:
         break;

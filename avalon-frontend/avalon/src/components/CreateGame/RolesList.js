@@ -12,8 +12,10 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {connect} from 'react-redux';
+
 import {chooseRole} from '../../store/actions/index';
 import roles from '../../utils/roles';
+import game from '../../utils/game';
 
 class RolesList extends Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class RolesList extends Component {
         : this.props.side === 'good'
         ? roles.filter(role => role.side === 'good')
         : undefined;
+    this.game = game(this.props.numberOfPlayers);
   }
 
   chooseRoleHandler = role => {
@@ -34,29 +37,32 @@ class RolesList extends Component {
     }
   };
 
+  isRoleDisabled = item => {
+    if (
+      this.props.chosenRoles.filter(role => role.id === item.id).length !== 0 ||
+      this.props.chosenRoles.length ===
+        parseInt(this.props.numberOfPlayers, 10) ||
+      this.props.chosenRoles.filter(role => role.side === item.side).length ===
+        this.game[item.side]
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   roleRenderItem = ({item}) => {
     return (
       <TouchableOpacity
         style={styles.roleButton}
         onPressIn={() => this.chooseRoleHandler(item)}
-        disabled={
-          this.props.chosenRoles.filter(role => item.id === role.id).length !==
-            0 ||
-          this.props.chosenRoles.length ===
-            parseInt(this.props.numberOfPlayers, 10)
-            ? true
-            : false
-        }>
+        disabled={this.isRoleDisabled(item)}>
         <Image
           source={item.image}
           style={[
             styles.roleImage,
-            this.props.chosenRoles.filter(role => item.id === role.id)
-              .length === 0 &&
-            this.props.chosenRoles.length !==
-              parseInt(this.props.numberOfPlayers, 10)
-              ? styles.buttonActive
-              : styles.buttonDeactive,
+            this.isRoleDisabled(item)
+              ? styles.buttonDeactive
+              : styles.buttonActive,
           ]}
           resizeMode="contain"
         />

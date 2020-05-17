@@ -33,7 +33,7 @@ def get_game(player):
     Try to fetch a game for the player.
     """
     try:
-        game = Game.objects.prefetch_related('roles').get(code=player.game)
+        game = Game.objects.prefetch_related('roles').select_related('creator').get(code=player.game)
         return game
     except Game.DoesNotExist:
         raise ClientError("GAME_INVALID")
@@ -75,3 +75,28 @@ def set_players_roles(players_roles):
         role = player_role[1]
         player.role = role
         player.save()
+
+
+@database_sync_to_async
+def delete_game_players(game_code):
+    """
+    Remove all game players from db
+    """
+    Player.objects.filter(game=game_code).delete()
+
+
+@database_sync_to_async
+def delete_game(game_code):
+    """
+    Remove all game players from db
+    """
+    Game.objects.filter(code=game_code).delete()
+
+
+@database_sync_to_async
+def delete_player(player_token):
+    """
+    Remove player from db
+    """
+    Player.objects.filter(token=player_token).delete()
+

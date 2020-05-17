@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import {Navigation} from 'react-native-navigation';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
@@ -19,9 +20,15 @@ import {
   decreaseNumberOfPlayers,
   removeRole,
 } from '../../store/actions/index';
+import {chosenRolesValidation} from '../../utils/rolesValidation';
 
 class CreateGameScreen extends Component {
   createGameHandler = async () => {
+    const validation = chosenRolesValidation(this.props.chosenRoles);
+    if (!validation.validation) {
+      this.toast.show(validation.errorMessage, DURATION.LENGTH_LONG);
+      return;
+    }
     const user = JSON.parse(await AsyncStorage.getItem('user'));
     const headers = {
       'Content-Type': 'application/json',
@@ -65,15 +72,21 @@ class CreateGameScreen extends Component {
             });
           })
           .catch(err => {
-            // eslint-disable-next-line no-alert
-            alert(
+            console.log(
               `Failed to register player to the game: ${err.response.status}`,
+            );
+            this.toast.show(
+              'Whoops... something went wrong!',
+              DURATION.LENGTH_LONG,
             );
           });
       })
       .catch(err => {
-        // eslint-disable-next-line no-alert
-        alert(`Failed to register the game: ${err.response.status}`);
+        console.log(`Failed to register the game: ${err.response.status}`);
+        this.toast.show(
+          'Whoops... something went wrong!',
+          DURATION.LENGTH_LONG,
+        );
       });
   };
 
@@ -147,6 +160,15 @@ class CreateGameScreen extends Component {
           onPress={this.createGameHandler}>
           Next
         </BottomButton>
+        <Toast
+          ref={ref => {
+            this.toast = ref;
+          }}
+          style={styles.toast}
+          positionValue={hp('30%')}
+          fadeInDuration={500}
+          textStyle={styles.toastText}
+        />
       </MainView>
     );
   }
@@ -197,6 +219,17 @@ const styles = StyleSheet.create({
   rolesList: {
     marginTop: hp('1%'),
     height: hp('18%'),
+  },
+  toast: {
+    borderRadius: 30,
+    backgroundColor: '#17242c',
+  },
+  toastText: {
+    color: '#e2d7aa',
+    textAlign: 'center',
+    fontFamily: 'JosefinSans-Regular',
+    fontSize: wp('4.5%'),
+    lineHeight: hp('2.8%'),
   },
 });
 

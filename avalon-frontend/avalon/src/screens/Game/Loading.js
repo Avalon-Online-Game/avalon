@@ -6,17 +6,42 @@ import {
 } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
+import {Navigation} from 'react-native-navigation';
 
 import {
-  startGame,
   wsConnect,
   wsDisconnect,
   setPlayerToken,
+  wsSend,
 } from '../../store/actions/index';
+import {
+  showLeave,
+  showPlayerLeft,
+  goMainMenu,
+  goBoard,
+} from '../../utils/navigation';
 
 class LoadingScreen extends Component {
   constructor(props) {
     super(props);
+    Navigation.events().bindComponent(this);
+  }
+
+  navigationButtonPressed({buttonId}) {
+    switch (buttonId) {
+      case 'leaveButton': {
+        const confirmFunction = () => {
+          const msg = {
+            msg_type: 'leave',
+          };
+          this.props.wsSend(msg);
+          AsyncStorage.multiRemove(['game', 'player']);
+          goMainMenu();
+        };
+        showLeave(confirmFunction);
+        break;
+      }
+    }
   }
 
   componentDidMount() {
@@ -24,6 +49,17 @@ class LoadingScreen extends Component {
       this.props.setPlayerToken(JSON.parse(token));
       this.props.wsConnect(JSON.parse(token));
     });
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.leftPlayers.length !== this.props.leftPlayers.length) {
+      showPlayerLeft(this.props.leftPlayers[this.props.leftPlayers.length - 1]);
+      return;
+    }
+    if (prevProps.gameState !== this.props.gameState) {
+      goBoard();
+      return;
+    }
   }
 
   render() {
@@ -76,21 +112,17 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    commander: state.game.commander,
-    questNumber: state.game.questNumber,
-    players: state.game.players,
-    numberOfPlayers: state.game.numberOfPlayers,
-    role: state.game.role,
-    roleData: state.game.roleData,
+    gameState: state.game.gameState,
+    leftPlayers: state.game.leftPlayers,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    startGame: data => dispatch(startGame(data)),
     wsConnect: token => dispatch(wsConnect(token)),
     wsDisconnect: () => dispatch(wsDisconnect()),
     setPlayerToken: token => dispatch(setPlayerToken(token)),
+    wsSend: msg => dispatch(wsSend(msg)),
   };
 };
 

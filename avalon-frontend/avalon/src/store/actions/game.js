@@ -9,6 +9,8 @@ import {SET_QUEST_RESULT} from './actionTypes';
 import {SET_ASSASSINATION_STATE} from './actionTypes';
 import {SET_ASSASSINATION_RESULT} from './actionTypes';
 import {SET_END_GAME} from './actionTypes';
+import {SET_PLAYER_LEFT} from './actionTypes';
+import {SET_PLAYER_DISCONNECTED} from './actionTypes';
 
 export const setPlayerToken = token => {
   return {
@@ -83,6 +85,20 @@ export const setAssassinationResult = data => {
 export const setEndGame = data => {
   return {
     type: SET_END_GAME,
+    data: data,
+  };
+};
+
+export const setPlayerLeft = data => {
+  return {
+    type: SET_PLAYER_LEFT,
+    data: data,
+  };
+};
+
+export const setPlayerDisconnected = data => {
+  return {
+    type: SET_PLAYER_DISCONNECTED,
     data: data,
   };
 };

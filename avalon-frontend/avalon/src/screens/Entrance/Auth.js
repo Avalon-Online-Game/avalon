@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Navigation} from 'react-native-navigation';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -13,6 +12,7 @@ import DefaultButton from '../../components/UI/Entrance/DefaultButton';
 import TabButton from '../../components/UI/Entrance/TabButton';
 import DefaultInput from '../../components/UI/Entrance/DefaultInput';
 import API from '../../utils/API';
+import {goWelcome} from '../../utils/navigation';
 
 class AuthScreen extends Component {
   constructor() {
@@ -34,13 +34,7 @@ class AuthScreen extends Component {
   }
 
   startMainScreen = () => {
-    Navigation.setRoot({
-      root: {
-        component: {
-          name: 'avalon.WelcomeScreen',
-        },
-      },
-    });
+    goWelcome();
   };
 
   signupHandler = () => {
@@ -134,16 +128,17 @@ class AuthScreen extends Component {
   };
 
   onSignupEmailChange = value => {
-    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    this.setState({
+      signupEmail: value,
+      signupEmailError: '',
+    });
+  };
+
+  signupEmailEndEditHandler = value => {
+    const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (regex.test(value) === false) {
       this.setState({
-        signupEmail: value,
         signupEmailError: 'Enter a valid Email address',
-      });
-    } else {
-      this.setState({
-        signupEmail: value,
-        signupEmailError: '',
       });
     }
   };
@@ -235,6 +230,7 @@ class AuthScreen extends Component {
           <DefaultInput
             value={this.state.signupEmail}
             onChangeText={this.onSignupEmailChange}
+            onEndEditing={this.signupEmailEndEditHandler}
             placeholder="Email Address"
             style={
               this.state.signupEmailError.length > 0
@@ -262,6 +258,11 @@ class AuthScreen extends Component {
 
     return (
       <EntranceView>
+        <Image
+          style={styles.castleImage}
+          source={require('../../assets/main/castle.png')}
+          resizeMode="contain"
+        />
         <View style={styles.container}>
           <View style={styles.tabButtons}>
             <TabButton
@@ -285,32 +286,33 @@ class AuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: hp('40%'),
+  container: {},
+  castleImage: {
+    width: wp('60%'),
+    height: hp('30%'),
+    marginTop: hp('5%'),
   },
   inner: {
-    // alignItems: 'center',
     width: '100%',
     marginTop: hp('5%'),
   },
   errorInput: {
-    borderColor: 'red',
-    borderWidth: 1,
-    opacity: 0.5,
+    borderColor: '#743834',
+    borderWidth: 3,
   },
   errorText: {
     width: wp('80%'),
     alignItems: 'center',
     backgroundColor: 'transparent',
-    color: 'red',
+    color: '#743834',
     fontFamily: 'JosefinSans-Medium',
     fontSize: wp('4%'),
-    opacity: 0.5,
   },
   tabButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: wp('90%'),
+    marginTop: hp('2%'),
   },
   googleIcon: {
     width: wp('10%'),

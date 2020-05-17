@@ -1,3 +1,5 @@
+export {chooseAvatar} from './user';
+
 export {chooseRole} from './roles';
 export {removeRole} from './roles';
 export {increaseNumberOfPlayers} from './roles';
@@ -14,6 +16,8 @@ export {setQuestResult} from './game';
 export {setAssassinationState} from './game';
 export {setAssassinationResult} from './game';
 export {setEndGame} from './game';
+export {setPlayerLeft} from './game';
+export {setPlayerDisconnected} from './game';
 
 export {wsConnect} from './websocket';
 export {wsConnected} from './websocket';

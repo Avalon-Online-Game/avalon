@@ -40,7 +40,7 @@ class EndScreen extends Component {
       visible: false,
     });
     Navigation.dismissModal(this.props.componentId);
-    Navigation.setStackRoot('main', {
+    Navigation.setStackRoot('mainStack', {
       component: {
         id: 'mainMenuScreen',
         name: 'avalon.MainMenuScreen',

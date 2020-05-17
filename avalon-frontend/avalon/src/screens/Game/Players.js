@@ -15,7 +15,7 @@ import {
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 import {Overlay} from 'react-native-elements';
-import Toast from 'react-native-easy-toast';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';
@@ -46,7 +46,10 @@ class PlayersScreen extends Component {
         this.state.chosenPlayers.length !==
         parseInt(this.currentQuest.number, 10)
       ) {
-        this.toast.show(`Choose exactly ${this.currentQuest.number} players`);
+        this.toast.show(
+          `Choose exactly ${this.currentQuest.number} players`,
+          DURATION.LONG_LENGTH,
+        );
         return;
       }
       const msg = {
@@ -163,29 +166,36 @@ class PlayersScreen extends Component {
           onBackdropPress={this.dissmissHandler}
           isVisible={this.state.visible}
           overlayStyle={styles.overlayStyle}>
-          <ImageBackground
-            style={styles.background}
-            source={require('../../assets/popups/modal-back.png')}
-            resizeMode="contain">
-            <FlatList
-              style={styles.list}
-              data={this.props.players}
-              extraData={this.state.chosenPlayers}
-              renderItem={this.playerRenderItem}
-              keyExtractor={item => item.token}
-              numColumns={2}
+          <View>
+            <ImageBackground
+              style={styles.background}
+              source={require('../../assets/popups/modal-back.png')}
+              resizeMode="contain">
+              <FlatList
+                style={styles.list}
+                data={this.props.players}
+                extraData={this.state.chosenPlayers}
+                renderItem={this.playerRenderItem}
+                keyExtractor={item => item.token}
+                numColumns={2}
+              />
+              <DefaultButton
+                style={styles.button}
+                onPress={this.onButtonHandler}>
+                {this.props.buttonText}
+              </DefaultButton>
+            </ImageBackground>
+            <Toast
+              ref={ref => {
+                this.toast = ref;
+              }}
+              style={styles.toast}
+              positionValue={hp('30%')}
+              fadeInDuration={500}
+              textStyle={styles.toastText}
             />
-            <DefaultButton style={styles.button} onPress={this.onButtonHandler}>
-              {this.props.buttonText}
-            </DefaultButton>
-          </ImageBackground>
+          </View>
         </Overlay>
-        <Toast
-          ref={ref => {
-            this.toast = ref;
-          }}
-          style={styles.toastStyle}
-        />
       </View>
     );
   }
@@ -254,9 +264,16 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     fontFamily: 'JosefinSans-Light',
   },
-  toastStyle: {
+  toast: {
     borderRadius: 30,
-    backgroundColor: '#0B161C',
+    backgroundColor: '#e2d7aa',
+  },
+  toastText: {
+    color: '#17242c',
+    textAlign: 'center',
+    fontFamily: 'JosefinSans-Regular',
+    fontSize: wp('4.5%'),
+    lineHeight: hp('2.8%'),
   },
 });
 

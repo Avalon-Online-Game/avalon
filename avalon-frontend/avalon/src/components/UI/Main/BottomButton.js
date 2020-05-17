@@ -9,6 +9,7 @@ const bottomButton = props => {
   return (
     <TouchableOpacity
       style={[styles.button, props.buttonStyle]}
+      disabled={props.disabled}
       onPress={props.onPress}>
       <Text style={[styles.buttonText, props.textStyle]}>{props.children}</Text>
     </TouchableOpacity>
