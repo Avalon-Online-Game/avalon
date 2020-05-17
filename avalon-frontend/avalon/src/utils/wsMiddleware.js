@@ -87,7 +87,7 @@ const socketMiddleware = () => {
         }
         // eslint-disable-next-line no-undef
         socket = new WebSocket(
-          `ws://localhost:8000/ws/game/?token=${action.token}`,
+          `ws://194.5.193.231:8005/ws/game/?token=${action.token}`,
         );
         socket.onmessage = onMessage(store);
         socket.onclose = onClose(store);
