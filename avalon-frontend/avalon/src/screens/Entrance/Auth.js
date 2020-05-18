@@ -134,9 +134,9 @@ class AuthScreen extends Component {
     });
   };
 
-  signupEmailEndEditHandler = value => {
+  onSignupEmailEndEditHandler = value => {
     const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (regex.test(value) === false) {
+    if (regex.test(value.nativeEvent.text) === false) {
       this.setState({
         signupEmailError: 'Enter a valid Email address',
       });
@@ -230,7 +230,7 @@ class AuthScreen extends Component {
           <DefaultInput
             value={this.state.signupEmail}
             onChangeText={this.onSignupEmailChange}
-            onEndEditing={this.signupEmailEndEditHandler}
+            onEndEditing={this.onSignupEmailEndEditHandler}
             placeholder="Email Address"
             style={
               this.state.signupEmailError.length > 0
