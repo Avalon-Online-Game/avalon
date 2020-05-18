@@ -2,8 +2,7 @@ export {chooseAvatar} from './user';
 
 export {chooseRole} from './roles';
 export {removeRole} from './roles';
-export {increaseNumberOfPlayers} from './roles';
-export {decreaseNumberOfPlayers} from './roles';
+export {setNumberOfPlayers} from './roles';
 
 export {setPlayerToken} from './game';
 export {setGameQuests} from './game';

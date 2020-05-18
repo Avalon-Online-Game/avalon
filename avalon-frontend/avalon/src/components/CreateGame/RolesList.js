@@ -26,7 +26,6 @@ class RolesList extends Component {
         : this.props.side === 'good'
         ? roles.filter(role => role.side === 'good')
         : undefined;
-    this.game = game(this.props.numberOfPlayers);
   }
 
   chooseRoleHandler = role => {
@@ -43,7 +42,7 @@ class RolesList extends Component {
       this.props.chosenRoles.length ===
         parseInt(this.props.numberOfPlayers, 10) ||
       this.props.chosenRoles.filter(role => role.side === item.side).length ===
-        this.game[item.side]
+        game(this.props.numberOfPlayers)[item.side]
     ) {
       return true;
     }
