@@ -15,11 +15,7 @@ import BottomButton from '../../components/UI/Main/BottomButton';
 import RolesList from '../../components/CreateGame/RolesList';
 import ChosenRolesList from '../../components/CreateGame/ChosenRolesList';
 import API from '../../utils/API';
-import {
-  increaseNumberOfPlayers,
-  decreaseNumberOfPlayers,
-  removeRole,
-} from '../../store/actions/index';
+import {removeRole, setNumberOfPlayers} from '../../store/actions/index';
 import {chosenRolesValidation} from '../../utils/rolesValidation';
 
 class CreateGameScreen extends Component {
@@ -92,18 +88,18 @@ class CreateGameScreen extends Component {
 
   handleIncreaseNumberOfPlayers = () => {
     if (this.props.numberOfPlayers < this.props.maxNumberOfPlayers) {
-      this.props.increaseNumberOfPlayers();
+      this.props.setNumberOfPlayers(this.props.numberOfPlayers + 1);
     }
   };
 
   handleDecreaseNumberOfPlayers = () => {
     if (this.props.numberOfPlayers > this.props.minNumberOfPlayers) {
-      this.props.decreaseNumberOfPlayers();
       if (this.props.chosenRoles.length === this.props.numberOfPlayers) {
         this.props.removeRole(
           this.props.chosenRoles[this.props.chosenRoles.length - 1],
         );
       }
+      this.props.setNumberOfPlayers(this.props.numberOfPlayers - 1);
     }
   };
 
@@ -244,8 +240,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    increaseNumberOfPlayers: () => dispatch(increaseNumberOfPlayers()),
-    decreaseNumberOfPlayers: () => dispatch(decreaseNumberOfPlayers()),
+    setNumberOfPlayers: numberOfPlayers =>
+      dispatch(setNumberOfPlayers(numberOfPlayers)),
     removeRole: role => dispatch(removeRole(role)),
   };
 };

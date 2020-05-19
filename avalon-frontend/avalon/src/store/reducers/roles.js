@@ -1,7 +1,6 @@
 import {CHOOSE_ROLE} from '../actions/actionTypes';
 import {REMOVE_ROLE} from '../actions/actionTypes';
-import {INCREASE_NUMBER_OF_PLAYERS} from '../actions/actionTypes';
-import {DECREASE_NUMBER_OF_PLAYERS} from '../actions/actionTypes';
+import {SET_NUMBER_OF_PLAYERS} from '../actions/actionTypes';
 
 import roles from '../../utils/roles';
 
@@ -26,15 +25,10 @@ const reducer = (state = initialState, action) => {
           return role.id !== action.role.id;
         }),
       };
-    case INCREASE_NUMBER_OF_PLAYERS:
+    case SET_NUMBER_OF_PLAYERS:
       return {
         ...state,
-        numberOfPlayers: state.numberOfPlayers + 1,
-      };
-    case DECREASE_NUMBER_OF_PLAYERS:
-      return {
-        ...state,
-        numberOfPlayers: state.numberOfPlayers - 1,
+        numberOfPlayers: action.numberOfPlayers,
       };
     default:
       return state;

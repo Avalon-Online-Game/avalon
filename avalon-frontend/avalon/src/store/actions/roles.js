@@ -1,7 +1,6 @@
 import {CHOOSE_ROLE} from './actionTypes';
 import {REMOVE_ROLE} from './actionTypes';
-import {INCREASE_NUMBER_OF_PLAYERS} from './actionTypes';
-import {DECREASE_NUMBER_OF_PLAYERS} from './actionTypes';
+import {SET_NUMBER_OF_PLAYERS} from './actionTypes';
 
 export const chooseRole = role => {
   return {
@@ -17,14 +16,9 @@ export const removeRole = role => {
   };
 };
 
-export const increaseNumberOfPlayers = () => {
+export const setNumberOfPlayers = numberOfPlayers => {
   return {
-    type: INCREASE_NUMBER_OF_PLAYERS,
-  };
-};
-
-export const decreaseNumberOfPlayers = () => {
-  return {
-    type: DECREASE_NUMBER_OF_PLAYERS,
+    type: SET_NUMBER_OF_PLAYERS,
+    numberOfPlayers: numberOfPlayers,
   };
 };
