@@ -20,6 +20,8 @@ import {
 } from '../store/actions/index';
 
 const socketMiddleware = () => {
+  const baseUrl = __DEV__ ? 'ws://localhost:8000' : 'wss://avalongame.ir';
+
   let socket = null;
 
   const onOpen = store => event => {
@@ -87,7 +89,7 @@ const socketMiddleware = () => {
         }
         // eslint-disable-next-line no-undef
         socket = new WebSocket(
-          `ws://194.5.193.231:8005/ws/game/?token=${action.token}`,
+          `${baseUrl}/ws/game/?token=${action.token}`,
         );
         socket.onmessage = onMessage(store);
         socket.onclose = onClose(store);
