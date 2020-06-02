@@ -44,6 +44,22 @@ services:
     depends_on:
         - db
         - redis
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    command: nginx -g 'daemon off';
+    volumes:
+      - static_volume:/usr/src/app/avalon/static/
+      - media_volume:/usr/src/app/avalon/media/
+      - /data/certs:/etc/nginx/certs
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - web
+    
   
 volumes:
     postgres_data:
