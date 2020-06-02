@@ -13,6 +13,7 @@ import TabButton from '../../components/UI/Entrance/TabButton';
 import DefaultInput from '../../components/UI/Entrance/DefaultInput';
 import API from '../../utils/API';
 import {goWelcome} from '../../utils/navigation';
+import color from '../../components/UI/colors';
 
 class AuthScreen extends Component {
   constructor() {
@@ -200,7 +201,7 @@ class AuthScreen extends Component {
                 style={styles.googleIcon}
                 name="google"
                 size={20}
-                color="#e2d7aa"
+                color={color.light}
               />
             }>
             Login With Google
@@ -322,7 +323,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#17242c',
   },
   googleButtonText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontFamily: 'JosefinSans-Medium',
     opacity: 0.5,
     textAlign: 'center',
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
     marginTop: hp('1.5%'),
   },
   forgotPasswordText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontFamily: 'JosefinSans-Light',
     opacity: 0.5,
   },

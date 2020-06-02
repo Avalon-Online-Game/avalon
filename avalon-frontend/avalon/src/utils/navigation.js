@@ -1,9 +1,8 @@
 import {Navigation} from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+
+import color from '../components/UI/colors';
 
 export const goAuth = () => {
   Navigation.setRoot({
@@ -48,14 +47,14 @@ export const goMainMenu = async () => {
                         {
                           id: 'logoutButton',
                           icon: logoutIcon,
-                          color: '#e2d7aa',
+                          color: color.light,
                         },
                       ],
                       rightButtons: [
                         {
                           id: 'settingsButton',
                           icon: settingsIcon,
-                          color: '#e2d7aa',
+                          color: color.light,
                         },
                       ],
                     },
@@ -67,7 +66,7 @@ export const goMainMenu = async () => {
               topBar: {
                 backButton: {
                   icon: backIcon,
-                  color: '#e2d7aa',
+                  color: color.light,
                 },
               },
             },
@@ -95,7 +94,7 @@ export const goLoading = async () => {
                     {
                       id: 'leaveButton',
                       icon: backIcon,
-                      color: '#e2d7aa',
+                      color: color.light,
                     },
                   ],
                 },
@@ -107,7 +106,7 @@ export const goLoading = async () => {
           topBar: {
             backButton: {
               icon: backIcon,
-              color: '#e2d7aa',
+              color: color.light,
             },
           },
         },
@@ -129,14 +128,14 @@ export const goBoard = async () => {
             {
               id: 'leaveButton',
               icon: logoutIcon,
-              color: '#e2d7aa',
+              color: color.light,
             },
           ],
           rightButtons: [
             {
               id: 'settingsButton',
               icon: settingsIcon,
-              color: '#e2d7aa',
+              color: color.light,
             },
           ],
         },

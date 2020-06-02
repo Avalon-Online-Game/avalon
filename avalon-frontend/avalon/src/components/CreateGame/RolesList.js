@@ -16,6 +16,7 @@ import {connect} from 'react-redux';
 import {chooseRole} from '../../store/actions/index';
 import roles from '../../utils/roles';
 import game from '../../utils/game';
+import color from '../UI/colors';
 
 class RolesList extends Component {
   constructor(props) {
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     width: hp('15%'),
   },
   roleText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('3.5%'),
     fontFamily: 'JosefinSans-Medium',
   },

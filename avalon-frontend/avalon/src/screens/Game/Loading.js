@@ -20,6 +20,7 @@ import {
   goMainMenu,
   goBoard,
 } from '../../utils/navigation';
+import color from '../../components/UI/colors';
 
 class LoadingScreen extends Component {
   constructor(props) {
@@ -86,12 +87,12 @@ class LoadingScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#0B161C',
+    backgroundColor: color.dark,
     width: wp('100%'),
     height: hp('100%'),
   },
   mainText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('7%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Medium',

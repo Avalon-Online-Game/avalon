@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 
 import {removeRole} from '../../store/actions/index';
+import color from '../UI/colors';
 
 const extractKey = ({id}) => id;
 
@@ -46,7 +47,11 @@ class ChosenRolesList extends Component {
             <TouchableOpacity
               style={styles.chosenRoleRemoveButton}
               onPress={() => this.removeRoleHandler(item)}>
-              <Icon name="ios-remove-circle" color="#e2d7aa" size={wp('8%')} />
+              <Icon
+                name="ios-remove-circle"
+                color={color.light}
+                size={wp('8%')}
+              />
             </TouchableOpacity>
           </ImageBackground>
         </View>

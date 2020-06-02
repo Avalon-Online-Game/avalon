@@ -5,7 +5,6 @@ import {
   FlatList,
   StyleSheet,
   ImageBackground,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -19,6 +18,7 @@ import {Overlay} from 'react-native-elements';
 
 import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';
+import color from '../../components/UI/colors';
 
 class VoteResultScreen extends Component {
   constructor(props) {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     height: wp('18%'),
   },
   userText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',

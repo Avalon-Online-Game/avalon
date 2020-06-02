@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import AvatarsList from '../../components/Main/AvatarsList';
 import API from '../../utils/API';
 import {goMainMenu} from '../../utils/navigation';
+import color from '../../components/UI/colors';
 
 class WelcomeScreen extends Component {
   constructor(props) {
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
     marginTop: hp('3%'),
   },
   skipButtonText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('8%'),
     fontFamily: 'JosefinSans-Light',
     opacity: 0.5,
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   avatarsListText: {
     fontFamily: 'JosefinSans-Regular',
     fontSize: wp('5%'),
-    color: '#e2d7aa',
+    color: color.light,
     marginTop: wp('3%'),
   },
   avatarsList: {

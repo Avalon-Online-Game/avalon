@@ -10,6 +10,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import color from '../colors';
+
 const defaultButton = props => {
   let buttonContent = (
     <ImageBackground
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    color: '#0b161c',
+    color: color.dark,
     fontSize: wp('6%'),
     fontFamily: 'JosefinSans-Bold',
   },

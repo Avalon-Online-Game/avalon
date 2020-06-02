@@ -16,6 +16,7 @@ import {connect} from 'react-redux';
 
 import avatars from '../../utils/avatars';
 import {wsSend} from '../../store/actions/index';
+import color from '../../components/UI/colors';
 
 class AssassinationConfirmationScreen extends Component {
   constructor(props) {
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('10%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Medium',
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
     height: wp('30%'),
   },
   playerText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('6%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Medium',

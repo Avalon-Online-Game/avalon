@@ -5,6 +5,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import color from '../colors';
+
 const bottomButton = props => {
   return (
     <TouchableOpacity
@@ -21,12 +23,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: hp('3%'),
-    backgroundColor: '#e2d7aa',
+    backgroundColor: color.light,
     width: wp('100%'),
     height: hp('8%'),
   },
   buttonText: {
-    color: '#0b161c',
+    color: color.dark,
     fontSize: wp('6%'),
     fontFamily: 'JosefinSans-Bold',
   },

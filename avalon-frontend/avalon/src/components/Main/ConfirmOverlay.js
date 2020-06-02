@@ -6,10 +6,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {Navigation} from 'react-native-navigation';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import DefaultButton from '../UI/Main/DefaultButton';
-import {goAuth} from '../../utils/navigation';
+import color from '../UI/colors';
 
 class ConfirmOverlay extends Component {
   constructor(props) {
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('7%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Regular',

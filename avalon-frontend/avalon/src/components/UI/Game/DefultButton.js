@@ -10,6 +10,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import color from '../colors';
+
 const defaultButton = props => {
   return (
     <TouchableOpacity
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    color: '#0B161C',
+    color: color.dark,
     fontSize: wp('6%'),
     textAlign: 'center',
     textAlignVertical: 'center',
