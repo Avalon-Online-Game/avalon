@@ -36,8 +36,8 @@ class AuthScreen extends Component {
     };
   }
 
-  startMainScreen = () => {
-    goWelcome();
+  startMainScreen = username => {
+    goWelcome(username);
   };
 
   signupHandler = () => {
@@ -57,7 +57,7 @@ class AuthScreen extends Component {
     })
       .then(async res => {
         await AsyncStorage.setItem('user', JSON.stringify(res.data));
-        this.startMainScreen();
+        this.startMainScreen(res.data.username);
       })
       .catch(err => {
         if (err.response.data.email) {
@@ -101,7 +101,7 @@ class AuthScreen extends Component {
     })
       .then(res => {
         AsyncStorage.setItem('user', JSON.stringify(res.data));
-        this.startMainScreen();
+        this.startMainScreen(res.data.username);
       })
       .catch(err => {
         if (err.response.data.non_field_errors) {
@@ -221,7 +221,7 @@ class AuthScreen extends Component {
             }>
             Login
           </DefaultButton>
-          <DefaultButton
+          {/* <DefaultButton
             onPress={this.googleLoginHandler}
             buttonStyle={styles.googleButton}
             textStyle={styles.googleButtonText}
@@ -240,7 +240,7 @@ class AuthScreen extends Component {
             buttonStyle={styles.forgotPasswordButton}
             textStyle={styles.forgotPasswordText}>
             Forgot Password?
-          </DefaultButton>
+          </DefaultButton> */}
         </View>
       );
     } else if (this.state.page === 'signup') {

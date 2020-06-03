@@ -15,12 +15,15 @@ export const goAuth = () => {
   });
 };
 
-export const goWelcome = () => {
+export const goWelcome = username => {
   Navigation.setRoot({
     root: {
       component: {
         id: 'welcomeScreen',
         name: 'avalon.WelcomeScreen',
+        passProps: {
+          username: username,
+        },
       },
     },
   });
