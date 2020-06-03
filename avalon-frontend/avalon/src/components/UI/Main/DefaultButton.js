@@ -29,7 +29,8 @@ const defaultButton = props => {
   return (
     <TouchableOpacity
       style={[styles.container, props.buttonStyle]}
-      onPress={props.onPress}>
+      onPress={props.onPress}
+      disabled={props.disabled}>
       {buttonContent}
     </TouchableOpacity>
   );

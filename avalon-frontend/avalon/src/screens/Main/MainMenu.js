@@ -65,8 +65,8 @@ class MainMenuScreen extends Component {
 
   render() {
     return (
-      <MainView style={styles.constainer}>
-        <View style={styles.constainer}>
+      <MainView style={styles.background}>
+        <View style={styles.buttonsView}>
           <DefaultButton
             buttonStyle={styles.button}
             onPress={this.createGameHandler}>
@@ -79,11 +79,13 @@ class MainMenuScreen extends Component {
           </DefaultButton>
           <DefaultButton
             buttonStyle={styles.button}
+            disabled={true}
             onPress={this.playersChartHandler}>
             Players Chart
           </DefaultButton>
           <DefaultButton
             buttonStyle={styles.button}
+            disabled={true}
             onPress={this.cardsAndRolesHandler}>
             Cards & Roles
           </DefaultButton>
@@ -94,11 +96,16 @@ class MainMenuScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  constainer: {
-    paddingTop: hp('3%'),
+  background: {
+    justifyContent: 'center',
+  },
+  buttonsView: {
+    height: hp('60%'),
+    marginTop: hp('-5%'),
+    justifyContent: 'space-between',
   },
   button: {
-    marginTop: hp('5%'),
+    marginTop: hp('0%'),
   },
 });
 
