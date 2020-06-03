@@ -19,7 +19,9 @@ const styles = StyleSheet.create({
     backgroundColor: DefaultColors.dark,
   },
   viewContent: {
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

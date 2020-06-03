@@ -18,10 +18,7 @@ const tabButton = props => {
 const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
-    marginTop: hp('1%'),
     backgroundColor: 'transparent',
-    width: wp('20%'),
-    height: hp('3%'),
   },
   buttonText: {
     color: DefaultColors.light,

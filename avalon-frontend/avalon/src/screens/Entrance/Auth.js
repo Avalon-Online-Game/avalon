@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   widthPercentageToDP as wp,
@@ -189,7 +189,7 @@ class AuthScreen extends Component {
     let content;
     if (this.state.page === 'login') {
       content = (
-        <View style={styles.inner}>
+        <View style={styles.inputContent}>
           <DefaultInput
             onChangeText={this.onLoginUsernameChange}
             value={this.state.loginUsername}
@@ -221,7 +221,7 @@ class AuthScreen extends Component {
             }>
             Login
           </DefaultButton>
-          {/* <DefaultButton
+          <DefaultButton
             onPress={this.googleLoginHandler}
             buttonStyle={styles.googleButton}
             textStyle={styles.googleButtonText}
@@ -230,7 +230,7 @@ class AuthScreen extends Component {
                 style={styles.googleIcon}
                 name="google"
                 size={20}
-                color={color.light}
+                color={DefaultColors.light}
               />
             }>
             Login With Google
@@ -240,12 +240,12 @@ class AuthScreen extends Component {
             buttonStyle={styles.forgotPasswordButton}
             textStyle={styles.forgotPasswordText}>
             Forgot Password?
-          </DefaultButton> */}
+          </DefaultButton>
         </View>
       );
     } else if (this.state.page === 'signup') {
       content = (
-        <View style={styles.inner}>
+        <View style={styles.inputContent}>
           <DefaultInput
             value={this.state.signupUsername}
             onChangeText={this.onSignupUsernameChange}
@@ -299,12 +299,12 @@ class AuthScreen extends Component {
 
     return (
       <EntranceView>
-        <Image
-          style={styles.castleImage}
-          source={require('../../assets/main/castle.png')}
-          resizeMode="contain"
-        />
-        <View style={styles.container}>
+        <View style={styles.content}>
+          <Image
+            style={styles.castleImage}
+            source={require('../../assets/main/castle.png')}
+            resizeMode="contain"
+          />
           <View style={styles.tabButtons}>
             <TabButton
               title="Login"
@@ -320,31 +320,34 @@ class AuthScreen extends Component {
             </TabButton>
           </View>
           {content}
+          <Toast
+            ref={ref => {
+              this.toast = ref;
+            }}
+            style={styles.toast}
+            positionValue={hp('30%')}
+            fadeInDuration={500}
+            textStyle={styles.toastText}
+          />
         </View>
-        <Toast
-          ref={ref => {
-            this.toast = ref;
-          }}
-          style={styles.toast}
-          positionValue={hp('30%')}
-          fadeInDuration={500}
-          textStyle={styles.toastText}
-        />
       </EntranceView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  content: {
+    flex: 1,
+    alignItems: 'center',
+  },
   castleImage: {
     width: wp('60%'),
     height: hp('30%'),
-    marginTop: hp('5%'),
+    marginTop: hp('10%'),
   },
-  inner: {
+  inputContent: {
     width: '100%',
-    marginTop: hp('5%'),
+    marginTop: hp('1%'),
   },
   errorInput: {
     borderColor: '#743834',
@@ -361,7 +364,9 @@ const styles = StyleSheet.create({
   tabButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     width: wp('90%'),
+    height: hp('4%'),
     marginTop: hp('2%'),
   },
   googleIcon: {
