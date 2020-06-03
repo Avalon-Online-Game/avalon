@@ -5,7 +5,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import color from '../colors';
+import DefaultColors from '../colors';
 
 const tabButton = props => {
   return (
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     height: hp('3%'),
   },
   buttonText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('5.5%'),
     fontFamily: 'JosefinSans-Bold',
   },

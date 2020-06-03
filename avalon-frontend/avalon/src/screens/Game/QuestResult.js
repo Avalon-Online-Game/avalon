@@ -8,7 +8,7 @@ import {
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class QuestResultScreen extends Component {
   constructor(props) {
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('9%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Medium',
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'green',
   },
   scoreNumber: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('15%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Medium',
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('1%'),
   },
   scoreText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('5%'),
     textAlign: 'center',
     textAlignVertical: 'center',

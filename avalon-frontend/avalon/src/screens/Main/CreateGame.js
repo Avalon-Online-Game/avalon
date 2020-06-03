@@ -17,7 +17,7 @@ import ChosenRolesList from '../../components/CreateGame/ChosenRolesList';
 import API from '../../utils/API';
 import {removeRole, setNumberOfPlayers} from '../../store/actions/index';
 import {chosenRolesValidation} from '../../utils/rolesValidation';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class CreateGameScreen extends Component {
   createGameHandler = async () => {
@@ -123,7 +123,7 @@ class CreateGameScreen extends Component {
                   : styles.numberPickerIconActive
               }
               name="md-arrow-dropdown"
-              color={color.light}
+              color={DefaultColors.light}
               size={wp('12%')}
             />
           </TouchableHighlight>
@@ -142,7 +142,7 @@ class CreateGameScreen extends Component {
                   : styles.numberPickerIconActive
               }
               name="md-arrow-dropup"
-              color={color.light}
+              color={DefaultColors.light}
               size={wp('12%')}
             />
           </TouchableHighlight>
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     marginTop: hp('1%'),
   },
   numberPickerText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('6%'),
     fontFamily: 'JosefinSans-Medium',
   },
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   numberText: {
     backgroundColor: '#17242c',
     width: wp('8%'),
-    color: color.light,
+    color: DefaultColors.light,
     textAlign: 'center',
     fontSize: wp('6%'),
     marginHorizontal: wp('3%'),
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   rolesListText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('4.5%'),
     fontFamily: 'JosefinSans-Medium',
     marginTop: hp('2%'),
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#17242c',
   },
   toastText: {
-    color: color.light,
+    color: DefaultColors.light,
     textAlign: 'center',
     fontFamily: 'JosefinSans-Regular',
     fontSize: wp('4.5%'),

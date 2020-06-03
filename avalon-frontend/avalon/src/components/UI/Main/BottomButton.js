@@ -5,7 +5,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import color from '../colors';
+import DefaultColors from '../colors';
 
 const bottomButton = props => {
   return (
@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: hp('3%'),
-    backgroundColor: color.light,
+    backgroundColor: DefaultColors.light,
     width: wp('100%'),
     height: hp('8%'),
   },
   buttonText: {
-    color: color.dark,
+    color: DefaultColors.dark,
     fontSize: wp('6%'),
     fontFamily: 'JosefinSans-Bold',
   },

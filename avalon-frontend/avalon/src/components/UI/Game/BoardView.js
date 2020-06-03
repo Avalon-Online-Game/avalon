@@ -5,7 +5,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import color from '../colors';
+import DefaultColors from '../colors';
 
 const boardView = props => {
   return (
@@ -25,7 +25,7 @@ const boardView = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.dark,
+    backgroundColor: DefaultColors.dark,
   },
   image: {
     width: wp('100%'),

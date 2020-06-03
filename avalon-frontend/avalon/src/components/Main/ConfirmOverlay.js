@@ -8,7 +8,7 @@ import {
 import {Navigation} from 'react-native-navigation';
 
 import DefaultButton from '../UI/Main/DefaultButton';
-import color from '../UI/colors';
+import DefaultColors from '../UI/colors';
 
 class ConfirmOverlay extends Component {
   constructor(props) {
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('7%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Regular',

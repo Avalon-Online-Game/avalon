@@ -14,7 +14,7 @@ import {connect} from 'react-redux';
 
 import avatars from '../../utils/avatars';
 import {chooseAvatar} from '../../store/actions/index';
-import color from '../UI/colors';
+import DefaultColors from '../UI/colors';
 
 class AvatarsList extends Component {
   constructor(props) {
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     height: hp('12%'),
   },
   roleText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('3.5%'),
     fontFamily: 'JosefinSans-Medium',
   },

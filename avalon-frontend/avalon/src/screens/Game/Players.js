@@ -20,7 +20,7 @@ import Toast, {DURATION} from 'react-native-easy-toast';
 import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';
 import {wsSend} from '../../store/actions/index';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class PlayersScreen extends Component {
   constructor(props) {
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: hp('2.7%'),
     width: wp('60%'),
-    borderColor: color.light,
+    borderColor: DefaultColors.light,
   },
   buttonDeactivate: {
     opacity: 0.5,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     height: wp('18%'),
   },
   userText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   },
   toast: {
     borderRadius: 30,
-    backgroundColor: color.light,
+    backgroundColor: DefaultColors.light,
   },
   toastText: {
     color: '#17242c',

@@ -19,7 +19,7 @@ import {Overlay} from 'react-native-elements';
 import API from '../../utils/API';
 import avatars from '../../utils/avatars';
 import roles from '../../utils/roles';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class EndScreen extends Component {
   constructor(props) {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('1%'),
   },
   userText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('2%'),
   },
   mainText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('8%'),
     textAlign: 'center',
     textAlignVertical: 'center',

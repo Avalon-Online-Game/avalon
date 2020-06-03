@@ -17,7 +17,7 @@ import {connect} from 'react-redux';
 import {Overlay} from 'react-native-elements';
 
 import avatars from '../../utils/avatars';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class AssassinationScreen extends Component {
   constructor(props) {
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   mainText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('6%'),
     textAlign: 'center',
     textAlignVertical: 'center',
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     height: wp('18%'),
   },
   userText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',

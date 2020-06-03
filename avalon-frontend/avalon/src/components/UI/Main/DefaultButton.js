@@ -10,7 +10,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import color from '../colors';
+import DefaultColors from '../colors';
 
 const defaultButton = props => {
   let buttonContent = (
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    color: color.dark,
+    color: DefaultColors.dark,
     fontSize: wp('6%'),
     fontFamily: 'JosefinSans-Bold',
   },

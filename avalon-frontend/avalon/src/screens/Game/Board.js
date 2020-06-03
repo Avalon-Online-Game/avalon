@@ -31,7 +31,7 @@ import {
   dissmissPlayerDisconnected,
 } from '../../utils/navigation';
 import {wsSend} from '../../store/actions/index';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class BoardScreen extends Component {
   constructor(props) {
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
   },
   commanderText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',

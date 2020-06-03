@@ -14,7 +14,7 @@ import TabButton from '../../components/UI/Entrance/TabButton';
 import DefaultInput from '../../components/UI/Entrance/DefaultInput';
 import API from '../../utils/API';
 import {goWelcome} from '../../utils/navigation';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class AuthScreen extends Component {
   constructor() {
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#17242c',
   },
   googleButtonText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontFamily: 'JosefinSans-Medium',
     opacity: 0.5,
     textAlign: 'center',
@@ -383,13 +383,13 @@ const styles = StyleSheet.create({
     marginTop: hp('1.5%'),
   },
   forgotPasswordText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontFamily: 'JosefinSans-Light',
     opacity: 0.5,
   },
   toast: {
     borderRadius: 30,
-    backgroundColor: color.light,
+    backgroundColor: DefaultColors.light,
   },
   toastText: {
     color: '#17242c',

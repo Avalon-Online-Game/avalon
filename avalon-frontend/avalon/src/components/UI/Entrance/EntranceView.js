@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-import color from '../colors';
+import DefaultColors from '../colors';
 
 const entranceView = props => {
   return (
@@ -16,7 +16,7 @@ const entranceView = props => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: color.dark,
+    backgroundColor: DefaultColors.dark,
   },
   viewContent: {
     alignItems: 'center',
