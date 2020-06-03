@@ -32,6 +32,8 @@ import AssassinationScreen from './Game/Assassination';
 import AssassinationConfirmationScreen from './Game/AssassinationConfirmation';
 import EndScreen from './Game/End';
 
+import color from '../components/UI/colors';
+
 import configureStore from '../store/configureStore';
 
 const store = configureStore();
@@ -184,14 +186,14 @@ export const registerScreens = () => {
       animate: true,
       title: {
         text: 'AVALON',
-        color: '#e2d7aa',
+        color: color.light,
         fontSize: hp('4.5%'),
         fontFamily: 'JosefinSans-Bold',
         alignment: 'center',
       },
       height: hp('8%'),
       background: {
-        color: '#0b161c',
+        color: color.dark,
       },
     },
   });

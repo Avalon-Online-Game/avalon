@@ -15,6 +15,7 @@ import {connect} from 'react-redux';
 
 import quests from '../../utils/quests';
 import {setGameQuests} from '../../store/actions/index';
+import color from '../UI/colors';
 
 class QuestsList extends Component {
   constructor(props) {
@@ -153,12 +154,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   questNumber: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('20%'),
     fontFamily: 'Dubai-Regular',
   },
   questDetail: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('4.5%'),
     height: hp('4%'),
     fontFamily: 'Dubai-Light',

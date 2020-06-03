@@ -11,6 +11,7 @@ import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
 import API from '../../utils/API';
 import {goLoading} from '../../utils/navigation';
+import color from '../../components/UI/colors';
 
 class JoinGameScreen extends Component {
   constructor() {
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   text: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('6%'),
     marginTop: hp('1%'),
     fontFamily: 'JosefinSans-Medium',
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
     height: wp('12%'),
     fontSize: wp('6%'),
     marginHorizontal: wp('2.5%'),
-    color: '#e2d7aa',
+    color: color.light,
     textAlign: 'center',
   },
   toast: {
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#17242c',
   },
   toastText: {
-    color: '#e2d7aa',
+    color: color.light,
     textAlign: 'center',
     fontFamily: 'JosefinSans-Regular',
     fontSize: wp('4.5%'),

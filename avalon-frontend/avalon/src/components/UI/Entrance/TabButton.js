@@ -5,6 +5,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import color from '../colors';
+
 const tabButton = props => {
   return (
     <TouchableOpacity style={styles.button} onPress={props.onPress}>
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
     height: hp('3%'),
   },
   buttonText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('5.5%'),
     fontFamily: 'JosefinSans-Bold',
   },

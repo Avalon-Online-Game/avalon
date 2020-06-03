@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 import EntranceView from '../../components/UI/Entrance/EntranceView';
 import DefaultButton from '../../components/UI/Entrance/DefaultButton';
@@ -13,6 +14,7 @@ import TabButton from '../../components/UI/Entrance/TabButton';
 import DefaultInput from '../../components/UI/Entrance/DefaultInput';
 import API from '../../utils/API';
 import {goWelcome} from '../../utils/navigation';
+import color from '../../components/UI/colors';
 
 class AuthScreen extends Component {
   constructor() {
@@ -30,6 +32,7 @@ class AuthScreen extends Component {
       signupUsernameError: '',
       signupPasswordError: '',
       loginError: '',
+      isLoading: false,
     };
   }
 
@@ -61,22 +64,29 @@ class AuthScreen extends Component {
           this.setState({
             signupEmailError: 'Email address has already been registered',
           });
-        }
-        if (err.response.data.username) {
+        } else if (err.response.data.username) {
           this.setState({
             signupUsernameError: 'Username is taken by another user',
           });
-        }
-        if (err.response.data.password) {
+        } else if (err.response.data.password) {
           this.setState({
             signupPasswordError: err.response.data.password,
           });
+        } else {
+          this.toast.show('Check your connection...', DURATION.LONG_LENGTH);
         }
       });
+    this.setState({
+      isLoading: true,
+    });
   };
 
   loginHandler = () => {
-    if (this.state.loginError.length > 0) {
+    if (
+      this.state.loginError.length > 0 ||
+      this.state.loginUsername.length === 0 ||
+      this.state.loginPassword.length === 0
+    ) {
       return;
     }
     const headers = {
@@ -98,8 +108,13 @@ class AuthScreen extends Component {
           this.setState({
             loginError: 'Username or password is incorrect',
           });
+        } else {
+          this.toast.show('Check your connection...', DURATION.LONG_LENGTH);
         }
       });
+    this.setState({
+      isLoading: true,
+    });
   };
 
   googleLoginHandler = () => {};
@@ -110,6 +125,7 @@ class AuthScreen extends Component {
     this.setState({
       loginUsername: value,
       loginError: '',
+      isLoading: false,
     });
   };
 
@@ -117,6 +133,7 @@ class AuthScreen extends Component {
     this.setState({
       loginPassword: value,
       loginError: '',
+      isLoading: false,
     });
   };
 
@@ -124,6 +141,7 @@ class AuthScreen extends Component {
     this.setState({
       signupUsername: value,
       signupUsernameError: '',
+      isLoading: false,
     });
   };
 
@@ -131,6 +149,7 @@ class AuthScreen extends Component {
     this.setState({
       signupEmail: value,
       signupEmailError: '',
+      isLoading: false,
     });
   };
 
@@ -190,8 +209,19 @@ class AuthScreen extends Component {
             ]}
           />
           <Text style={styles.errorText}>{this.state.loginError}</Text>
-          <DefaultButton onPress={this.loginHandler}>Login</DefaultButton>
           <DefaultButton
+            onPress={this.loginHandler}
+            disabled={
+              this.state.loginUsername.length === 0 ||
+              this.state.loginPassword.length === 0 ||
+              this.state.loginError.length > 0 ||
+              this.state.isLoading
+                ? true
+                : false
+            }>
+            Login
+          </DefaultButton>
+          {/* <DefaultButton
             onPress={this.googleLoginHandler}
             buttonStyle={styles.googleButton}
             textStyle={styles.googleButtonText}
@@ -200,7 +230,7 @@ class AuthScreen extends Component {
                 style={styles.googleIcon}
                 name="google"
                 size={20}
-                color="#e2d7aa"
+                color={color.light}
               />
             }>
             Login With Google
@@ -210,7 +240,7 @@ class AuthScreen extends Component {
             buttonStyle={styles.forgotPasswordButton}
             textStyle={styles.forgotPasswordText}>
             Forgot Password?
-          </DefaultButton>
+          </DefaultButton> */}
         </View>
       );
     } else if (this.state.page === 'signup') {
@@ -251,7 +281,18 @@ class AuthScreen extends Component {
             }
           />
           <Text style={styles.errorText}>{this.state.signupPasswordError}</Text>
-          <DefaultButton onPress={this.signupHandler}>Sign up</DefaultButton>
+          <DefaultButton
+            onPress={this.signupHandler}
+            disabled={
+              this.state.signupEmail.length === 0 ||
+              this.state.signupPassword.length === 0 ||
+              this.state.signupEmailError.length > 0 ||
+              this.state.isLoading
+                ? true
+                : false
+            }>
+            Sign up
+          </DefaultButton>
         </View>
       );
     }
@@ -280,6 +321,15 @@ class AuthScreen extends Component {
           </View>
           {content}
         </View>
+        <Toast
+          ref={ref => {
+            this.toast = ref;
+          }}
+          style={styles.toast}
+          positionValue={hp('30%')}
+          fadeInDuration={500}
+          textStyle={styles.toastText}
+        />
       </EntranceView>
     );
   }
@@ -322,7 +372,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#17242c',
   },
   googleButtonText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontFamily: 'JosefinSans-Medium',
     opacity: 0.5,
     textAlign: 'center',
@@ -333,9 +383,20 @@ const styles = StyleSheet.create({
     marginTop: hp('1.5%'),
   },
   forgotPasswordText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontFamily: 'JosefinSans-Light',
     opacity: 0.5,
+  },
+  toast: {
+    borderRadius: 30,
+    backgroundColor: color.light,
+  },
+  toastText: {
+    color: '#17242c',
+    textAlign: 'center',
+    fontFamily: 'JosefinSans-Regular',
+    fontSize: wp('4.5%'),
+    lineHeight: hp('2.8%'),
   },
 });
 

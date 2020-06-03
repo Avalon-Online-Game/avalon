@@ -8,6 +8,8 @@ import {
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 
+import color from '../../components/UI/colors';
+
 class WaitingScreen extends Component {
   constructor(props) {
     super(props);
@@ -79,13 +81,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('10%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Medium',
   },
   mainText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('7%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Regular',

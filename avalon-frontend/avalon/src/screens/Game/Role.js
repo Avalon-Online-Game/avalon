@@ -11,6 +11,7 @@ import {Overlay} from 'react-native-elements';
 import RoleDataList from '../../components/Game/RoleDataList';
 import DefaultButton from '../../components/UI/Game/DefultButton';
 import {startGame, wsConnect, wsDisconnect} from '../../store/actions/index';
+import color from '../../components/UI/colors';
 
 class RoleScreen extends Component {
   constructor(props) {
@@ -78,14 +79,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('6%'),
     textAlign: 'center',
     marginTop: hp('5%'),
     fontFamily: 'JosefinSans-Regular',
   },
   roleText: {
-    color: '#e2d7aa',
+    color: color.light,
     fontSize: wp('8%'),
     textAlign: 'center',
     marginTop: hp('-7%'),
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'green',
   },
   buttonText: {
-    color: '#0B161C',
+    color: color.dark,
     fontSize: wp('6%'),
     textAlign: 'center',
     textAlignVertical: 'center',
