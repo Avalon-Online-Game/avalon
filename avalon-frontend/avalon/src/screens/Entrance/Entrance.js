@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, Image, StyleSheet} from 'react-native';
+import {Text, Image, StyleSheet, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   widthPercentageToDP as wp,
@@ -8,7 +8,8 @@ import {
 
 import EntranceView from '../../components/UI/Entrance/EntranceView';
 import API from '../../utils/API';
-import {goAuth, goLoading, goMainMenu} from '../../utils/navigation';
+import {goAuth, goMainMenu} from './navigation';
+import {goLoading} from '../Main/navigation';
 
 class EntranceScreen extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class EntranceScreen extends Component {
         await this.isPlayerValid();
       }
     }
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 4000));
     this.navigationFunction();
   }
 
@@ -110,31 +111,50 @@ class EntranceScreen extends Component {
   render() {
     return (
       <EntranceView>
-        <Text style={styles.mainText}>AVALON</Text>
-        <Image
-          style={styles.castleImage}
-          source={require('../../assets/main/castle.png')}
-          resizeMode="contain"
-        />
+        <View style={styles.content}>
+          <Image
+            style={styles.crownImage}
+            source={require('../../assets/main/crown.png')}
+            resizeMode="contain"
+          />
+          <Text style={styles.mainText}>AVALON</Text>
+          <Image
+            style={styles.castleImage}
+            source={require('../../assets/main/castle.png')}
+            resizeMode="contain"
+          />
+        </View>
       </EntranceView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  content: {
     flex: 1,
     alignItems: 'center',
+  },
+  crownImage: {
+    width: wp('15%'),
+    height: hp('8%'),
+    marginTop: hp('15%'),
+    alignSelf: 'flex-end',
+    transform: [
+      {
+        rotate: '15deg',
+      },
+    ],
+    marginBottom: hp('-2%'),
+    marginRight: wp('-3%'),
   },
   mainText: {
     color: '#e4d7aa',
     fontFamily: 'JosefinSans-Bold',
-    fontSize: wp('15%'),
-    marginTop: hp('20%'),
+    fontSize: wp('17%'),
   },
   castleImage: {
-    width: wp('60%'),
-    height: hp('30%'),
+    width: wp('70%'),
+    height: hp('40%'),
     marginTop: hp('10%'),
   },
   skipButton: {

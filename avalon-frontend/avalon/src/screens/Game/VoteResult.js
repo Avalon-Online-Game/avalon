@@ -18,7 +18,7 @@ import {Overlay} from 'react-native-elements';
 
 import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class VoteResultScreen extends Component {
   constructor(props) {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     height: wp('18%'),
   },
   userText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',

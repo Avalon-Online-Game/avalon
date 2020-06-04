@@ -4,59 +4,55 @@ import {Navigation} from 'react-native-navigation';
 
 import MainView from '../../components/UI/Main/MainView';
 import DefaultButton from '../../components/UI/Main/DefaultButton';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import AsyncStorage from '@react-native-community/async-storage';
-
-import {goAuth} from '../../utils/navigation';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {showLogout, pushCreateGame, pushJoinGame} from './navigation';
 
 class MainMenuScreen extends Component {
   constructor(props) {
     super(props);
     Navigation.events().bindComponent(this);
+    this.state = {
+      inLogoutModal: false,
+    };
   }
 
   navigationButtonPressed({buttonId}) {
     switch (buttonId) {
       case 'logoutButton': {
-        Navigation.showModal({
-          component: {
-            id: 'logoutScreen',
-            name: 'avalon.ConfirmScreen',
-            options: {
-              modalTransitionStyle: 'crossDissolve',
-              modalPresentationStyle: 'overCurrentContext',
+        if (!this.state.inLogoutModal) {
+          this.setState(
+            {
+              inLogoutModal: true,
             },
-            passProps: {
-              message: 'Are you sure you want to logout?',
-              confirmFunction: () => {
-                AsyncStorage.removeItem('user');
-                goAuth();
-              },
-            },
-          },
-        });
+            showLogout(),
+          );
+        }
         break;
       }
     }
   }
 
-  createGameHandler = () => {
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: 'avalon.CreateGameScreen',
+  componentDidMount() {
+    Navigation.events().registerModalDismissedListener(
+      ({componentId, modalsDismissed}) => {
+        switch (componentId) {
+          case 'logoutScreen': {
+            this.setState({
+              inLogoutModal: false,
+            });
+            break;
+          }
+        }
       },
-    });
+    );
+  }
+
+  createGameHandler = () => {
+    pushCreateGame();
   };
 
   joinGameHandler = () => {
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: 'avalon.JoinGameScreen',
-      },
-    });
+    pushJoinGame();
   };
 
   playersChartHandler = () => {};

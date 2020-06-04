@@ -14,8 +14,8 @@ import BottomButton from '../../components/UI/Game/BottomButton';
 import QuestList from '../../components/Game/QuestsList';
 import VotingsList from '../../components/Game/VotingsList';
 import {
-  goMainMenu,
   showRole,
+  showPlayers,
   showLeave,
   pushVote,
   showVotingWait,
@@ -29,28 +29,41 @@ import {
   showPlayerDisconnected,
   showPlayerLeft,
   dissmissPlayerDisconnected,
-} from '../../utils/navigation';
+} from './navigation';
+import {goMainMenu} from '../Entrance/navigation';
 import {wsSend} from '../../store/actions/index';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class BoardScreen extends Component {
   constructor(props) {
     super(props);
     Navigation.events().bindComponent(this);
+    this.state = {
+      inLeaveModal: false,
+      inRoleScreen: false,
+      inPlayersScreen: false,
+    };
+    this.leaveConfirmFunction = () => {
+      const msg = {
+        msg_type: 'leave',
+      };
+      this.props.wsSend(msg);
+      AsyncStorage.multiRemove(['game', 'player']);
+      goMainMenu();
+    };
   }
 
   navigationButtonPressed({buttonId}) {
     switch (buttonId) {
       case 'leaveButton': {
-        const confirmFunction = () => {
-          const msg = {
-            msg_type: 'leave',
-          };
-          this.props.wsSend(msg);
-          AsyncStorage.multiRemove(['game', 'player']);
-          goMainMenu();
-        };
-        showLeave(confirmFunction);
+        if (!this.state.inLeaveModal) {
+          this.setState(
+            {
+              inLeaveModal: true,
+            },
+            showLeave(this.leaveConfirmFunction),
+          );
+        }
         break;
       }
     }
@@ -119,8 +132,31 @@ class BoardScreen extends Component {
     Navigation.events().registerModalDismissedListener(
       ({componentId, modalsDismissed}) => {
         switch (componentId) {
+          case 'leaveScreen': {
+            this.setState({
+              inLeaveModal: false,
+            });
+            break;
+          }
+          case 'roleScreen': {
+            this.setState({
+              inRoleScreen: false,
+            });
+            break;
+          }
+          case 'questChoiceScreen': {
+            this.setState({
+              inPlayersScreen: false,
+            });
+            break;
+          }
+          case 'playersScreen': {
+            this.setState({
+              inPlayersScreen: false,
+            });
+            break;
+          }
           case 'votingWaitScreen': {
-            console.log('opening vote result');
             showVotingResult();
             break;
           }
@@ -156,7 +192,10 @@ class BoardScreen extends Component {
       );
       return;
     }
-    if (this.props.disconnectedPlayers.length === 0) {
+    if (
+      this.props.disconnectedPlayers.length === 0 &&
+      prevProps.disconnectedPlayers.length > 0
+    ) {
       dissmissPlayerDisconnected();
       return;
     }
@@ -187,28 +226,28 @@ class BoardScreen extends Component {
   }
 
   watchPlayersHandler = () => {
-    let commanderButtonText = this.isPlayerCommander() ? 'Confirm' : 'Got it';
-    let modalId = this.isPlayerCommander()
-      ? 'questChoiceScreen'
-      : 'playersScreen';
-    Navigation.showModal({
-      component: {
-        id: modalId,
-        name: 'avalon.PlayersScreen',
-        options: {
-          modalTransitionStyle: 'crossDissolve',
-          modalPresentationStyle: 'overCurrentContext',
+    const isPlayerCommander = this.isPlayerCommander();
+    let commanderButtonText = isPlayerCommander ? 'Confirm' : 'Got it';
+    let modalId = isPlayerCommander ? 'questChoiceScreen' : 'playersScreen';
+    if (!this.state.inPlayersScreen) {
+      this.setState(
+        {
+          inPlayersScreen: true,
         },
-        passProps: {
-          isPlayerCommander: this.isPlayerCommander(),
-          buttonText: commanderButtonText,
-        },
-      },
-    });
+        showPlayers(modalId, isPlayerCommander, commanderButtonText),
+      );
+    }
   };
 
   watchRoleHandler = () => {
-    showRole();
+    if (!this.state.inRoleScreen) {
+      this.setState(
+        {
+          inRoleScreen: true,
+        },
+        showRole(),
+      );
+    }
   };
 
   render() {
@@ -267,24 +306,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    // backgroundColor: 'white',
   },
   questsList: {
     height: hp('28%'),
-    // backgroundColor: 'red',
   },
   votingsList: {
     width: wp('90%'),
     height: wp('20%'),
     marginHorizontal: wp('2%'),
-    // marginTop: hp('-2%'),
-    // backgroundColor: 'purple',
   },
   bottomContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: wp('2%'),
-    // backgroundColor: 'yellow',
   },
   playersButton: {
     marginHorizontal: wp('2%'),
@@ -296,7 +330,6 @@ const styles = StyleSheet.create({
     height: hp('12%'),
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'blue',
   },
   roleButtonImage: {
     width: wp('18%'),
@@ -313,16 +346,13 @@ const styles = StyleSheet.create({
   //   textAlignVertical: 'center',
   //   fontFamily: 'JosefinSans-Regular',
   // },
-  commander: {
-    // backgroundColor: 'red',
-  },
+  commander: {},
   commanderText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',
     fontFamily: 'JosefinSans-Regular',
-    // backgroundColor: 'green',
   },
 });
 

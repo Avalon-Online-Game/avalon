@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Image, Text, StyleSheet} from 'react-native';
+import {View, Image, Text, StyleSheet} from 'react-native';
 
 import EntranceView from '../../components/UI/Entrance/EntranceView';
-import DefaultButton from '../../components/UI/Main/DefaultButton';
+import BottomButton from '../../components/UI/Main/BottomButton';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,17 +12,15 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import AvatarsList from '../../components/Main/AvatarsList';
 import API from '../../utils/API';
-import {goMainMenu} from '../../utils/navigation';
-import color from '../../components/UI/colors';
+import {goMainMenu} from '../Entrance/navigation';
+import DefaultColors from '../../components/UI/colors';
 
 class WelcomeScreen extends Component {
   constructor(props) {
     super(props);
   }
 
-  tutorialHandler = () => {};
-
-  skipHandler = async () => {
+  nextHandler = async () => {
     const user = JSON.parse(await AsyncStorage.getItem('user'));
     const headers = {
       'Content-Type': 'application/json',
@@ -46,71 +44,68 @@ class WelcomeScreen extends Component {
   render() {
     return (
       <EntranceView>
-        <Image
-          style={styles.tickImage}
-          source={require('../../assets/main/welcome.png')}
-        />
-        <Image
-          style={styles.chosenAvatarImage}
-          source={this.props.chosenAvatar.image}
-          resizeMode="contain"
-        />
-        <Text style={styles.avatarsListText}>Choose an avatar</Text>
-        <AvatarsList style={styles.avatarsList} />
-        <DefaultButton
-          buttonStyle={styles.tutorialButton}
-          onPress={this.tutorialHandler}>
-          Tutorial
-        </DefaultButton>
-        <DefaultButton
-          buttonStyle={styles.skipButton}
-          transparentButton={true}
-          textStyle={styles.skipButtonText}
-          onPress={this.skipHandler}>
-          Next>
-        </DefaultButton>
+        <View style={styles.content}>
+          <View style={styles.contentInner}>
+            <Image
+              style={styles.tickImage}
+              source={require('../../assets/main/welcome.png')}
+            />
+            <Text style={styles.avatarsListText}>Choose An Avatar</Text>
+            <View style={styles.userContainer}>
+              <Image
+                style={styles.chosenAvatarImage}
+                source={this.props.chosenAvatar.image}
+                resizeMode="contain"
+              />
+              <Text style={styles.chosenAvatarText}>{this.props.username}</Text>
+            </View>
+            <AvatarsList style={styles.avatarsList} />
+          </View>
+          <BottomButton onPress={this.nextHandler}>Next</BottomButton>
+        </View>
       </EntranceView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  content: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  contentInner: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp('10%'),
   },
   tickImage: {
-    marginTop: hp('10%'),
     width: wp('30%'),
     height: wp('30%'),
   },
-  tutorialButton: {
+  avatarsListText: {
+    fontFamily: 'JosefinSans-Regular',
+    fontSize: wp('6%'),
+    color: DefaultColors.light,
     marginTop: hp('10%'),
   },
-  skipButton: {
-    marginTop: hp('3%'),
-  },
-  skipButtonText: {
-    color: color.light,
-    fontSize: wp('8%'),
-    fontFamily: 'JosefinSans-Light',
-    opacity: 0.5,
+  userContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp('2%'),
   },
   chosenAvatarImage: {
     width: hp('12%'),
     height: hp('12%'),
-    marginTop: hp('5%'),
   },
-  avatarsListText: {
-    fontFamily: 'JosefinSans-Regular',
-    fontSize: wp('5%'),
-    color: color.light,
-    marginTop: wp('3%'),
+  chosenAvatarText: {
+    fontFamily: 'JosefinSans-Light',
+    fontSize: wp('5.5%'),
+    color: DefaultColors.light,
   },
   avatarsList: {
     height: hp('12%'),
     marginTop: hp('2%'),
-    // backgroundColor: 'red',
   },
 });
 

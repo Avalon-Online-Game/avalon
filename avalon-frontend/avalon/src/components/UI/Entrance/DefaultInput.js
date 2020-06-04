@@ -5,13 +5,13 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import color from '../colors';
+import DefaultColors from '../colors';
 
 const defaultInput = props => (
   <View style={styles.container}>
     <TextInput
       {...props}
-      placeholderTextColor={color.light}
+      placeholderTextColor={DefaultColors.light}
       style={[styles.input, props.style]}
       onEndEditing={props.onEndEditing}
     />
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#17242c',
     width: '100%',
     height: hp('7%'),
-    color: color.light,
+    color: DefaultColors.light,
     fontFamily: 'JosefinSans-Medium',
     fontSize: wp('4.8%'),
     marginTop: hp('1%'),

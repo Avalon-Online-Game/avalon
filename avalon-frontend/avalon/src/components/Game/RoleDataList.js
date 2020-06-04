@@ -6,7 +6,7 @@ import {
 } from 'react-native-responsive-screen';
 
 import avatars from '../../utils/avatars';
-import color from '../UI/colors';
+import DefaultColors from '../UI/colors';
 
 class RoleDataList extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     height: wp('20%'),
   },
   roleDataText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('4%'),
     fontFamily: 'JosefinSans-Regular',
     textAlign: 'center',

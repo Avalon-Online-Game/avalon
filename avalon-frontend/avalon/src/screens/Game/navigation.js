@@ -2,118 +2,7 @@ import {Navigation} from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
-import color from '../components/UI/colors';
-
-export const goAuth = () => {
-  Navigation.setRoot({
-    root: {
-      component: {
-        id: 'authScreen',
-        name: 'avalon.AuthScreen',
-      },
-    },
-  });
-};
-
-export const goWelcome = () => {
-  Navigation.setRoot({
-    root: {
-      component: {
-        id: 'welcomeScreen',
-        name: 'avalon.WelcomeScreen',
-      },
-    },
-  });
-};
-
-export const goMainMenu = async () => {
-  const backIcon = await Icon.getImageSource('ios-arrow-back', wp('8%'));
-  const logoutIcon = await Icon.getImageSource('ios-log-out', wp('8%'));
-  const settingsIcon = await Icon.getImageSource('ios-settings', wp('8%'));
-  Navigation.setRoot({
-    root: {
-      sideMenu: {
-        center: {
-          stack: {
-            id: 'mainStack',
-            children: [
-              {
-                component: {
-                  id: 'mainMenuScreen',
-                  name: 'avalon.MainMenuScreen',
-                  options: {
-                    topBar: {
-                      leftButtons: [
-                        {
-                          id: 'logoutButton',
-                          icon: logoutIcon,
-                          color: color.light,
-                        },
-                      ],
-                      rightButtons: [
-                        {
-                          id: 'settingsButton',
-                          icon: settingsIcon,
-                          color: color.light,
-                        },
-                      ],
-                    },
-                  },
-                },
-              },
-            ],
-            options: {
-              topBar: {
-                backButton: {
-                  icon: backIcon,
-                  color: color.light,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-};
-
-export const goLoading = async () => {
-  const backIcon = await Icon.getImageSource('ios-arrow-back', wp('8%'));
-  Navigation.setRoot({
-    root: {
-      stack: {
-        id: 'mainStack',
-        children: [
-          {
-            component: {
-              id: 'loadingScreen',
-              name: 'avalon.LoadingScreen',
-              options: {
-                topBar: {
-                  leftButtons: [
-                    {
-                      id: 'leaveButton',
-                      icon: backIcon,
-                      color: color.light,
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        ],
-        options: {
-          topBar: {
-            backButton: {
-              icon: backIcon,
-              color: color.light,
-            },
-          },
-        },
-      },
-    },
-  });
-};
+import DefaultColors from '../../components/UI/colors';
 
 export const goBoard = async () => {
   const logoutIcon = await Icon.getImageSource('ios-log-out', wp('8%'));
@@ -128,14 +17,14 @@ export const goBoard = async () => {
             {
               id: 'leaveButton',
               icon: logoutIcon,
-              color: color.light,
+              color: DefaultColors.light,
             },
           ],
           rightButtons: [
             {
               id: 'settingsButton',
               icon: settingsIcon,
-              color: color.light,
+              color: DefaultColors.light,
             },
           ],
         },
@@ -152,6 +41,27 @@ export const showRole = () => {
       options: {
         modalTransitionStyle: 'crossDissolve',
         modalPresentationStyle: 'overCurrentContext',
+      },
+    },
+  });
+};
+
+export const showPlayers = (
+  modalId,
+  isPlayerCommander,
+  commanderButtonText,
+) => {
+  Navigation.showModal({
+    component: {
+      id: modalId,
+      name: 'avalon.PlayersScreen',
+      options: {
+        modalTransitionStyle: 'crossDissolve',
+        modalPresentationStyle: 'overCurrentContext',
+      },
+      passProps: {
+        isPlayerCommander: isPlayerCommander,
+        buttonText: commanderButtonText,
       },
     },
   });

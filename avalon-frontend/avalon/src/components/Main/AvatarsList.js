@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {
   View,
   FlatList,
-  TouchableOpacity,
   Image,
   StyleSheet,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -14,7 +14,7 @@ import {connect} from 'react-redux';
 
 import avatars from '../../utils/avatars';
 import {chooseAvatar} from '../../store/actions/index';
-import color from '../UI/colors';
+import DefaultColors from '../UI/colors';
 
 class AvatarsList extends Component {
   constructor(props) {
@@ -27,21 +27,22 @@ class AvatarsList extends Component {
 
   avatarRenderItem = ({item}) => {
     return (
-      <TouchableOpacity
-        style={styles.avatarButton}
-        onPressIn={() => this.chooseAvatarHandler(item)}
+      <TouchableWithoutFeedback
+        onPress={() => this.chooseAvatarHandler(item)}
         disabled={this.props.chosenAvatar === item ? true : false}>
-        <Image
-          source={item.image}
-          style={[
-            styles.avatarImage,
-            this.props.chosenAvatar === item
-              ? styles.avatarDeactive
-              : styles.avatarActive,
-          ]}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
+        <View style={styles.avatarButton}>
+          <Image
+            source={item.image}
+            style={[
+              styles.avatarImage,
+              this.props.chosenAvatar === item
+                ? styles.avatarDeactive
+                : styles.avatarActive,
+            ]}
+            resizeMode="contain"
+          />
+        </View>
+      </TouchableWithoutFeedback>
     );
   };
 
@@ -72,14 +73,14 @@ const styles = StyleSheet.create({
   },
   avatarButton: {
     alignItems: 'center',
-    marginHorizontal: wp('3%'),
+    marginHorizontal: wp('2%'),
   },
   avatarImage: {
     width: hp('12%'),
     height: hp('12%'),
   },
   roleText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('3.5%'),
     fontFamily: 'JosefinSans-Medium',
   },

@@ -11,7 +11,7 @@ import MainView from '../../components/UI/Main/MainView';
 import DefaultButton from '../../components/UI/Main/DefaultButton';
 import avatars from '../../utils/avatars';
 import {wsSend, setPlayerVote} from '../../store/actions/index';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class VoteScreen extends Component {
   constructor(props) {
@@ -98,7 +98,7 @@ class VoteScreen extends Component {
 const styles = StyleSheet.create({
   container: {},
   questTitle: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('7%'),
     textAlign: 'center',
     textAlignVertical: 'center',
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     height: wp('18%'),
   },
   commanderText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('5%'),
     textAlign: 'center',
     textAlignVertical: 'center',
@@ -136,14 +136,14 @@ const styles = StyleSheet.create({
     height: wp('18%'),
   },
   questPlayerText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',
     fontFamily: 'JosefinSans-Regular',
   },
   voteText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('6%'),
     textAlign: 'center',
     textAlignVertical: 'center',

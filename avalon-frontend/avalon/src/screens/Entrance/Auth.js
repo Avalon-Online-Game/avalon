@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   widthPercentageToDP as wp,
@@ -13,8 +13,8 @@ import DefaultButton from '../../components/UI/Entrance/DefaultButton';
 import TabButton from '../../components/UI/Entrance/TabButton';
 import DefaultInput from '../../components/UI/Entrance/DefaultInput';
 import API from '../../utils/API';
-import {goWelcome} from '../../utils/navigation';
-import color from '../../components/UI/colors';
+import {goWelcome} from './navigation';
+import DefaultColors from '../../components/UI/colors';
 
 class AuthScreen extends Component {
   constructor() {
@@ -36,8 +36,8 @@ class AuthScreen extends Component {
     };
   }
 
-  startMainScreen = () => {
-    goWelcome();
+  startMainScreen = username => {
+    goWelcome(username);
   };
 
   signupHandler = () => {
@@ -57,7 +57,7 @@ class AuthScreen extends Component {
     })
       .then(async res => {
         await AsyncStorage.setItem('user', JSON.stringify(res.data));
-        this.startMainScreen();
+        this.startMainScreen(res.data.username);
       })
       .catch(err => {
         if (err.response.data.email) {
@@ -101,7 +101,7 @@ class AuthScreen extends Component {
     })
       .then(res => {
         AsyncStorage.setItem('user', JSON.stringify(res.data));
-        this.startMainScreen();
+        this.startMainScreen(res.data.username);
       })
       .catch(err => {
         if (err.response.data.non_field_errors) {
@@ -189,7 +189,7 @@ class AuthScreen extends Component {
     let content;
     if (this.state.page === 'login') {
       content = (
-        <View style={styles.inner}>
+        <View style={styles.inputContent}>
           <DefaultInput
             onChangeText={this.onLoginUsernameChange}
             value={this.state.loginUsername}
@@ -230,7 +230,7 @@ class AuthScreen extends Component {
                 style={styles.googleIcon}
                 name="google"
                 size={20}
-                color={color.light}
+                color={DefaultColors.light}
               />
             }>
             Login With Google
@@ -245,7 +245,7 @@ class AuthScreen extends Component {
       );
     } else if (this.state.page === 'signup') {
       content = (
-        <View style={styles.inner}>
+        <View style={styles.inputContent}>
           <DefaultInput
             value={this.state.signupUsername}
             onChangeText={this.onSignupUsernameChange}
@@ -299,12 +299,12 @@ class AuthScreen extends Component {
 
     return (
       <EntranceView>
-        <Image
-          style={styles.castleImage}
-          source={require('../../assets/main/castle.png')}
-          resizeMode="contain"
-        />
-        <View style={styles.container}>
+        <View style={styles.content}>
+          <Image
+            style={styles.castleImage}
+            source={require('../../assets/main/castle.png')}
+            resizeMode="contain"
+          />
           <View style={styles.tabButtons}>
             <TabButton
               title="Login"
@@ -320,31 +320,34 @@ class AuthScreen extends Component {
             </TabButton>
           </View>
           {content}
+          <Toast
+            ref={ref => {
+              this.toast = ref;
+            }}
+            style={styles.toast}
+            positionValue={hp('30%')}
+            fadeInDuration={500}
+            textStyle={styles.toastText}
+          />
         </View>
-        <Toast
-          ref={ref => {
-            this.toast = ref;
-          }}
-          style={styles.toast}
-          positionValue={hp('30%')}
-          fadeInDuration={500}
-          textStyle={styles.toastText}
-        />
       </EntranceView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  content: {
+    flex: 1,
+    alignItems: 'center',
+  },
   castleImage: {
     width: wp('60%'),
     height: hp('30%'),
-    marginTop: hp('5%'),
+    marginTop: hp('10%'),
   },
-  inner: {
+  inputContent: {
     width: '100%',
-    marginTop: hp('5%'),
+    marginTop: hp('1%'),
   },
   errorInput: {
     borderColor: '#743834',
@@ -361,7 +364,9 @@ const styles = StyleSheet.create({
   tabButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     width: wp('90%'),
+    height: hp('4%'),
     marginTop: hp('2%'),
   },
   googleIcon: {
@@ -372,7 +377,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#17242c',
   },
   googleButtonText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontFamily: 'JosefinSans-Medium',
     opacity: 0.5,
     textAlign: 'center',
@@ -383,13 +388,13 @@ const styles = StyleSheet.create({
     marginTop: hp('1.5%'),
   },
   forgotPasswordText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontFamily: 'JosefinSans-Light',
     opacity: 0.5,
   },
   toast: {
     borderRadius: 30,
-    backgroundColor: color.light,
+    backgroundColor: DefaultColors.light,
   },
   toastText: {
     color: '#17242c',

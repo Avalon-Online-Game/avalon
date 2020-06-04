@@ -14,32 +14,38 @@ import {
   setPlayerToken,
   wsSend,
 } from '../../store/actions/index';
-import {
-  showLeave,
-  showPlayerLeft,
-  goMainMenu,
-  goBoard,
-} from '../../utils/navigation';
-import color from '../../components/UI/colors';
+import {showLeave, showPlayerLeft, goBoard} from './navigation';
+import {goMainMenu} from '../Entrance/navigation';
+import DefaultColors from '../../components/UI/colors';
 
 class LoadingScreen extends Component {
   constructor(props) {
     super(props);
     Navigation.events().bindComponent(this);
+    this.state = {
+      inLeaveModal: false,
+    };
+    this.leaveConfirmFunction = () => {
+      const msg = {
+        msg_type: 'leave',
+      };
+      this.props.wsSend(msg);
+      AsyncStorage.multiRemove(['game', 'player']);
+      goMainMenu();
+    };
   }
 
   navigationButtonPressed({buttonId}) {
     switch (buttonId) {
       case 'leaveButton': {
-        const confirmFunction = () => {
-          const msg = {
-            msg_type: 'leave',
-          };
-          this.props.wsSend(msg);
-          AsyncStorage.multiRemove(['game', 'player']);
-          goMainMenu();
-        };
-        showLeave(confirmFunction);
+        if (!this.state.inLeaveModal) {
+          this.setState(
+            {
+              inLeaveModal: true,
+            },
+            showLeave(this.leaveConfirmFunction),
+          );
+        }
         break;
       }
     }
@@ -50,6 +56,18 @@ class LoadingScreen extends Component {
       this.props.setPlayerToken(JSON.parse(token));
       this.props.wsConnect(JSON.parse(token));
     });
+    Navigation.events().registerModalDismissedListener(
+      ({componentId, modalsDismissed}) => {
+        switch (componentId) {
+          case 'leaveScreen': {
+            this.setState({
+              inLeaveModal: false,
+            });
+            break;
+          }
+        }
+      },
+    );
   }
 
   async componentDidUpdate(prevProps) {
@@ -87,12 +105,12 @@ class LoadingScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: color.dark,
+    backgroundColor: DefaultColors.dark,
     width: wp('100%'),
     height: hp('100%'),
   },
   mainText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('7%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Medium',

@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 import MainView from '../../components/UI/Main/MainView';
 import DefaultButton from '../../components/UI/Main/DefaultButton';
 import {wsSend} from '../../store/actions/index';
-import color from '../../components/UI/colors';
+import DefaultColors from '../../components/UI/colors';
 
 class VoteScreen extends Component {
   constructor(props) {
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
   },
   questTitle: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('7%'),
     textAlign: 'center',
     textAlignVertical: 'center',
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   mainText: {
     marginTop: hp('10%'),
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('6%'),
     textAlign: 'center',
     textAlignVertical: 'center',

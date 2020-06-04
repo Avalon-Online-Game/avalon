@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {
   View,
   FlatList,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Image,
   Text,
   StyleSheet,
@@ -16,7 +16,7 @@ import {connect} from 'react-redux';
 import {chooseRole} from '../../store/actions/index';
 import roles from '../../utils/roles';
 import game from '../../utils/game';
-import color from '../UI/colors';
+import DefaultColors from '../UI/colors';
 
 class RolesList extends Component {
   constructor(props) {
@@ -52,22 +52,23 @@ class RolesList extends Component {
 
   roleRenderItem = ({item}) => {
     return (
-      <TouchableOpacity
-        style={styles.roleButton}
-        onPressIn={() => this.chooseRoleHandler(item)}
+      <TouchableWithoutFeedback
+        onPress={() => this.chooseRoleHandler(item)}
         disabled={this.isRoleDisabled(item)}>
-        <Image
-          source={item.image}
-          style={[
-            styles.roleImage,
-            this.isRoleDisabled(item)
-              ? styles.buttonDeactive
-              : styles.buttonActive,
-          ]}
-          resizeMode="contain"
-        />
-        <Text style={styles.roleText}>{item.text}</Text>
-      </TouchableOpacity>
+        <View style={styles.roleButton}>
+          <Image
+            source={item.image}
+            style={[
+              styles.roleImage,
+              this.isRoleDisabled(item)
+                ? styles.buttonDeactive
+                : styles.buttonActive,
+            ]}
+            resizeMode="contain"
+          />
+          <Text style={styles.roleText}>{item.text}</Text>
+        </View>
+      </TouchableWithoutFeedback>
     );
   };
 
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     width: hp('15%'),
   },
   roleText: {
-    color: color.light,
+    color: DefaultColors.light,
     fontSize: wp('3.5%'),
     fontFamily: 'JosefinSans-Medium',
   },
