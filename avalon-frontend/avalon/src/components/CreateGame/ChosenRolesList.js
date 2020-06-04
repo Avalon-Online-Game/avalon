@@ -2,44 +2,70 @@ import React, {Component} from 'react';
 import {
   View,
   FlatList,
-  TouchableOpacity,
   StyleSheet,
+  Image,
   ImageBackground,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
+import * as Animatable from 'react-native-animatable';
 import {connect} from 'react-redux';
+
 import {removeRole} from '../../store/actions/index';
+import DefaultColors from '../UI/colors';
 
 const extractKey = ({id}) => id;
 
 class ChosenRolesList extends Component {
   constructor(props) {
     super(props);
+    this.chosenRolesRefs = {};
   }
 
   removeRoleHandler = item => {
-    this.props.removeRole(item);
+    this.chosenRolesRefs[item.id].fadeOut(150).then(() => {
+      this.props.removeRole(item);
+    });
   };
 
   chosenRoleRenderItem = ({item}) => {
-    return (
-      <View style={styles.chosenRole}>
-        <ImageBackground
-          source={item.image}
-          style={styles.chosenRoleImage}
-          resizeMode="contain">
-          <TouchableOpacity
-            style={styles.chosenRoleRemoveButton}
-            onPress={() => this.removeRoleHandler(item)}>
-            <Icon name="ios-remove-circle" color="#e2d7aa" size={wp('8%')} />
-          </TouchableOpacity>
-        </ImageBackground>
-      </View>
-    );
+    const content =
+      'required' in item ? (
+        <View style={styles.chosenRole}>
+          <Image
+            source={item.image}
+            style={styles.chosenRoleImage}
+            resizeMode="contain"
+          />
+        </View>
+      ) : (
+        <Animatable.View
+          ref={ref => (this.chosenRolesRefs[item.id] = ref)}
+          animation="fadeIn"
+          easing="ease"
+          duration={150}
+          style={styles.chosenRole}>
+          <ImageBackground
+            source={item.image}
+            style={styles.chosenRoleImage}
+            resizeMode="contain">
+            <TouchableWithoutFeedback
+              style={styles.chosenRoleRemoveButton}
+              onPress={() => this.removeRoleHandler(item, item.id)}>
+              <Icon
+                name="ios-remove-circle"
+                color={DefaultColors.light}
+                size={wp('8%')}
+              />
+            </TouchableWithoutFeedback>
+          </ImageBackground>
+        </Animatable.View>
+      );
+    return content;
   };
 
   render() {
@@ -47,6 +73,8 @@ class ChosenRolesList extends Component {
       <View style={this.props.style}>
         <FlatList
           ref={ref => (this.rolesList = ref)}
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
           data={this.props.chosenRoles}
           extraData={this.props.chosenRoles}
           renderItem={this.chosenRoleRenderItem}

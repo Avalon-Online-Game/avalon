@@ -18,22 +18,21 @@ class PlayerListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = PlayerSerializer    
 
     def create(self, request, *args, **kwargs):
-        game = get_object_or_404(Game, code=request.data['game'])
-        if game.players_joined == game.number_of_players:
-            return Response(content='game full of players', status=status.HTTP_406_NOT_ACCEPTABLE)
+        try:
+            game = Game.objects.prefetch_related('players').get(code=request.data['game'])
+        except:
+            return Response('game not found', status=status.HTTP_404_NOT_FOUND)
+        if game.players.count() == game.number_of_players:
+            return Response('game full of players', status=status.HTTP_406_NOT_ACCEPTABLE)
         user_token = uuid4().hex
-        player_num = game.players_joined + 1
+        player_num = game.players.count() + 1
         serializer_data = {'user': self.request.user.id, 'token': user_token,
                            'game':game.code, 'player_num':player_num}
+        print(serializer_data)
         serializer = self.get_serializer(data=serializer_data)
         serializer.is_valid(raise_exception=True)
-        # instance = serializer.save()
-        # serializer = PlayerSerializer(instance)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        # increment number of players
-        game.players_joined += 1
-        game.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 

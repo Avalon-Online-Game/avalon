@@ -58,7 +58,7 @@ class AccountDetailsSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', )
+        fields = ('id', 'username', 'email', 'avatar', )
         read_only_fields = ('id',)
 
 class PasswordResetSerializer(serializers.Serializer):

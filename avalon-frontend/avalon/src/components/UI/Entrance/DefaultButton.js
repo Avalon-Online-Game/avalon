@@ -1,17 +1,21 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import DefaultColors from '../colors';
+
 const defaultButton = props => {
   return (
-    <TouchableOpacity
-      style={[styles.button, props.buttonStyle]}
-      onPress={props.onPress}>
-      {props.Icon}
-      <Text style={[styles.buttonText, props.textStyle]}>{props.children}</Text>
+    <TouchableOpacity onPress={props.onPress} disabled={props.disabled}>
+      <View style={[styles.button, props.buttonStyle]}>
+        {props.Icon}
+        <Text style={[styles.buttonText, props.textStyle]}>
+          {props.children}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -21,12 +25,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: hp('2%'),
-    backgroundColor: '#e2d7aa',
+    backgroundColor: DefaultColors.light,
     width: wp('90%'),
     height: hp('6.2%'),
   },
   buttonText: {
-    color: '#0b161c',
+    color: DefaultColors.dark,
     fontSize: wp('5%'),
     fontFamily: 'JosefinSans-Bold',
   },

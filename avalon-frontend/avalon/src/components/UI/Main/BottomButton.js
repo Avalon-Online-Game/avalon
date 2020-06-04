@@ -5,10 +5,13 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import DefaultColors from '../colors';
+
 const bottomButton = props => {
   return (
     <TouchableOpacity
       style={[styles.button, props.buttonStyle]}
+      disabled={props.disabled}
       onPress={props.onPress}>
       <Text style={[styles.buttonText, props.textStyle]}>{props.children}</Text>
     </TouchableOpacity>
@@ -20,12 +23,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: hp('3%'),
-    backgroundColor: '#e2d7aa',
+    backgroundColor: DefaultColors.light,
     width: wp('100%'),
     height: hp('8%'),
   },
   buttonText: {
-    color: '#0b161c',
+    color: DefaultColors.dark,
     fontSize: wp('6%'),
     fontFamily: 'JosefinSans-Bold',
   },

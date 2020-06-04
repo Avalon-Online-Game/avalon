@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  web:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      command: sh -c "./entrypoint.sh"
+      volumes:
+        - ./avalon/:/usr/src/app/avalon/
+        - static_volume:/usr/src/app/avalon/static/
+        - media_volume:/usr/src/app/avalon/media/
+      env_file:
+        - ./.env.dev
+      ports:
+        - 8000:8000
+      depends_on:
+      - db
+    
+  db:
+      image: postgres:12-alpine
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
+      environment:
+        POSTGRES_USER: avalon
+        POSTGRES_DB: avalondb
+        POSTGRES_PASSWORD: avalonbackend
+      ports:
+        - 5432:5432
+
+  redis:
+      image: "redis:alpine"
+  
+volumes:
+    postgres_data:
+    static_volume:
+    media_volume:

@@ -1,18 +1,20 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Navigation} from 'react-native-navigation';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 import EntranceView from '../../components/UI/Entrance/EntranceView';
 import DefaultButton from '../../components/UI/Entrance/DefaultButton';
 import TabButton from '../../components/UI/Entrance/TabButton';
 import DefaultInput from '../../components/UI/Entrance/DefaultInput';
 import API from '../../utils/API';
+import {goWelcome} from './navigation';
+import DefaultColors from '../../components/UI/colors';
 
 class AuthScreen extends Component {
   constructor() {
@@ -30,17 +32,12 @@ class AuthScreen extends Component {
       signupUsernameError: '',
       signupPasswordError: '',
       loginError: '',
+      isLoading: false,
     };
   }
 
-  startMainScreen = () => {
-    Navigation.setRoot({
-      root: {
-        component: {
-          name: 'avalon.WelcomeScreen',
-        },
-      },
-    });
+  startMainScreen = username => {
+    goWelcome(username);
   };
 
   signupHandler = () => {
@@ -60,29 +57,36 @@ class AuthScreen extends Component {
     })
       .then(async res => {
         await AsyncStorage.setItem('user', JSON.stringify(res.data));
-        this.startMainScreen();
+        this.startMainScreen(res.data.username);
       })
       .catch(err => {
         if (err.response.data.email) {
           this.setState({
             signupEmailError: 'Email address has already been registered',
           });
-        }
-        if (err.response.data.username) {
+        } else if (err.response.data.username) {
           this.setState({
             signupUsernameError: 'Username is taken by another user',
           });
-        }
-        if (err.response.data.password) {
+        } else if (err.response.data.password) {
           this.setState({
             signupPasswordError: err.response.data.password,
           });
+        } else {
+          this.toast.show('Check your connection...', DURATION.LONG_LENGTH);
         }
       });
+    this.setState({
+      isLoading: true,
+    });
   };
 
   loginHandler = () => {
-    if (this.state.loginError.length > 0) {
+    if (
+      this.state.loginError.length > 0 ||
+      this.state.loginUsername.length === 0 ||
+      this.state.loginPassword.length === 0
+    ) {
       return;
     }
     const headers = {
@@ -97,15 +101,20 @@ class AuthScreen extends Component {
     })
       .then(res => {
         AsyncStorage.setItem('user', JSON.stringify(res.data));
-        this.startMainScreen();
+        this.startMainScreen(res.data.username);
       })
       .catch(err => {
         if (err.response.data.non_field_errors) {
           this.setState({
             loginError: 'Username or password is incorrect',
           });
+        } else {
+          this.toast.show('Check your connection...', DURATION.LONG_LENGTH);
         }
       });
+    this.setState({
+      isLoading: true,
+    });
   };
 
   googleLoginHandler = () => {};
@@ -116,6 +125,7 @@ class AuthScreen extends Component {
     this.setState({
       loginUsername: value,
       loginError: '',
+      isLoading: false,
     });
   };
 
@@ -123,6 +133,7 @@ class AuthScreen extends Component {
     this.setState({
       loginPassword: value,
       loginError: '',
+      isLoading: false,
     });
   };
 
@@ -130,20 +141,23 @@ class AuthScreen extends Component {
     this.setState({
       signupUsername: value,
       signupUsernameError: '',
+      isLoading: false,
     });
   };
 
   onSignupEmailChange = value => {
-    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (regex.test(value) === false) {
+    this.setState({
+      signupEmail: value,
+      signupEmailError: '',
+      isLoading: false,
+    });
+  };
+
+  onSignupEmailEndEditHandler = value => {
+    const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (regex.test(value.nativeEvent.text) === false) {
       this.setState({
-        signupEmail: value,
         signupEmailError: 'Enter a valid Email address',
-      });
-    } else {
-      this.setState({
-        signupEmail: value,
-        signupEmailError: '',
       });
     }
   };
@@ -175,7 +189,7 @@ class AuthScreen extends Component {
     let content;
     if (this.state.page === 'login') {
       content = (
-        <View style={styles.inner}>
+        <View style={styles.inputContent}>
           <DefaultInput
             onChangeText={this.onLoginUsernameChange}
             value={this.state.loginUsername}
@@ -195,8 +209,19 @@ class AuthScreen extends Component {
             ]}
           />
           <Text style={styles.errorText}>{this.state.loginError}</Text>
-          <DefaultButton onPress={this.loginHandler}>Login</DefaultButton>
           <DefaultButton
+            onPress={this.loginHandler}
+            disabled={
+              this.state.loginUsername.length === 0 ||
+              this.state.loginPassword.length === 0 ||
+              this.state.loginError.length > 0 ||
+              this.state.isLoading
+                ? true
+                : false
+            }>
+            Login
+          </DefaultButton>
+          {/* <DefaultButton
             onPress={this.googleLoginHandler}
             buttonStyle={styles.googleButton}
             textStyle={styles.googleButtonText}
@@ -205,7 +230,7 @@ class AuthScreen extends Component {
                 style={styles.googleIcon}
                 name="google"
                 size={20}
-                color="#e2d7aa"
+                color={DefaultColors.light}
               />
             }>
             Login With Google
@@ -215,12 +240,12 @@ class AuthScreen extends Component {
             buttonStyle={styles.forgotPasswordButton}
             textStyle={styles.forgotPasswordText}>
             Forgot Password?
-          </DefaultButton>
+          </DefaultButton> */}
         </View>
       );
     } else if (this.state.page === 'signup') {
       content = (
-        <View style={styles.inner}>
+        <View style={styles.inputContent}>
           <DefaultInput
             value={this.state.signupUsername}
             onChangeText={this.onSignupUsernameChange}
@@ -235,6 +260,7 @@ class AuthScreen extends Component {
           <DefaultInput
             value={this.state.signupEmail}
             onChangeText={this.onSignupEmailChange}
+            onEndEditing={this.onSignupEmailEndEditHandler}
             placeholder="Email Address"
             style={
               this.state.signupEmailError.length > 0
@@ -255,14 +281,30 @@ class AuthScreen extends Component {
             }
           />
           <Text style={styles.errorText}>{this.state.signupPasswordError}</Text>
-          <DefaultButton onPress={this.signupHandler}>Sign up</DefaultButton>
+          <DefaultButton
+            onPress={this.signupHandler}
+            disabled={
+              this.state.signupEmail.length === 0 ||
+              this.state.signupPassword.length === 0 ||
+              this.state.signupEmailError.length > 0 ||
+              this.state.isLoading
+                ? true
+                : false
+            }>
+            Sign up
+          </DefaultButton>
         </View>
       );
     }
 
     return (
       <EntranceView>
-        <View style={styles.container}>
+        <View style={styles.content}>
+          <Image
+            style={styles.castleImage}
+            source={require('../../assets/main/castle.png')}
+            resizeMode="contain"
+          />
           <View style={styles.tabButtons}>
             <TabButton
               title="Login"
@@ -278,6 +320,15 @@ class AuthScreen extends Component {
             </TabButton>
           </View>
           {content}
+          <Toast
+            ref={ref => {
+              this.toast = ref;
+            }}
+            style={styles.toast}
+            positionValue={hp('30%')}
+            fadeInDuration={500}
+            textStyle={styles.toastText}
+          />
         </View>
       </EntranceView>
     );
@@ -285,32 +336,38 @@ class AuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: hp('40%'),
+  content: {
+    flex: 1,
+    alignItems: 'center',
   },
-  inner: {
-    // alignItems: 'center',
+  castleImage: {
+    width: wp('60%'),
+    height: hp('30%'),
+    marginTop: hp('10%'),
+  },
+  inputContent: {
     width: '100%',
-    marginTop: hp('5%'),
+    marginTop: hp('1%'),
   },
   errorInput: {
-    borderColor: 'red',
-    borderWidth: 1,
-    opacity: 0.5,
+    borderColor: '#743834',
+    borderWidth: 3,
   },
   errorText: {
     width: wp('80%'),
     alignItems: 'center',
     backgroundColor: 'transparent',
-    color: 'red',
+    color: '#743834',
     fontFamily: 'JosefinSans-Medium',
     fontSize: wp('4%'),
-    opacity: 0.5,
   },
   tabButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     width: wp('90%'),
+    height: hp('4%'),
+    marginTop: hp('2%'),
   },
   googleIcon: {
     width: wp('10%'),
@@ -320,7 +377,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#17242c',
   },
   googleButtonText: {
-    color: '#e2d7aa',
+    color: DefaultColors.light,
     fontFamily: 'JosefinSans-Medium',
     opacity: 0.5,
     textAlign: 'center',
@@ -331,9 +388,20 @@ const styles = StyleSheet.create({
     marginTop: hp('1.5%'),
   },
   forgotPasswordText: {
-    color: '#e2d7aa',
+    color: DefaultColors.light,
     fontFamily: 'JosefinSans-Light',
     opacity: 0.5,
+  },
+  toast: {
+    borderRadius: 30,
+    backgroundColor: DefaultColors.light,
+  },
+  toastText: {
+    color: '#17242c',
+    textAlign: 'center',
+    fontFamily: 'JosefinSans-Regular',
+    fontSize: wp('4.5%'),
+    lineHeight: hp('2.8%'),
   },
 });
 

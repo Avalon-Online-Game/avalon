@@ -15,17 +15,13 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u9ug2$e9zd-$&-ggbl)o^-7paf0pg@-8yrh1nm8mqk791bm%#4'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'u9ug2$e9zd-$&-ggbl)o^-7paf0pg@-8yrh1nm8mqk791bm%#4')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get('DEBUG', 1))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(' ')
 
 
 # Application definition
@@ -52,53 +48,17 @@ INSTALLED_APPS = [
 ]
 
 ##### Channels-specific settings
-
 redis_host = os.environ.get('REDIS_HOST', 'localhost')
 
 # Channel layer definitions
-# http://channels.readthedocs.io/en/latest/topics/channel_layers.html
 CHANNEL_LAYERS = {
-    "default": {
-        # This example app uses the Redis channel layer implementation channels_redis
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [(redis_host, 6379)],
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [(redis_host, 6379)],
         },
     },
 }
-
-##### Project-specific settings
-
-MSG_TYPE_COMMANDER = "commander"
-MSG_TYPE_QUEST_CHOICE = "quest_choice"
-MSG_TYPE_QUEST_VOTE = "quest_vote"
-MSG_TYPE_QUEST_RESULT = "quest_result"
-MSG_TYPE_NIGHT = "night"
-MSG_TYPE_START = "start"
-MSG_TYPE_END = "end"
-MSG_TYPE_LEAVE = "leave"
-
-MESSAGE_TYPES_CHOICES = (
-    (MSG_TYPE_COMMANDER, 'COMMANDER'),
-    (MSG_TYPE_QUEST_CHOICE, 'QUEST_CHOICE'),
-    (MSG_TYPE_QUEST_VOTE, 'QUEST_VOTE'),
-    (MSG_TYPE_QUEST_RESULT, 'QUEST_RESULT'),
-    (MSG_TYPE_NIGHT, 'NIGHT'),
-    (MSG_TYPE_START, 'START'),
-    (MSG_TYPE_END, 'END'),
-    (MSG_TYPE_LEAVE, 'LEAVE'),
-)
-
-MESSAGE_TYPES_LIST = [
-    MSG_TYPE_COMMANDER,
-    MSG_TYPE_QUEST_CHOICE,
-    MSG_TYPE_QUEST_VOTE,
-    MSG_TYPE_QUEST_RESULT,
-    MSG_TYPE_NIGHT,
-    MSG_TYPE_START,
-    MSG_TYPE_END,
-    MSG_TYPE_LEAVE,
-]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -120,24 +80,13 @@ REST_AUTH_SERIALIZERS = {
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {
-    "REGISTER_SERIALIZER": "users.serializers.AccountRegistrationSerializer",
+    'REGISTER_SERIALIZER': 'users.serializers.AccountRegistrationSerializer',
 }
 
 # Channels configurations
 ASGI_APPLICATION = 'avalon.routing.application'
 
 SITE_ID = 1
-
-# Email settings
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# MAILER_EMAIL_BACKEND = EMAIL_BACKEND
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'markitteamservice@gmail.com'
-# EMAIL_HOST_PASSWORD = 'seteamfall19'
-# EMAIL_HOST_USERNAME = 'markitteamservice'
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Account settings
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
@@ -153,7 +102,7 @@ ACCOUNT_ADAPTER = 'users.adapter.CustomAccountAdapter'
 REST_USE_JWT = False
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware', # redis
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -161,7 +110,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware', # redis
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'avalon.urls'
@@ -182,19 +131,16 @@ TEMPLATES = [
     },
 ]
 
-# Account Settings
-# AUTH_USER_MODEL = 'user.User'
-
 WSGI_APPLICATION = 'avalon.wsgi.application'
 
-
-# Cache
+# cache
 CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.environ.get('REDIS_LOCATION', 'redis://localhost:6379/'),
+        'TIMEOUT': 86400,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
     }
 }
@@ -204,12 +150,12 @@ CACHES = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'avalondb',
-        'USER': 'avalon',
-        'PASSWORD': 'avalonbackend',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.environ.get('SQL_DATABASE', 'avalondb'),
+        'USER': os.environ.get('SQL_USER', 'avalon'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD', 'avalonbackend'),
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
+        'PORT': os.environ.get('SQL_PORT', '5432')
     }
 }
 
@@ -251,3 +197,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

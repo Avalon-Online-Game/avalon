@@ -1,0 +1,66 @@
+version: '3.7'
+
+services:
+  web:
+      build:
+        context: .
+        dockerfile: Dockerfile.prod
+      command: sh -c "./entrypoint.prod.sh"
+      volumes:
+        - ./avalon/:/usr/src/app/avalon/
+        - static_volume:/usr/src/app/avalon/static/
+        - media_volume:/usr/src/app/avalon/media/
+      env_file:
+        - ./.env.prod
+      ports:
+        - 8000:8000
+      depends_on:
+      - db
+    
+  db:
+      image: postgres:12-alpine
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
+      env_file:
+        - ./.env.prod.db
+      ports:
+        - 5432:5432
+
+  redis:
+      image: "redis:alpine"
+
+  daphne:
+    build:
+        context: .
+        dockerfile: Dockerfile.prod
+    command: sh -c "cd avalon/ && daphne -b 0.0.0.0 -p 8005 avalon.asgi:application"
+    volumes:
+      - static_volume:/usr/src/app/avalon/static/
+      - media_volume:/usr/src/app/avalon/media/
+    env_file:
+      - ./.env.prod
+    ports:
+        - "8005:8005"
+    depends_on:
+        - db
+        - redis
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    command: nginx -g 'daemon off';
+    volumes:
+      - static_volume:/usr/src/app/avalon/static/
+      - media_volume:/usr/src/app/avalon/media/
+      - /data/certs:/etc/nginx/certs
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - web
+
+volumes:
+    postgres_data:
+    static_volume:
+    media_volume:

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
+const baseUrl = __DEV__ ? 'http://localhost:8000/api/v1/' : 'https://avalongame.ir/api/v1/';
 export default axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/v1/',
+  baseURL: 'https://avalongame.ir/api/v1/',
   responseType: 'json',
 });
