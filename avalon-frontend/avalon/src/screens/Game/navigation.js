@@ -46,6 +46,27 @@ export const showRole = () => {
   });
 };
 
+export const showPlayers = (
+  modalId,
+  isPlayerCommander,
+  commanderButtonText,
+) => {
+  Navigation.showModal({
+    component: {
+      id: modalId,
+      name: 'avalon.PlayersScreen',
+      options: {
+        modalTransitionStyle: 'crossDissolve',
+        modalPresentationStyle: 'overCurrentContext',
+      },
+      passProps: {
+        isPlayerCommander: isPlayerCommander,
+        buttonText: commanderButtonText,
+      },
+    },
+  });
+};
+
 export const showVotingWait = () => {
   Navigation.showModal({
     component: {

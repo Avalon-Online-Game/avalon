@@ -89,7 +89,7 @@ const socketMiddleware = () => {
         }
         // eslint-disable-next-line no-undef
         socket = new WebSocket(
-          `${baseUrl}/ws/game/?token=${action.token}`,
+          `wss://avalongame.ir/ws/game/?token=${action.token}`,
         );
         socket.onmessage = onMessage(store);
         socket.onclose = onClose(store);
