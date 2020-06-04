@@ -14,7 +14,6 @@ import BottomButton from '../../components/UI/Game/BottomButton';
 import QuestList from '../../components/Game/QuestsList';
 import VotingsList from '../../components/Game/VotingsList';
 import {
-  goMainMenu,
   showRole,
   showLeave,
   pushVote,
@@ -29,7 +28,8 @@ import {
   showPlayerDisconnected,
   showPlayerLeft,
   dissmissPlayerDisconnected,
-} from '../../utils/navigation';
+} from './navigation';
+import {goMainMenu} from '../Entrance/navigation';
 import {wsSend} from '../../store/actions/index';
 import DefaultColors from '../../components/UI/colors';
 

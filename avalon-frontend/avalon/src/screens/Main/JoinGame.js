@@ -10,7 +10,7 @@ import Toast, {DURATION} from 'react-native-easy-toast';
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
 import API from '../../utils/API';
-import {goLoading} from '../../utils/navigation';
+import {goLoading} from './navigation';
 import DefaultColors from '../../components/UI/colors';
 
 class JoinGameScreen extends Component {

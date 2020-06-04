@@ -8,7 +8,8 @@ import {
 
 import EntranceView from '../../components/UI/Entrance/EntranceView';
 import API from '../../utils/API';
-import {goAuth, goLoading, goMainMenu} from '../../utils/navigation';
+import {goAuth, goMainMenu} from './navigation';
+import {goLoading} from '../Main/navigation';
 
 class EntranceScreen extends Component {
   constructor(props) {

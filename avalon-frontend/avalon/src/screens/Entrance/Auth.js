@@ -13,7 +13,7 @@ import DefaultButton from '../../components/UI/Entrance/DefaultButton';
 import TabButton from '../../components/UI/Entrance/TabButton';
 import DefaultInput from '../../components/UI/Entrance/DefaultInput';
 import API from '../../utils/API';
-import {goWelcome} from '../../utils/navigation';
+import {goWelcome} from './navigation';
 import DefaultColors from '../../components/UI/colors';
 
 class AuthScreen extends Component {

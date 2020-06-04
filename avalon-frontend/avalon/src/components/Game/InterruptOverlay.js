@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import DefaultButton from '../UI/Main/DefaultButton';
 import API from '../../utils/API';
-import {goMainMenu} from '../../utils/navigation';
+import {goMainMenu} from '../../screens/Entrance/navigation';
 import DefaultColors from '../UI/colors';
 
 class InterruptOverlay extends Component {

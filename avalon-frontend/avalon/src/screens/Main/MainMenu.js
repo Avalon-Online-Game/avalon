@@ -5,7 +5,7 @@ import {Navigation} from 'react-native-navigation';
 import MainView from '../../components/UI/Main/MainView';
 import DefaultButton from '../../components/UI/Main/DefaultButton';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {showLogout, pushCreateGame, pushJoinGame} from '../../utils/navigation';
+import {showLogout, pushCreateGame, pushJoinGame} from './navigation';
 
 class MainMenuScreen extends Component {
   constructor(props) {

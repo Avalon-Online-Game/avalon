@@ -16,7 +16,7 @@ import ChosenRolesList from '../../components/CreateGame/ChosenRolesList';
 import API from '../../utils/API';
 import {removeRole, setNumberOfPlayers} from '../../store/actions/index';
 import {chosenRolesValidation} from '../../utils/rolesValidation';
-import {pushShareGame} from '../../utils/navigation';
+import {pushShareGame} from './navigation';
 import DefaultColors from '../../components/UI/colors';
 
 class CreateGameScreen extends Component {

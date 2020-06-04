@@ -7,7 +7,7 @@ import {
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
-import {goLoading} from '../../utils/navigation';
+import {goLoading} from './navigation';
 import DefaultColors from '../../components/UI/colors';
 
 class ShareGameScreen extends Component {

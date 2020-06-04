@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import AvatarsList from '../../components/Main/AvatarsList';
 import API from '../../utils/API';
-import {goMainMenu} from '../../utils/navigation';
+import {goMainMenu} from '../Entrance/navigation';
 import DefaultColors from '../../components/UI/colors';
 
 class WelcomeScreen extends Component {

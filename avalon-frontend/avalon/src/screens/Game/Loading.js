@@ -14,12 +14,8 @@ import {
   setPlayerToken,
   wsSend,
 } from '../../store/actions/index';
-import {
-  showLeave,
-  showPlayerLeft,
-  goMainMenu,
-  goBoard,
-} from '../../utils/navigation';
+import {showLeave, showPlayerLeft, goBoard} from './navigation';
+import {goMainMenu} from '../Entrance/navigation';
 import DefaultColors from '../../components/UI/colors';
 
 class LoadingScreen extends Component {
