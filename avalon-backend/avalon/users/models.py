@@ -53,7 +53,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField('Active', default=True,
                                     help_text=('Designates whether this user should be treated as '
                                                'active. Use this instead of deleting accounts.'))
-    avatar = models.IntegerField(null=True, default=0)
+    avatar = models.IntegerField(null=True, default=1)
 
     def __str__(self):
         return self.username
