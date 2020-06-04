@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {
   View,
   FlatList,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Image,
   Text,
   StyleSheet,
@@ -52,22 +52,23 @@ class RolesList extends Component {
 
   roleRenderItem = ({item}) => {
     return (
-      <TouchableOpacity
-        style={styles.roleButton}
-        onPressIn={() => this.chooseRoleHandler(item)}
+      <TouchableWithoutFeedback
+        onPress={() => this.chooseRoleHandler(item)}
         disabled={this.isRoleDisabled(item)}>
-        <Image
-          source={item.image}
-          style={[
-            styles.roleImage,
-            this.isRoleDisabled(item)
-              ? styles.buttonDeactive
-              : styles.buttonActive,
-          ]}
-          resizeMode="contain"
-        />
-        <Text style={styles.roleText}>{item.text}</Text>
-      </TouchableOpacity>
+        <View style={styles.roleButton}>
+          <Image
+            source={item.image}
+            style={[
+              styles.roleImage,
+              this.isRoleDisabled(item)
+                ? styles.buttonDeactive
+                : styles.buttonActive,
+            ]}
+            resizeMode="contain"
+          />
+          <Text style={styles.roleText}>{item.text}</Text>
+        </View>
+      </TouchableWithoutFeedback>
     );
   };
 

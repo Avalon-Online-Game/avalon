@@ -2,16 +2,17 @@ import React, {Component} from 'react';
 import {
   View,
   FlatList,
-  TouchableOpacity,
   StyleSheet,
   Image,
   ImageBackground,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
+import * as Animatable from 'react-native-animatable';
 import {connect} from 'react-redux';
 
 import {removeRole} from '../../store/actions/index';
@@ -22,10 +23,13 @@ const extractKey = ({id}) => id;
 class ChosenRolesList extends Component {
   constructor(props) {
     super(props);
+    this.chosenRolesRefs = {};
   }
 
   removeRoleHandler = item => {
-    this.props.removeRole(item);
+    this.chosenRolesRefs[item.id].fadeOut(150).then(() => {
+      this.props.removeRole(item);
+    });
   };
 
   chosenRoleRenderItem = ({item}) => {
@@ -39,22 +43,27 @@ class ChosenRolesList extends Component {
           />
         </View>
       ) : (
-        <View style={styles.chosenRole}>
+        <Animatable.View
+          ref={ref => (this.chosenRolesRefs[item.id] = ref)}
+          animation="fadeIn"
+          easing="ease"
+          duration={150}
+          style={styles.chosenRole}>
           <ImageBackground
             source={item.image}
             style={styles.chosenRoleImage}
             resizeMode="contain">
-            <TouchableOpacity
+            <TouchableWithoutFeedback
               style={styles.chosenRoleRemoveButton}
-              onPress={() => this.removeRoleHandler(item)}>
+              onPress={() => this.removeRoleHandler(item, item.id)}>
               <Icon
                 name="ios-remove-circle"
                 color={DefaultColors.light}
                 size={wp('8%')}
               />
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
           </ImageBackground>
-        </View>
+        </Animatable.View>
       );
     return content;
   };
@@ -64,6 +73,8 @@ class ChosenRolesList extends Component {
       <View style={this.props.style}>
         <FlatList
           ref={ref => (this.rolesList = ref)}
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
           data={this.props.chosenRoles}
           extraData={this.props.chosenRoles}
           renderItem={this.chosenRoleRenderItem}

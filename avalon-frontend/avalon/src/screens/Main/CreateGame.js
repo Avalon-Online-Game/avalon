@@ -204,8 +204,7 @@ const styles = StyleSheet.create({
   chosenRolesList: {
     height: hp('11%'),
     marginTop: hp('2%'),
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignSelf: 'flex-start',
   },
   rolesListText: {
     color: DefaultColors.light,
