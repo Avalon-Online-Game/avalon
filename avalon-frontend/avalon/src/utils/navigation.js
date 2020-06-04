@@ -1,6 +1,7 @@
 import {Navigation} from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import DefaultColors from '../components/UI/colors';
 
@@ -73,6 +74,63 @@ export const goMainMenu = async () => {
                 },
               },
             },
+          },
+        },
+      },
+    },
+  });
+};
+
+export const showLogout = () => {
+  Navigation.showModal({
+    component: {
+      id: 'logoutScreen',
+      name: 'avalon.ConfirmScreen',
+      options: {
+        modalTransitionStyle: 'crossDissolve',
+        modalPresentationStyle: 'overCurrentContext',
+      },
+      passProps: {
+        message: 'Are you sure you want to logout?',
+        confirmFunction: () => {
+          AsyncStorage.removeItem('user');
+          goAuth();
+        },
+      },
+    },
+  });
+};
+
+export const pushCreateGame = () => {
+  Navigation.push('mainStack', {
+    component: {
+      name: 'avalon.CreateGameScreen',
+    },
+  });
+};
+
+export const pushJoinGame = () => {
+  Navigation.push('mainStack', {
+    component: {
+      name: 'avalon.JoinGameScreen',
+    },
+  });
+};
+
+export const pushShareGame = async () => {
+  const backIcon = await Icon.getImageSource('ios-arrow-back', wp('8%'));
+  Navigation.push('mainStack', {
+    component: {
+      name: 'avalon.ShareGameCodeScreen',
+      passProps: {
+        gameCode: await AsyncStorage.getItem('game').then(gameCode =>
+          JSON.parse(gameCode),
+        ),
+      },
+      options: {
+        topBar: {
+          backButton: {
+            visible: false,
           },
         },
       },

@@ -7,7 +7,6 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
-import {Navigation} from 'react-native-navigation';
 import Toast, {DURATION} from 'react-native-easy-toast';
 
 import MainView from '../../components/UI/Main/MainView';
@@ -17,13 +16,21 @@ import ChosenRolesList from '../../components/CreateGame/ChosenRolesList';
 import API from '../../utils/API';
 import {removeRole, setNumberOfPlayers} from '../../store/actions/index';
 import {chosenRolesValidation} from '../../utils/rolesValidation';
+import {pushShareGame} from '../../utils/navigation';
 import DefaultColors from '../../components/UI/colors';
 
 class CreateGameScreen extends Component {
-  createGameHandler = async () => {
+  validateChosenRoles = () => {
     const validation = chosenRolesValidation(this.props.chosenRoles);
     if (!validation.validation) {
       this.toast.show(validation.errorMessage, DURATION.LENGTH_LONG);
+      return false;
+    }
+    return true;
+  };
+
+  createGameHandler = async () => {
+    if (!this.validateChosenRoles()) {
       return;
     }
     const user = JSON.parse(await AsyncStorage.getItem('user'));
@@ -57,16 +64,7 @@ class CreateGameScreen extends Component {
               'player',
               JSON.stringify(playerRes.data.token),
             );
-            Navigation.push(this.props.componentId, {
-              component: {
-                name: 'avalon.ShareGameCodeScreen',
-                passProps: {
-                  gameCode: await AsyncStorage.getItem('game').then(gameCode =>
-                    JSON.parse(gameCode),
-                  ),
-                },
-              },
-            });
+            pushShareGame();
           })
           .catch(err => {
             console.log(
