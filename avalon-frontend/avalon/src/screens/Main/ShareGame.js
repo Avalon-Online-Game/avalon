@@ -1,9 +1,17 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, BackHandler} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  BackHandler,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Share from 'react-native-share';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
@@ -27,6 +35,21 @@ class ShareGameScreen extends Component {
     return true;
   };
 
+  shareHandler = () => {
+    const options = {
+      title: 'Share your code with others',
+      subject: 'Join me on Avalon!',
+      message: `Avalon! Game Code: ${this.props.gameCode}`,
+    };
+    Share.open(options)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        err && console.log(err);
+      });
+  };
+
   nextHandler = () => {
     goLoading();
   };
@@ -34,13 +57,17 @@ class ShareGameScreen extends Component {
   render() {
     return (
       <MainView style={styles.container}>
-        <Text style={styles.text}>Share game code</Text>
+        <Text style={styles.text}>Game Code</Text>
         <View style={styles.gameCodeContainer}>
           <Text style={styles.gameCode}>{this.props.gameCode.charAt(0)}</Text>
           <Text style={styles.gameCode}>{this.props.gameCode.charAt(1)}</Text>
           <Text style={styles.gameCode}>{this.props.gameCode.charAt(2)}</Text>
           <Text style={styles.gameCode}>{this.props.gameCode.charAt(3)}</Text>
         </View>
+        <TouchableWithoutFeedback onPress={this.shareHandler}>
+          <Icon name="share" style={styles.shareIcon} size={wp('10%')} />
+        </TouchableWithoutFeedback>
+        <Text style={styles.shareText}>Share your code</Text>
         <BottomButton onPress={this.nextHandler}>Next</BottomButton>
       </MainView>
     );
@@ -53,13 +80,13 @@ const styles = StyleSheet.create({
   },
   text: {
     color: DefaultColors.light,
-    fontSize: wp('6%'),
-    marginTop: hp('1%'),
+    fontSize: wp('8%'),
+    marginTop: hp('10%'),
     fontFamily: 'JosefinSans-Medium',
   },
   gameCodeContainer: {
     flexDirection: 'row',
-    marginBottom: hp('55%'),
+    marginTop: hp('-18%'),
   },
   gameCode: {
     backgroundColor: '#17242c',
@@ -70,6 +97,15 @@ const styles = StyleSheet.create({
     color: DefaultColors.light,
     textAlign: 'center',
     textAlignVertical: 'center',
+  },
+  shareIcon: {
+    color: DefaultColors.light,
+  },
+  shareText: {
+    marginTop: hp('-20%'),
+    color: DefaultColors.light,
+    fontSize: wp('6%'),
+    fontFamily: 'JosefinSans-Medium',
   },
 });
 
