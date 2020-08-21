@@ -7,7 +7,6 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
-import Toast, {DURATION} from 'react-native-easy-toast';
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
@@ -18,12 +17,17 @@ import {removeRole, setNumberOfPlayers} from '../../store/actions/index';
 import {chosenRolesValidation} from '../../utils/rolesValidation';
 import {pushShareGame} from './navigation';
 import DefaultColors from '../../components/UI/colors';
+import {showShortBottomToast, showLongBottomToast} from '../../utils/toasts';
 
 class CreateGameScreen extends Component {
   validateChosenRoles = () => {
+    if (this.props.chosenRoles.length !== this.props.numberOfPlayers) {
+      showShortBottomToast(`Choose exactly ${this.props.numberOfPlayers} players`)
+      return false;
+    }
     const validation = chosenRolesValidation(this.props.chosenRoles);
     if (!validation.validation) {
-      this.toast.show(validation.errorMessage, DURATION.LENGTH_LONG);
+      showLongBottomToast(validation.errorMessage);
       return false;
     }
     return true;
@@ -70,18 +74,12 @@ class CreateGameScreen extends Component {
             console.log(
               `Failed to register player to the game: ${err.response.status}`,
             );
-            this.toast.show(
-              'Whoops... something went wrong!',
-              DURATION.LENGTH_LONG,
-            );
+            showLongBottomToast('Whoops... something went wrong!');
           });
       })
       .catch(err => {
         console.log(`Failed to register the game: ${err.response.status}`);
-        this.toast.show(
-          'Whoops... something went wrong!',
-          DURATION.LENGTH_LONG,
-        );
+        showShortBottomToast('Whoops... something went wrong!');
       });
   };
 
@@ -155,15 +153,6 @@ class CreateGameScreen extends Component {
           onPress={this.createGameHandler}>
           Next
         </BottomButton>
-        <Toast
-          ref={ref => {
-            this.toast = ref;
-          }}
-          style={styles.toast}
-          positionValue={hp('30%')}
-          fadeInDuration={500}
-          textStyle={styles.toastText}
-        />
       </MainView>
     );
   }
@@ -213,17 +202,6 @@ const styles = StyleSheet.create({
   rolesList: {
     marginTop: hp('1%'),
     height: hp('18%'),
-  },
-  toast: {
-    borderRadius: 30,
-    backgroundColor: '#17242c',
-  },
-  toastText: {
-    color: DefaultColors.light,
-    textAlign: 'center',
-    fontFamily: 'JosefinSans-Regular',
-    fontSize: wp('4.5%'),
-    lineHeight: hp('2.8%'),
   },
 });
 

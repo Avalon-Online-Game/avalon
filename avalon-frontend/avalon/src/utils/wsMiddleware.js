@@ -1,3 +1,5 @@
+import ReconnectingWebsocket from 'reconnecting-websocket';
+
 import {WS_CONNECT, WS_DISCONNECT, WS_SEND} from '../store/actions/actionTypes';
 import {
   wsConnected,
@@ -20,7 +22,7 @@ import {
 } from '../store/actions/index';
 
 const socketMiddleware = () => {
-  const baseUrl = __DEV__ ? 'ws://localhost:8000' : 'wss://avalongame.ir';
+  const baseUrl = __DEV__ ? 'ws://localhost:8000/' : 'wss://avalongame.ir/';
 
   let socket = null;
 
@@ -88,8 +90,8 @@ const socketMiddleware = () => {
           socket.close();
         }
         // eslint-disable-next-line no-undef
-        socket = new WebSocket(
-          `wss://avalongame.ir/ws/game/?token=${action.token}`,
+        socket = new ReconnectingWebsocket(
+          `${baseUrl}ws/game/?token=${action.token}`,
         );
         socket.onmessage = onMessage(store);
         socket.onclose = onClose(store);

@@ -104,6 +104,7 @@ class AuthScreen extends Component {
         this.startMainScreen(res.data.username);
       })
       .catch(err => {
+        console.log(err);
         if (err.response.data.non_field_errors) {
           this.setState({
             loginError: 'Username or password is incorrect',
