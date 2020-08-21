@@ -15,12 +15,12 @@ import {
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
 import {Overlay} from 'react-native-elements';
-import Toast, {DURATION} from 'react-native-easy-toast';
 
 import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';
 import {wsSend} from '../../store/actions/index';
 import DefaultColors from '../../components/UI/colors';
+import {showLongBottomToast} from '../../utils/toasts';
 
 class PlayersScreen extends Component {
   constructor(props) {
@@ -47,10 +47,7 @@ class PlayersScreen extends Component {
         this.state.chosenPlayers.length !==
         parseInt(this.currentQuest.number, 10)
       ) {
-        this.toast.show(
-          `Choose exactly ${this.currentQuest.number} players`,
-          DURATION.LONG_LENGTH,
-        );
+        showLongBottomToast(`Choose exactly ${this.currentQuest.number} players`);
         return;
       }
       const msg = {
@@ -186,15 +183,6 @@ class PlayersScreen extends Component {
                 {this.props.buttonText}
               </DefaultButton>
             </ImageBackground>
-            <Toast
-              ref={ref => {
-                this.toast = ref;
-              }}
-              style={styles.toast}
-              positionValue={hp('30%')}
-              fadeInDuration={500}
-              textStyle={styles.toastText}
-            />
           </View>
         </Overlay>
       </View>
@@ -264,17 +252,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     fontFamily: 'JosefinSans-Light',
-  },
-  toast: {
-    borderRadius: 30,
-    backgroundColor: DefaultColors.light,
-  },
-  toastText: {
-    color: '#17242c',
-    textAlign: 'center',
-    fontFamily: 'JosefinSans-Regular',
-    fontSize: wp('4.5%'),
-    lineHeight: hp('2.8%'),
   },
 });
 
