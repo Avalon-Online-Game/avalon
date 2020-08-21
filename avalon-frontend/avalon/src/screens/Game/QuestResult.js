@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, ImageBackground, Image, StyleSheet} from 'react-native';
-import {Overlay} from 'react-native-elements';
+import Modal from 'react-native-modal';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -19,10 +19,10 @@ class QuestResultScreen extends Component {
   }
 
   dissmissHandler = () => {
+    Navigation.dismissModal(this.props.componentId);
     this.setState({
       visible: false,
     });
-    Navigation.dismissModal(this.props.componentId);
   };
 
   render() {
@@ -30,66 +30,61 @@ class QuestResultScreen extends Component {
       this.props.questResult === 'success' ? 'Succeed' : 'Failed'
     }!`;
     return (
-      <Overlay
-        backdropStyle={styles.backdrop}
-        onBackdropPress={this.dissmissHandler}
-        isVisible={this.state.visible}
-        overlayStyle={styles.overlayStyle}>
-        <ImageBackground
-          style={styles.background}
-          source={require('../../assets/popups/popup-back.png')}
-          resizeMode="contain">
-          <Text
-            style={[
-              styles.titleText,
-              this.props.questResult === 'success'
-                ? styles.successColor
-                : styles.failColor,
-            ]}>
-            {title}
-          </Text>
-          <View style={styles.scoreContainer}>
-            <View style={styles.successScoresContainer}>
-              <Text style={styles.scoreNumber}>
-                {this.props.questScores.success}
-              </Text>
-              <View style={styles.successScore}>
-                <Image
-                  style={styles.scoreImage}
-                  source={require('../../assets/popups/success.png')}
-                  resizeMode="contain"
-                />
-                <Text style={styles.scoreText}>Success</Text>
+      <View>
+        <Modal
+          isVisible={this.state.visible}
+          style={styles.overlay}
+          onBackdropPress={this.dissmissHandler}>
+          <ImageBackground
+            style={styles.background}
+            source={require('../../assets/popups/popup-back.png')}
+            resizeMode="contain">
+            <Text
+              style={[
+                styles.titleText,
+                this.props.questResult === 'success'
+                  ? styles.successColor
+                  : styles.failColor,
+              ]}>
+              {title}
+            </Text>
+            <View style={styles.scoreContainer}>
+              <View style={styles.successScoresContainer}>
+                <Text style={styles.scoreNumber}>
+                  {this.props.questScores.success}
+                </Text>
+                <View style={styles.successScore}>
+                  <Image
+                    style={styles.scoreImage}
+                    source={require('../../assets/popups/success.png')}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.scoreText}>Success</Text>
+                </View>
+              </View>
+              <View style={styles.failScoresContainer}>
+                <Text style={styles.scoreNumber}>
+                  {this.props.questScores.fail}
+                </Text>
+                <View style={styles.failScore}>
+                  <Image
+                    style={styles.scoreImage}
+                    source={require('../../assets/popups/fail.png')}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.scoreText}>Fail</Text>
+                </View>
               </View>
             </View>
-            <View style={styles.failScoresContainer}>
-              <Text style={styles.scoreNumber}>
-                {this.props.questScores.fail}
-              </Text>
-              <View style={styles.failScore}>
-                <Image
-                  style={styles.scoreImage}
-                  source={require('../../assets/popups/fail.png')}
-                  resizeMode="contain"
-                />
-                <Text style={styles.scoreText}>Fail</Text>
-              </View>
-            </View>
-          </View>
-        </ImageBackground>
-      </Overlay>
+          </ImageBackground>
+        </Modal>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000000A0',
-  },
-  overlayStyle: {
+  overlay: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',

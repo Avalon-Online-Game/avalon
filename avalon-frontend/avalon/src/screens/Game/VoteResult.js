@@ -14,7 +14,7 @@ import {
 } from 'react-native-responsive-screen';
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
-import {Overlay} from 'react-native-elements';
+import Modal from 'react-native-modal';
 
 import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';
@@ -29,10 +29,27 @@ class VoteResultScreen extends Component {
   }
 
   dissmissHandler = () => {
+    Navigation.dismissModal(this.props.componentId);
     this.setState({
       visible: false,
     });
-    Navigation.dismissModal(this.props.componentId);
+  };
+
+  voteImage = vote => {
+    if (vote === 'approve') {
+      return (
+        <Image
+          source={require('../../assets/popups/yes.png')}
+          style={styles.voteImage}
+        />
+      );
+    }
+    return (
+      <Image
+        source={require('../../assets/popups/no.png')}
+        style={styles.voteImage}
+      />
+    );
   };
 
   playerRenderItem = ({item}) => {
@@ -50,7 +67,7 @@ class VoteResultScreen extends Component {
             resizeMode="contain"
           />
           <Text style={styles.userText}>{player.username}</Text>
-          <Text style={styles.userText}>{vote}</Text>
+          {this.voteImage(vote)}
         </View>
       </TouchableWithoutFeedback>
     );
@@ -58,39 +75,31 @@ class VoteResultScreen extends Component {
 
   render() {
     return (
-      <Overlay
-        backdropStyle={styles.backdrop}
-        onBackdropPress={this.dissmissHandler}
-        isVisible={this.state.visible}
-        overlayStyle={styles.overlayStyle}>
-        <ImageBackground
-          style={styles.background}
-          source={require('../../assets/popups/modal-back.png')}
-          resizeMode="contain">
-          <FlatList
-            style={styles.list}
-            data={this.props.questPlayersVotes}
-            renderItem={this.playerRenderItem}
-            keyExtractor={(item, index) => String(index)}
-            numColumns={2}
-          />
-          <DefaultButton style={styles.button} onPress={this.dissmissHandler}>
-            Got it
-          </DefaultButton>
-        </ImageBackground>
-      </Overlay>
+      <View>
+        <Modal isVisible={this.state.visible} style={styles.overlay}>
+          <ImageBackground
+            style={styles.background}
+            source={require('../../assets/popups/modal-back.png')}
+            resizeMode="contain">
+            <FlatList
+              style={styles.list}
+              data={this.props.questPlayersVotes}
+              renderItem={this.playerRenderItem}
+              keyExtractor={(item, index) => String(index)}
+              numColumns={2}
+            />
+            <DefaultButton style={styles.button} onPress={this.dissmissHandler}>
+              Got it
+            </DefaultButton>
+          </ImageBackground>
+        </Modal>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000000D0',
-  },
-  overlayStyle: {
+  overlay: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
@@ -108,36 +117,31 @@ const styles = StyleSheet.create({
     marginBottom: hp('-4%'),
     width: wp('60%'),
   },
-  // buttonImage: {
-  //   width: wp('60%'),
-  //   height: hp('8%'),
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
-  // buttonText: {
-  //   color: '#0B161C',
-  //   fontSize: wp('6%'),
-  //   textAlign: 'center',
-  //   textAlignVertical: 'center',
-  //   fontFamily: 'JosefinSans-Bold',
-  // },
-  userButtonContainer: {},
+  list: {
+    width: wp('60%'),
+    height: hp('100%'),
+  },
   userButton: {
     width: wp('20%'),
-    marginTop: hp('2%'),
+    marginTop: hp('1.5%'),
     marginHorizontal: wp('5%'),
     alignItems: 'center',
   },
   userImage: {
-    width: wp('18%'),
-    height: wp('18%'),
+    width: wp('15%'),
+    height: wp('15%'),
   },
   userText: {
     color: DefaultColors.light,
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontFamily: 'JosefinSans-Light',
+    fontFamily: 'JosefinSans-Medium',
+  },
+  voteImage: {
+    width: wp('4.5%'),
+    height: wp('4.5%'),
+    marginTop: hp('0%'),
   },
 });
 

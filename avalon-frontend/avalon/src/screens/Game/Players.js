@@ -14,13 +14,13 @@ import {
 } from 'react-native-responsive-screen';
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
-import {Overlay} from 'react-native-elements';
+import Modal from 'react-native-modal';
 
 import DefaultButton from '../../components/UI/Game/DefultButton';
 import avatars from '../../utils/avatars';
 import {wsSend} from '../../store/actions/index';
 import DefaultColors from '../../components/UI/colors';
-import {showLongBottomToast} from '../../utils/toasts';
+import {showShortBottomToast} from '../../utils/toasts';
 
 class PlayersScreen extends Component {
   constructor(props) {
@@ -35,10 +35,10 @@ class PlayersScreen extends Component {
   }
 
   dissmissHandler = () => {
+    Navigation.dismissModal(this.props.componentId);
     this.setState({
       visible: false,
     });
-    Navigation.dismissModal(this.props.componentId);
   };
 
   onButtonHandler = () => {
@@ -47,7 +47,9 @@ class PlayersScreen extends Component {
         this.state.chosenPlayers.length !==
         parseInt(this.currentQuest.number, 10)
       ) {
-        showLongBottomToast(`Choose exactly ${this.currentQuest.number} players`);
+        showShortBottomToast(
+          `Choose exactly ${this.currentQuest.number} players`,
+        );
         return;
       }
       const msg = {
@@ -56,10 +58,10 @@ class PlayersScreen extends Component {
       };
       this.props.wsSend(msg);
     }
+    Navigation.dismissModal(this.props.componentId);
     this.setState({
       visible: false,
     });
-    Navigation.dismissModal(this.props.componentId);
   };
 
   clickOnPlayerHandler = player => {
@@ -159,11 +161,11 @@ class PlayersScreen extends Component {
   render() {
     return (
       <View>
-        <Overlay
-          backdropStyle={styles.backdrop}
-          onBackdropPress={this.dissmissHandler}
+        <Modal
+          style={styles.overlay}
           isVisible={this.state.visible}
-          overlayStyle={styles.overlayStyle}>
+          onBackdropPress={this.dissmissHandler}
+          onBackButtonPress={this.dissmissHandler}>
           <View>
             <ImageBackground
               style={styles.background}
@@ -184,23 +186,16 @@ class PlayersScreen extends Component {
               </DefaultButton>
             </ImageBackground>
           </View>
-        </Overlay>
+        </Modal>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
+  overlay: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000000D0',
-  },
-  overlayStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
   },
   background: {
     justifyContent: 'space-between',
@@ -251,7 +246,7 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontFamily: 'JosefinSans-Light',
+    fontFamily: 'JosefinSans-Medium',
   },
 });
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {Text, Image, ImageBackground, StyleSheet} from 'react-native';
-import {Overlay} from 'react-native-elements';
+import {View, Text, Image, ImageBackground, StyleSheet} from 'react-native';
+import Modal from 'react-native-modal';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -31,32 +31,30 @@ class WaitingScreen extends Component {
   }
 
   dissmissHandler = () => {
+    Navigation.dismissModal(this.props.componentId);
     this.setState({
       visible: false,
     });
-    Navigation.dismissModal(this.props.componentId);
   };
 
   render() {
     return (
-      <Overlay
-        backdropStyle={styles.backdrop}
-        // onBackdropPress={this.dissmissHandler}
-        isVisible={this.state.visible}
-        overlayStyle={styles.overlayStyle}>
-        <ImageBackground
-          style={styles.background}
-          source={require('../../assets/popups/popup-back.png')}
-          resizeMode="contain">
-          <Text style={styles.titleText}>Waiting...</Text>
-          <Text style={styles.mainText}>{this.props.message}</Text>
-          <Image
-            style={styles.crownImage}
-            source={require('../../assets/popups/crown.png')}
-            resizeMode="contain"
-          />
-        </ImageBackground>
-      </Overlay>
+      <View>
+        <Modal isVisible={this.state.visible} style={styles.overlay}>
+          <ImageBackground
+            style={styles.background}
+            source={require('../../assets/popups/popup-back.png')}
+            resizeMode="contain">
+            <Text style={styles.titleText}>Waiting...</Text>
+            <Text style={styles.mainText}>{this.props.message}</Text>
+            <Image
+              style={styles.crownImage}
+              source={require('../../assets/popups/crown.png')}
+              resizeMode="contain"
+            />
+          </ImageBackground>
+        </Modal>
+      </View>
     );
   }
 }
@@ -68,7 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#000000A0',
   },
-  overlayStyle: {
+  overlay: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',

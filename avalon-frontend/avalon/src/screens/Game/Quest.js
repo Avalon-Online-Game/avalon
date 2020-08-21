@@ -36,11 +36,9 @@ class VoteScreen extends Component {
     Navigation.pop(this.props.componentId);
   };
 
-  render() {
-    return (
-      <MainView style={styles.container}>
-        <Text style={styles.questTitle}>{this.questTitle}</Text>
-        <Text style={styles.mainText}>Choose your quest result</Text>
+  voteButtons = () => {
+    if (this.props.role.side === 'evil') {
+      return (
         <View style={styles.buttonContainer}>
           <DefaultButton
             buttonStyle={styles.button}
@@ -55,16 +53,32 @@ class VoteScreen extends Component {
             Fail
           </DefaultButton>
         </View>
+      );
+    }
+    return (
+      <View style={styles.buttonContainer}>
+        <DefaultButton
+          buttonStyle={styles.button}
+          backgroundStyle={styles.buttonBackground}
+          onPress={this.successHandler}>
+          Success
+        </DefaultButton>
+      </View>
+    );
+  };
+
+  render() {
+    return (
+      <MainView>
+        <Text style={styles.questTitle}>{this.questTitle}</Text>
+        <Text style={styles.mainText}>Choose your quest result</Text>
+        {this.voteButtons()}
       </MainView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // justifyContent: 'center',
-    // alignItems: 'center',
-  },
   questTitle: {
     color: DefaultColors.light,
     fontSize: wp('7%'),
@@ -94,24 +108,11 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    // players: state.game.players,
     commander: state.game.commander,
-    // quests: state.game.quests,
-    // numberOfPlayers: state.game.numberOfPlayers,
     currentQuestNumber: state.game.currentQuestNumber,
-    // failedVotings: state.game.failedVotings,
     gameState: state.game.gameState,
-    // winner: state.game.winner,
-    // role: state.game.role,
-    // roleData: state.game.roleData,
     questChosenPlayers: state.game.questChosenPlayers,
-    // questVotedPlayers: state.game.questVotedPlayers,
-    // questVotingResult: state.game.questVotingResult,
-    // questPlayersVotes: state.game.questPlayersVotes,
-    // questScores: state.game.questScores,
-    // questResult: state.game.questResult,
-    // assassinatedPlayer: state.game.assassinatedPlayer,
-    // assassinationResult: state.game.assassinationResult,
+    role: state.game.role,
   };
 };
 
