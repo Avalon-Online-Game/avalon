@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, ImageBackground, StyleSheet, View} from 'react-native';
-import {Overlay} from 'react-native-elements';
+import Modal from 'react-native-modal';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -27,64 +27,56 @@ class ConfirmOverlay extends Component {
   };
 
   dissmissHandler = () => {
+    Navigation.dismissModal(this.props.componentId);
     this.setState({
       visible: false,
     });
-    Navigation.dismissModal(this.props.componentId);
   };
 
   render() {
     return (
-      <Overlay
-        backdropStyle={styles.backdrop}
-        onBackdropPress={this.dissmissHandler}
-        isVisible={this.state.visible}
-        overlayStyle={styles.overlayStyle}>
-        <ImageBackground
-          style={styles.background}
-          source={require('../../assets/popups/popup-back.png')}
-          resizeMode="contain">
-          <Text style={styles.titleText}>{this.props.message}</Text>
-          <View style={styles.buttonsContainer}>
-            <DefaultButton
-              buttonStyle={styles.button}
-              backgroundStyle={styles.buttonBackground}
-              textStyle={styles.buttonText}
-              onPress={this.confirmHandler}>
-              Yes
-            </DefaultButton>
-            <DefaultButton
-              buttonStyle={styles.button}
-              backgroundStyle={styles.buttonBackground}
-              textStyle={styles.buttonText}
-              onPress={this.dissmissHandler}>
-              No
-            </DefaultButton>
-          </View>
-        </ImageBackground>
-      </Overlay>
+      <View>
+        <Modal
+          isVisible={this.state.visible}
+          style={styles.overlay}>
+          <ImageBackground
+            style={styles.background}
+            source={require('../../assets/popups/popup-back.png')}
+            resizeMode="contain">
+            <Text style={styles.titleText}>{this.props.message}</Text>
+            <View style={styles.buttonsContainer}>
+              <DefaultButton
+                buttonStyle={styles.button}
+                backgroundStyle={styles.buttonBackground}
+                textStyle={styles.buttonText}
+                onPress={this.confirmHandler}>
+                Yes
+              </DefaultButton>
+              <DefaultButton
+                buttonStyle={styles.button}
+                backgroundStyle={styles.buttonBackground}
+                textStyle={styles.buttonText}
+                onPress={this.dissmissHandler}>
+                No
+              </DefaultButton>
+            </View>
+          </ImageBackground>
+        </Modal>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
+  overlay: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000000A0',
-  },
-  overlayStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
   },
   background: {
     justifyContent: 'center',
     alignItems: 'center',
     width: wp('90%'),
     height: hp('40%'),
-    backgroundColor: 'transparent',
   },
   titleText: {
     color: DefaultColors.light,

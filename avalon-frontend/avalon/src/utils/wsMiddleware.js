@@ -1,3 +1,5 @@
+import ReconnectingWebsocket from 'reconnecting-websocket';
+
 import {WS_CONNECT, WS_DISCONNECT, WS_SEND} from '../store/actions/actionTypes';
 import {
   wsConnected,
@@ -20,12 +22,11 @@ import {
 } from '../store/actions/index';
 
 const socketMiddleware = () => {
-  const baseUrl = __DEV__ ? 'ws://localhost:8000' : 'wss://avalongame.ir';
+  const baseUrl = __DEV__ ? 'ws://localhost:8000/' : 'wss://avalongame.ir/';
 
   let socket = null;
 
   const onOpen = store => event => {
-    console.log('websocket opened');
     store.dispatch(wsConnected());
   };
 
@@ -35,7 +36,6 @@ const socketMiddleware = () => {
 
   const onMessage = store => event => {
     const payload = JSON.parse(event.data);
-    console.log('receiving server message');
 
     switch (payload.msg_type) {
       case 'start':
@@ -87,23 +87,35 @@ const socketMiddleware = () => {
         if (socket !== null) {
           socket.close();
         }
-        // eslint-disable-next-line no-undef
-        socket = new WebSocket(
-          `wss://avalongame.ir/ws/game/?token=${action.token}`,
+        let wsOptions = {
+          maxReconnectionDelay: 10000,
+          minReconnectionDelay: 1000 + Math.random() * 4000,
+          reconnectionDelayGrowFactor: 1.3,
+          minUptime: 5000,
+          connectionTimeout: 4000,
+          maxRetries: Infinity,
+          maxEnqueuedMessages: Infinity,
+          startClosed: false,
+          debug: __DEV__,
+        };
+        socket = new ReconnectingWebsocket(
+          `${baseUrl}ws/game/?token=${action.token}`,
+          [],
+          wsOptions,
         );
         socket.onmessage = onMessage(store);
         socket.onclose = onClose(store);
         socket.onopen = onOpen(store);
         break;
+
       case WS_DISCONNECT:
         if (socket !== null) {
           socket.close();
         }
         socket = null;
-        console.log('websocket closed');
         break;
+
       case WS_SEND:
-        console.log('sending a message', action.msg);
         socket.send(JSON.stringify(action.msg));
         break;
       default:

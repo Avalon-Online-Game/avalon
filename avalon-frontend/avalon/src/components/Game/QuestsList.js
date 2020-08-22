@@ -44,7 +44,7 @@ class QuestsList extends Component {
     }
   }
 
-  seeQuestHandler = quest => {};
+  // seeQuestHandler = quest => {};
 
   questRenderItem = ({item}) => {
     let detail;
@@ -68,9 +68,7 @@ class QuestsList extends Component {
       content = (
         <View>
           {detail}
-          <TouchableWithoutFeedback
-            style={styles.questButton}
-            onPress={() => this.seeQuestHandler(item)}>
+          <TouchableWithoutFeedback onPress={() => this.seeQuestHandler(item)}>
             <ImageBackground
               style={styles.questBackgroundBorder}
               source={questResultBorder}
@@ -114,7 +112,6 @@ class QuestsList extends Component {
     return (
       <View style={this.props.style}>
         <FlatList
-          style={styles.list}
           contentContainerStyle={styles.listContent}
           data={this.props.gameQuests}
           extraData={[this.props.gameQuests, this.props.numberOfPlayers]}
@@ -129,23 +126,15 @@ class QuestsList extends Component {
 }
 
 const styles = StyleSheet.create({
-  list: {
-    // backgroundColor: 'white',
-  },
   listContent: {
     alignItems: 'center',
-    // backgroundColor: 'white',
-  },
-  questButton: {
-    marginHorizontal: wp('2%'),
   },
   questBackgroundBorder: {
     width: hp('22%'),
     height: hp('22%'),
     justifyContent: 'center',
     alignItems: 'center',
-    // marginTop: hp('1.5%'),
-    // marginHorizontal: wp('5%'),
+    marginHorizontal: wp('0.5%'),
   },
   questBackground: {
     width: hp('20%'),

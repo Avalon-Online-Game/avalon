@@ -97,6 +97,9 @@ class LoadingScreen extends Component {
             source={require('../../assets/loading/castle.png')}
           />
         </ImageBackground>
+        <Text style={styles.codeText}>
+          Game Code: {this.props.gameCode}
+        </Text>
       </View>
     );
   }
@@ -111,14 +114,15 @@ const styles = StyleSheet.create({
   },
   mainText: {
     color: DefaultColors.light,
+    width: wp('85%'),
     fontSize: wp('7%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Medium',
     marginTop: hp('5%'),
   },
   innerBackgroundImage: {
-    width: wp('80%'),
-    height: wp('80%'),
+    width: wp('78%'),
+    height: hp('35%'),
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: hp('5%'),
@@ -126,6 +130,13 @@ const styles = StyleSheet.create({
   innerImage: {
     width: wp('50%'),
     height: wp('50%'),
+  },
+  codeText: {
+    color: DefaultColors.light,
+    fontSize: wp('6%'),
+    textAlign: 'center',
+    fontFamily: 'JosefinSans-Medium',
+    marginTop: hp('3%'),
   },
 });
 

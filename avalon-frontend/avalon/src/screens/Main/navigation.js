@@ -76,6 +76,11 @@ export const goLoading = async () => {
             component: {
               id: 'loadingScreen',
               name: 'avalon.LoadingScreen',
+              passProps: {
+                gameCode: await AsyncStorage.getItem('game').then(gameCode =>
+                  JSON.parse(gameCode),
+                ),
+              },
               options: {
                 topBar: {
                   leftButtons: [

@@ -5,13 +5,13 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import Toast, {DURATION} from 'react-native-easy-toast';
 
 import MainView from '../../components/UI/Main/MainView';
 import BottomButton from '../../components/UI/Main/BottomButton';
 import API from '../../utils/API';
 import {goLoading} from './navigation';
 import DefaultColors from '../../components/UI/colors';
+import {showLongBottomToast} from '../../utils/toasts';
 
 class JoinGameScreen extends Component {
   constructor() {
@@ -70,18 +70,15 @@ class JoinGameScreen extends Component {
       .catch(err => {
         if (err.response.status === 404) {
           console.log('Game code is not correct: 404');
-          this.toast.show('Game code is wrong', DURATION.LONG_LENGTH);
+          showLongBottomToast('Entered game code is wrong');
         }
         if (err.response.status === 406) {
           console.log('Game is full: 406');
-          this.toast.show('Game is out of capacity', DURATION.LONG_LENGTH);
+          showLongBottomToast('Game is out of capacity');
         }
         if (err.response.status === 400) {
           console.log(`${JSON.stringify(err.response.data)}: 400`);
-          this.toast.show(
-            'Whoops... something went wrong!',
-            DURATION.LONG_LENGTH,
-          );
+          showLongBottomToast('Whoops... something went wrong!');
         }
       });
   };
@@ -125,15 +122,6 @@ class JoinGameScreen extends Component {
           onPress={this.joinHandler}>
           Join
         </BottomButton>
-        <Toast
-          ref={ref => {
-            this.toast = ref;
-          }}
-          style={styles.toast}
-          positionValue={hp('30%')}
-          fadeInDuration={500}
-          textStyle={styles.toastText}
-        />
       </MainView>
     );
   }
@@ -161,17 +149,6 @@ const styles = StyleSheet.create({
     marginHorizontal: wp('2.5%'),
     color: DefaultColors.light,
     textAlign: 'center',
-  },
-  toast: {
-    borderRadius: 30,
-    backgroundColor: '#17242c',
-  },
-  toastText: {
-    color: DefaultColors.light,
-    textAlign: 'center',
-    fontFamily: 'JosefinSans-Regular',
-    fontSize: wp('4.5%'),
-    lineHeight: hp('2.8%'),
   },
 });
 

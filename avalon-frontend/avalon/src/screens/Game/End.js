@@ -14,7 +14,7 @@ import {
 import {Navigation} from 'react-native-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
-import {Overlay} from 'react-native-elements';
+import Modal from 'react-native-modal';
 
 import API from '../../utils/API';
 import avatars from '../../utils/avatars';
@@ -32,11 +32,19 @@ class EndScreen extends Component {
       this.props.winner === 'good'
         ? require('../../assets/popups/good-end.png')
         : require('../../assets/popups/evil-end.png');
-    this.mainText =
-      this.props.winner === 'good' ? 'Good Side Won!' : 'Evil Side Won!';
+    this.mainText = this.props.winner === 'good' ? 'Goods Won!' : 'Evils Won!';
   }
 
   dissmissHandler = async () => {
+    const userToken = JSON.parse(await AsyncStorage.getItem('user')).key;
+    const gameCode = JSON.parse(await AsyncStorage.getItem('game'));
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${userToken}`,
+    };
+    API.delete(`games/game/${gameCode}`, {
+      headers: headers,
+    });
     this.setState({
       visible: false,
     });
@@ -46,15 +54,6 @@ class EndScreen extends Component {
         id: 'mainMenuScreen',
         name: 'avalon.MainMenuScreen',
       },
-    });
-    const userToken = JSON.parse(await AsyncStorage.getItem('user')).key;
-    const gameCode = JSON.parse(await AsyncStorage.getItem('game'));
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Token ${userToken}`,
-    };
-    API.delete(`games/game/${gameCode}`, {
-      headers: headers,
     });
   };
 
@@ -85,27 +84,29 @@ class EndScreen extends Component {
 
   render() {
     return (
-      <Overlay
-        backdropStyle={styles.backdrop}
-        onBackdropPress={this.dissmissHandler}
-        isVisible={this.state.visible}
-        overlayStyle={styles.overlayStyle}>
-        <ImageBackground
-          style={styles.background}
-          source={this.imageBackground}
-          resizeMode="contain">
-          <FlatList
-            style={styles.list}
-            contentContainerStyle={styles.listContent}
-            data={this.props.playersRoles}
-            extraData={this.props.playersRoles}
-            renderItem={this.playerRenderItem}
-            keyExtractor={item => item[0].token}
-            numColumns={2}
-          />
-          <Text style={styles.mainText}>{this.mainText}</Text>
-        </ImageBackground>
-      </Overlay>
+      <View>
+        <Modal
+          onBackdropPress={this.dissmissHandler}
+          onBackButtonPress={this.dissmissHandler}
+          isVisible={this.state.visible}
+          style={styles.overlay}>
+          <ImageBackground
+            style={styles.background}
+            source={this.imageBackground}
+            resizeMode="contain">
+            <FlatList
+              style={styles.list}
+              contentContainerStyle={styles.listContent}
+              data={this.props.playersRoles}
+              extraData={this.props.playersRoles}
+              renderItem={this.playerRenderItem}
+              keyExtractor={item => item[0].token}
+              numColumns={2}
+            />
+            <Text style={styles.mainText}>{this.mainText}</Text>
+          </ImageBackground>
+        </Modal>
+      </View>
     );
   }
 }
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#000000D0',
   },
-  overlayStyle: {
+  overlay: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
@@ -132,7 +133,6 @@ const styles = StyleSheet.create({
   list: {
     marginTop: hp('7%'),
     marginBottom: hp('9%'),
-    // backgroundColor: 'blue',
   },
   listContent: {
     alignItems: 'center',
@@ -142,7 +142,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: hp('2%'),
     marginHorizontal: wp('5%'),
-    // backgroundColor: 'red',
   },
   roleImage: {
     width: wp('23%'),
@@ -158,15 +157,15 @@ const styles = StyleSheet.create({
   },
   userText: {
     color: DefaultColors.light,
-    fontSize: wp('4%'),
+    fontSize: wp('5%'),
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontFamily: 'JosefinSans-Light',
+    fontFamily: 'JosefinSans-Medium',
     marginHorizontal: wp('2%'),
   },
   mainText: {
     color: DefaultColors.light,
-    fontSize: wp('8%'),
+    fontSize: wp('7.5%'),
     textAlign: 'center',
     textAlignVertical: 'center',
     fontFamily: 'JosefinSans-Medium',

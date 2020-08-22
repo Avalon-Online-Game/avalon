@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import Toast, {DURATION} from 'react-native-easy-toast';
 
 import EntranceView from '../../components/UI/Entrance/EntranceView';
 import DefaultButton from '../../components/UI/Entrance/DefaultButton';
@@ -15,6 +13,7 @@ import DefaultInput from '../../components/UI/Entrance/DefaultInput';
 import API from '../../utils/API';
 import {goWelcome} from './navigation';
 import DefaultColors from '../../components/UI/colors';
+import {showLongBottomToast} from '../../utils/toasts';
 
 class AuthScreen extends Component {
   constructor() {
@@ -60,20 +59,22 @@ class AuthScreen extends Component {
         this.startMainScreen(res.data.username);
       })
       .catch(err => {
-        if (err.response.data.email) {
-          this.setState({
-            signupEmailError: 'Email address has already been registered',
-          });
-        } else if (err.response.data.username) {
-          this.setState({
-            signupUsernameError: 'Username is taken by another user',
-          });
-        } else if (err.response.data.password) {
-          this.setState({
-            signupPasswordError: err.response.data.password,
-          });
+        if (err.response !== undefined) {
+          if (err.response.data.email) {
+            this.setState({
+              signupEmailError: 'Email address has already been registered',
+            });
+          } else if (err.response.data.username) {
+            this.setState({
+              signupUsernameError: 'Username is taken by another user',
+            });
+          } else if (err.response.data.password) {
+            this.setState({
+              signupPasswordError: err.response.data.password,
+            });
+          }
         } else {
-          this.toast.show('Check your connection...', DURATION.LONG_LENGTH);
+          showLongBottomToast('No internet connection');
         }
       });
     this.setState({
@@ -104,12 +105,13 @@ class AuthScreen extends Component {
         this.startMainScreen(res.data.username);
       })
       .catch(err => {
-        if (err.response.data.non_field_errors) {
+        console.log(err);
+        if (err.response !== undefined && err.response.data.non_field_errors) {
           this.setState({
             loginError: 'Username or password is incorrect',
           });
         } else {
-          this.toast.show('Check your connection...', DURATION.LONG_LENGTH);
+          showLongBottomToast('No internet connection');
         }
       });
     this.setState({
@@ -320,15 +322,6 @@ class AuthScreen extends Component {
             </TabButton>
           </View>
           {content}
-          <Toast
-            ref={ref => {
-              this.toast = ref;
-            }}
-            style={styles.toast}
-            positionValue={hp('30%')}
-            fadeInDuration={500}
-            textStyle={styles.toastText}
-          />
         </View>
       </EntranceView>
     );
@@ -391,17 +384,6 @@ const styles = StyleSheet.create({
     color: DefaultColors.light,
     fontFamily: 'JosefinSans-Light',
     opacity: 0.5,
-  },
-  toast: {
-    borderRadius: 30,
-    backgroundColor: DefaultColors.light,
-  },
-  toastText: {
-    color: '#17242c',
-    textAlign: 'center',
-    fontFamily: 'JosefinSans-Regular',
-    fontSize: wp('4.5%'),
-    lineHeight: hp('2.8%'),
   },
 });
 

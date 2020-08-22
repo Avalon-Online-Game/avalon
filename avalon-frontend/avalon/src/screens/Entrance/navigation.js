@@ -32,7 +32,7 @@ export const goWelcome = username => {
 export const goMainMenu = async () => {
   const backIcon = await Icon.getImageSource('ios-arrow-back', wp('8%'));
   const logoutIcon = await Icon.getImageSource('ios-log-out', wp('8%'));
-  const settingsIcon = await Icon.getImageSource('ios-settings', wp('8%'));
+  // const settingsIcon = await Icon.getImageSource('ios-settings', wp('8%'));
   Navigation.setRoot({
     root: {
       sideMenu: {
@@ -53,13 +53,13 @@ export const goMainMenu = async () => {
                           color: DefaultColors.light,
                         },
                       ],
-                      rightButtons: [
-                        {
-                          id: 'settingsButton',
-                          icon: settingsIcon,
-                          color: DefaultColors.light,
-                        },
-                      ],
+                      // rightButtons: [
+                      //   {
+                      //     id: 'settingsButton',
+                      //     icon: settingsIcon,
+                      //     color: DefaultColors.light,
+                      //   },
+                      // ],
                     },
                   },
                 },
