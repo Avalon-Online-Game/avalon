@@ -31,7 +31,10 @@ class RoleScreen extends Component {
   render() {
     return (
       <View>
-        <Modal style={styles.overlay} isVisible={this.state.visible}>
+        <Modal
+          style={styles.overlay}
+          isVisible={this.state.visible}
+          backdropTransitionOutTiming={0}>
           <ImageBackground
             style={styles.background}
             source={require('../../assets/popups/modal-back.png')}

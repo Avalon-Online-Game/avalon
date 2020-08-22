@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     height: hp('12%'),
   },
   chosenAvatarText: {
-    fontFamily: 'JosefinSans-Light',
+    fontFamily: 'JosefinSans-Medium',
     fontSize: wp('5.5%'),
     color: DefaultColors.light,
   },

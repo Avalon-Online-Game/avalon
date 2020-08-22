@@ -21,10 +21,7 @@ class InterruptOverlay extends Component {
     };
   }
 
-  confirmHandler = async () => {
-    this.setState({
-      visible: false,
-    });
+  confirm = async () => {
     const userToken = JSON.parse(await AsyncStorage.getItem('user')).key;
     const gameCode = JSON.parse(await AsyncStorage.getItem('game'));
     const playerCode = JSON.parse(await AsyncStorage.getItem('player'));
@@ -43,11 +40,26 @@ class InterruptOverlay extends Component {
     goMainMenu();
   };
 
+  confirmHandler = async () => {
+    this.setState(
+      {
+        visible: false,
+      },
+      () => {
+        this.confirm();
+      },
+    );
+  };
+
   dissmissHandler = () => {
-    Navigation.dismissModal(this.props.componentId);
-    this.setState({
-      visible: false,
-    });
+    this.setState(
+      {
+        visible: false,
+      },
+      () => {
+        Navigation.dismissModal(this.props.componentId);
+      },
+    );
   };
 
   render() {
@@ -55,7 +67,8 @@ class InterruptOverlay extends Component {
       <View>
         <Modal
           style={styles.overlay}
-          isVisible={this.state.visible}>
+          isVisible={this.state.visible}
+          backdropTransitionOutTiming={0}>
           <ImageBackground
             style={styles.background}
             source={require('../../assets/popups/popup-back.png')}

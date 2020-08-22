@@ -6,7 +6,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {Navigation} from 'react-native-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 
+import {goAuth} from '../../screens/Entrance/navigation';
 import DefaultButton from '../UI/Main/DefaultButton';
 import DefaultColors from '../UI/colors';
 
@@ -19,18 +21,25 @@ class ConfirmOverlay extends Component {
   }
 
   confirmHandler = () => {
-    this.setState({
-      visible: false,
-    });
-    Navigation.dismissModal(this.props.componentId);
-    this.props.confirmFunction();
+    this.setState(
+      {
+        visible: false,
+      },
+      async () => {
+        await this.props.confirmFunction();
+      },
+    );
   };
 
   dissmissHandler = () => {
-    Navigation.dismissModal(this.props.componentId);
-    this.setState({
-      visible: false,
-    });
+    this.setState(
+      {
+        visible: false,
+      },
+      async () => {
+        await Navigation.dismissModal(this.props.componentId);
+      },
+    );
   };
 
   render() {
@@ -38,7 +47,8 @@ class ConfirmOverlay extends Component {
       <View>
         <Modal
           isVisible={this.state.visible}
-          style={styles.overlay}>
+          style={styles.overlay}
+          backdropTransitionOutTiming={0}>
           <ImageBackground
             style={styles.background}
             source={require('../../assets/popups/popup-back.png')}
@@ -48,14 +58,12 @@ class ConfirmOverlay extends Component {
               <DefaultButton
                 buttonStyle={styles.button}
                 backgroundStyle={styles.buttonBackground}
-                textStyle={styles.buttonText}
                 onPress={this.confirmHandler}>
                 Yes
               </DefaultButton>
               <DefaultButton
                 buttonStyle={styles.button}
                 backgroundStyle={styles.buttonBackground}
-                textStyle={styles.buttonText}
                 onPress={this.dissmissHandler}>
                 No
               </DefaultButton>
@@ -83,8 +91,8 @@ const styles = StyleSheet.create({
     fontSize: wp('7%'),
     textAlign: 'center',
     fontFamily: 'JosefinSans-Regular',
-    width: wp('85%'),
-    lineHeight: hp('5%'),
+    width: wp('70%'),
+    lineHeight: hp('5.5%'),
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -93,12 +101,14 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: hp('5%'),
-    marginHorizontal: wp('2%'),
+    marginHorizontal: wp('3%'),
+    width: wp('35%'),
+    height: hp('5%'),
   },
   buttonBackground: {
-    width: wp('37%'),
+    width: '100%',
+    height: '100%',
   },
-  buttonText: {},
 });
 
 export default ConfirmOverlay;

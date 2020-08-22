@@ -17,8 +17,9 @@ export const showLogout = () => {
       },
       passProps: {
         message: 'Are you sure you want to logout?',
-        confirmFunction: () => {
+        confirmFunction: async () => {
           AsyncStorage.removeItem('user');
+          await Navigation.dismissModal('logoutScreen');
           goAuth();
         },
       },
