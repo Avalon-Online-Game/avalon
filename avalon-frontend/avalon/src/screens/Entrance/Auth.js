@@ -59,20 +59,22 @@ class AuthScreen extends Component {
         this.startMainScreen(res.data.username);
       })
       .catch(err => {
-        if (err.response.data.email) {
-          this.setState({
-            signupEmailError: 'Email address has already been registered',
-          });
-        } else if (err.response.data.username) {
-          this.setState({
-            signupUsernameError: 'Username is taken by another user',
-          });
-        } else if (err.response.data.password) {
-          this.setState({
-            signupPasswordError: err.response.data.password,
-          });
+        if (err.response !== undefined) {
+          if (err.response.data.email) {
+            this.setState({
+              signupEmailError: 'Email address has already been registered',
+            });
+          } else if (err.response.data.username) {
+            this.setState({
+              signupUsernameError: 'Username is taken by another user',
+            });
+          } else if (err.response.data.password) {
+            this.setState({
+              signupPasswordError: err.response.data.password,
+            });
+          }
         } else {
-          showLongBottomToast('Check your connection...');
+          showLongBottomToast('No internet connection');
         }
       });
     this.setState({
@@ -104,12 +106,12 @@ class AuthScreen extends Component {
       })
       .catch(err => {
         console.log(err);
-        if (err.response.data.non_field_errors) {
+        if (err.response !== undefined && err.response.data.non_field_errors) {
           this.setState({
             loginError: 'Username or password is incorrect',
           });
         } else {
-          showLongBottomToast('Check your connection...');
+          showLongBottomToast('No internet connection');
         }
       });
     this.setState({
