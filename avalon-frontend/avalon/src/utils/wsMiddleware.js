@@ -97,22 +97,24 @@ const socketMiddleware = () => {
           maxEnqueuedMessages: Infinity,
           startClosed: false,
           debug: __DEV__,
-        }
+        };
         socket = new ReconnectingWebsocket(
-          `${baseUrl}ws/game/?token=${action.token}`, [], wsOptions
+          `${baseUrl}ws/game/?token=${action.token}`,
+          [],
+          wsOptions,
         );
         socket.onmessage = onMessage(store);
         socket.onclose = onClose(store);
         socket.onopen = onOpen(store);
         break;
-      
+
       case WS_DISCONNECT:
         if (socket !== null) {
           socket.close();
         }
         socket = null;
         break;
-      
+
       case WS_SEND:
         socket.send(JSON.stringify(action.msg));
         break;
