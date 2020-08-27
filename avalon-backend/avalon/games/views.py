@@ -23,9 +23,8 @@ class GameListCreateAPIView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         game_code = uuid4().hex[:4].upper()
-        user = User.objects.get(email=self.request.user)
         data = request.data.copy()
-        data.update({'creator': user.id, 'code': game_code})
+        data.update({'creator': self.request.user.id, 'code': game_code})
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

@@ -359,6 +359,15 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             game_state.clear_quest_state()
         else:
             game_state.update_current_quest(current_quest)
+            await self.channel_layer.group_send(
+                game_code,
+                {
+                    'type': 'game.quest_score',
+                    'player': {'token': quest_player.token, 'username': quest_player.user.username,
+                               'avatar': quest_player.user.avatar},
+                    'scored_players': game_state.quest_scored_players,
+                },
+            )
 
         cache.set(game_state.game, game_state)
 
@@ -485,6 +494,18 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             {
                 'msg_type': state.MSG_TYPE_QUEST_VOTE_RESULT,
                 'game_state': event['game_state'],
+            }
+        )
+
+    async def game_quest_score(self, event):
+        """
+        Send players list of players who has scored.
+        """
+        await self.send_json(
+            {
+                'msg_type': state.MSG_TYPE_QUEST_SCORE,
+                'player': event['player'],
+                'scored_players': event['scored_players'],
             }
         )
 
