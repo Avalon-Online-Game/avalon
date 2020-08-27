@@ -1,10 +1,9 @@
 from urllib.parse import parse_qs
 from channels.db import database_sync_to_async
-from asgiref.sync import sync_to_async, async_to_sync
 from channels.auth import AuthMiddlewareStack
 from django.contrib.auth.models import AnonymousUser
-from django.db import close_old_connections
 from players.models import Player
+
 
 @database_sync_to_async
 def get_user(token_key):
@@ -35,7 +34,7 @@ class TokenAuthMiddlewareInstance:
         self.inner = self.middleware.inner
 
     async def __call__(self, receive, send):
-        #Used for querystring token url auth
+        # Used for querystring token url auth
         query_string = parse_qs(self.scope['query_string'])
         
         if b'token' in query_string:
@@ -45,5 +44,6 @@ class TokenAuthMiddlewareInstance:
         inner = self.inner(self.scope)
         return await inner(receive, send)
         # return self.inner(self.scope)
+
 
 TokenAuthMiddlewareStack = lambda inner: TokenAuthMiddleware(AuthMiddlewareStack(inner))

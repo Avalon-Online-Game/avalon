@@ -1,5 +1,4 @@
 from rest_auth.registration.views import RegisterView, LoginView
-from rest_auth.views import PasswordResetView
 
 from .serializers import (
     AccountDetailsSerializer,
@@ -19,11 +18,13 @@ class CustomLoginView(LoginView):
         response.data.update(user_data)
         return response
 
+
 class CustomRegistrationView(RegisterView):
     """
     Custom registration view.
     """
     serializer_class = AccountRegistrationSerializer
+
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         user = User.objects.get(email=request.data['email'])

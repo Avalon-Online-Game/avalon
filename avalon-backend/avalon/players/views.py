@@ -1,12 +1,12 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
 from uuid import uuid4
 
 from games.models import Game
 from .models import Player
 from .serializers import PlayerSerializer
+
 
 class PlayerListCreateAPIView(generics.ListCreateAPIView):
     """
@@ -27,7 +27,7 @@ class PlayerListCreateAPIView(generics.ListCreateAPIView):
         user_token = uuid4().hex
         player_num = game.players.count() + 1
         serializer_data = {'user': self.request.user.id, 'token': user_token,
-                           'game':game.code, 'player_num':player_num}
+                           'game': game.code, 'player_num': player_num}
         print(serializer_data)
         serializer = self.get_serializer(data=serializer_data)
         serializer.is_valid(raise_exception=True)

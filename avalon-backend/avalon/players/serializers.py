@@ -1,9 +1,8 @@
 from rest_framework import serializers
 
-from users.serializers import AccountDetailsSerializer
-from games.serializers import GameSerializer
 from games.models import Game
 from .models import Player
+
 
 class PlayerGameSerializer(serializers.RelatedField):
     def get_queryset(self):

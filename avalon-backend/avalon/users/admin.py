@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import Group
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from .models import User
@@ -44,13 +43,13 @@ class UserChangeForm(forms.ModelForm):
     """
     Admin page user check form.
     """
-    password = ReadOnlyPasswordHashField(label=("Password"),
-                                         help_text=("Raw passwords are not stored,", \
+    password = ReadOnlyPasswordHashField(label="Password",
+                                         help_text=("Raw passwords are not stored,",
                                                     "so there is no way to see "))
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'is_staff', 'avatar', )
+        fields = ('username', 'email', 'password', 'is_staff', 'avatar',)
 
     def clean_password(self):
         """
@@ -59,16 +58,15 @@ class UserChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
-
 class CustomUserAdmin(UserAdmin):
     """
     Custom user admin page.
     """
     change_form = UserChangeForm
     add_form = UserCreationForm
-    list_display = ('id', 'username', 'email', )
+    list_display = ('id', 'username', 'email',)
     list_display_links = ('username',)
-    ordering = ('id', 'username', 'email', )
+    ordering = ('id', 'username', 'email',)
     list_filter = ('username', 'email',)
     search_fields = ('username', 'email',)
     filter_horizontal = ()
@@ -82,7 +80,8 @@ class CustomUserAdmin(UserAdmin):
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'email', 'password1', 'password2', 'is_staff')}
-        ),
+         ),
     )
+
 
 admin.site.register(User, CustomUserAdmin)

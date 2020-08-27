@@ -1,6 +1,5 @@
 from allauth.account.adapter import DefaultAccountAdapter
 
-from .models import User
 
 class CustomAccountAdapter(DefaultAccountAdapter):
     """

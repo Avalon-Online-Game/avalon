@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from users.serializers import AccountDetailsSerializer
 from .models import Game, Role
+
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:

@@ -2,7 +2,6 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.conf import settings
 from allauth.account.adapter import get_adapter
 from rest_framework import serializers
-from rest_auth.registration.serializers import RegisterSerializer
 from allauth.utils import email_address_exists
 from allauth.account import app_settings as allauth_settings
 from allauth.account.utils import setup_user_email
@@ -52,6 +51,7 @@ class AccountRegistrationSerializer(serializers.Serializer):
         setup_user_email(request, user, [])
         return user
 
+
 class AccountDetailsSerializer(serializers.ModelSerializer):
     """
     Custom account detail serializer.
@@ -61,12 +61,14 @@ class AccountDetailsSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'avatar', )
         read_only_fields = ('id',)
 
+
 class PasswordResetSerializer(serializers.Serializer):
     """
     Password reset serializer.
     """
     email = serializers.EmailField()
     password_reset_form_class = PasswordResetForm
+
     def validate_email(self, value):
         """
         Email validator.
@@ -90,4 +92,3 @@ class PasswordResetSerializer(serializers.Serializer):
             'request': request,
         }
         self.reset_form.save(**opts)
-

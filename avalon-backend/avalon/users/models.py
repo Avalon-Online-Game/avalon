@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+
 class UserManager(BaseUserManager):
     """
     User manager.
@@ -44,7 +45,7 @@ class User(AbstractBaseUser):
     """
     User model.
     """
-    email = models.EmailField('Email Address', unique=True, max_length = 255)
+    email = models.EmailField('Email Address', unique=True, max_length=255)
     username = models.CharField('Username', unique=True, max_length=32)
     is_staff = models.BooleanField('Staff', default=False,
                                    help_text=('Designates whether the user can log into this admin '
@@ -59,19 +60,16 @@ class User(AbstractBaseUser):
         return self.username
 
     def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
+        """Does the user have a specific permission?"""
         # Simplest possible answer: Yes, always
         return True
 
     def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
+        """Does the user have permissions to view the app `app_label`?"""
         # Simplest possible answer: Yes, always
         return True
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email',]
-
-    def __str__(self):
-        return self.email
+    REQUIRED_FIELDS = ['email', ]
 
     objects = UserManager()
