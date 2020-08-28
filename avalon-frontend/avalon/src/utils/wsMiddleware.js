@@ -1,18 +1,14 @@
 import ReconnectingWebsocket from 'reconnecting-websocket';
 
 import {WS_CONNECT, WS_DISCONNECT, WS_SEND} from '../store/actions/actionTypes';
-import {
-  wsConnected,
-  wsDisconnected,
-  wsDisconnect,
-  wsSend,
-} from '../store/actions/index';
+import {wsConnected, wsDisconnected, wsSend} from '../store/actions/index';
 import {
   startGame,
   updateGame,
   setQuestChosenPlayers,
   setQuestVotedPlayers,
   setQuestVoteResult,
+  setQuestScoredPlayers,
   setQuestResult,
   setAssassinationState,
   setAssassinationResult,
@@ -52,6 +48,9 @@ const socketMiddleware = () => {
         break;
       case 'quest_vote_result':
         store.dispatch(setQuestVoteResult(payload));
+        break;
+      case 'quest_score':
+        store.dispatch(setQuestScoredPlayers(payload));
         break;
       case 'quest_result':
         store.dispatch(setQuestResult(payload));

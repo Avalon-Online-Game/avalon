@@ -5,6 +5,7 @@ import {UPDATE_GAME} from './actionTypes';
 import {SET_QUEST_CHOSEN_PLAYERS} from './actionTypes';
 import {SET_QUEST_VOTED_PLAYERS} from './actionTypes';
 import {SET_QUEST_VOTE_RESULT} from './actionTypes';
+import {SET_QUEST_SCORED_PLAYERS} from './actionTypes';
 import {SET_QUEST_RESULT} from './actionTypes';
 import {SET_ASSASSINATION_STATE} from './actionTypes';
 import {SET_ASSASSINATION_RESULT} from './actionTypes';
@@ -57,6 +58,13 @@ export const setQuestVotedPlayers = data => {
 export const setQuestVoteResult = data => {
   return {
     type: SET_QUEST_VOTE_RESULT,
+    data: data,
+  };
+};
+
+export const setQuestScoredPlayers = data => {
+  return {
+    type: SET_QUEST_SCORED_PLAYERS,
     data: data,
   };
 };
