@@ -89,7 +89,8 @@ class EndScreen extends Component {
           onBackdropPress={this.dissmissHandler}
           onBackButtonPress={this.dissmissHandler}
           isVisible={this.state.visible}
-          style={styles.overlay}>
+          style={styles.overlay}
+          backdropTransitionOutTiming={0}>
           <ImageBackground
             style={styles.background}
             source={this.imageBackground}

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-  TouchableOpacity,
+  View,
+  TouchableWithoutFeedback,
   Text,
   ImageBackground,
   StyleSheet,
@@ -27,12 +28,9 @@ const defaultButton = props => {
     );
   }
   return (
-    <TouchableOpacity
-      style={[styles.container, props.buttonStyle]}
-      onPress={props.onPress}
-      disabled={props.disabled}>
-      {buttonContent}
-    </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={props.onPress} disabled={props.disabled}>
+      <View style={[styles.container, props.buttonStyle]}>{buttonContent}</View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -40,7 +38,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: hp('8%'),
   },
   buttonImage: {
     width: wp('80%'),
@@ -50,7 +47,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: DefaultColors.dark,
-    fontSize: wp('6%'),
+    fontSize: wp('4.8%'),
     fontFamily: 'JosefinSans-Bold',
   },
 });

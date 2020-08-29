@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,12 +9,13 @@ import DefaultColors from '../colors';
 
 const bottomButton = props => {
   return (
-    <TouchableOpacity
-      style={[styles.button, props.buttonStyle]}
-      disabled={props.disabled}
-      onPress={props.onPress}>
-      <Text style={[styles.buttonText, props.textStyle]}>{props.children}</Text>
-    </TouchableOpacity>
+    <TouchableWithoutFeedback disabled={props.disabled} onPress={props.onPress}>
+      <View style={[styles.button, props.buttonStyle]}>
+        <Text style={[styles.buttonText, props.textStyle]}>
+          {props.children}
+        </Text>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

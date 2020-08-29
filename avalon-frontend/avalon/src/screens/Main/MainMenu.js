@@ -55,37 +55,35 @@ class MainMenuScreen extends Component {
     pushJoinGame();
   };
 
-  playersChartHandler = () => {};
+  // playersChartHandler = () => {};
 
-  cardsAndRolesHandler = () => {};
+  // cardsAndRolesHandler = () => {};
 
   render() {
     return (
       <MainView style={styles.background}>
-        <View style={styles.buttonsView}>
-          <DefaultButton
-            buttonStyle={styles.button}
-            onPress={this.createGameHandler}>
-            Create New Game
-          </DefaultButton>
-          <DefaultButton
-            buttonStyle={styles.button}
-            onPress={this.joinGameHandler}>
-            Join Game
-          </DefaultButton>
-          <DefaultButton
-            buttonStyle={styles.button}
-            disabled={true}
-            onPress={this.playersChartHandler}>
-            Players Chart
-          </DefaultButton>
-          <DefaultButton
-            buttonStyle={styles.button}
-            disabled={true}
-            onPress={this.cardsAndRolesHandler}>
-            Cards & Roles
-          </DefaultButton>
-        </View>
+        <DefaultButton
+          buttonStyle={styles.button}
+          onPress={this.createGameHandler}>
+          Create New Game
+        </DefaultButton>
+        <DefaultButton
+          buttonStyle={styles.button}
+          onPress={this.joinGameHandler}>
+          Join Game
+        </DefaultButton>
+        <DefaultButton
+          buttonStyle={styles.button}
+          disabled={true}
+          onPress={this.playersChartHandler}>
+          Players Chart
+        </DefaultButton>
+        <DefaultButton
+          buttonStyle={styles.button}
+          disabled={true}
+          onPress={this.cardsAndRolesHandler}>
+          Cards & Roles
+        </DefaultButton>
       </MainView>
     );
   }
@@ -93,15 +91,10 @@ class MainMenuScreen extends Component {
 
 const styles = StyleSheet.create({
   background: {
-    justifyContent: 'center',
-  },
-  buttonsView: {
-    height: hp('60%'),
-    marginTop: hp('-5%'),
-    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   button: {
-    marginTop: hp('0%'),
+    marginTop: hp('8%'),
   },
 });
 
