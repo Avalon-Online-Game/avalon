@@ -25,12 +25,13 @@ class LoadingScreen extends Component {
     this.state = {
       inLeaveModal: false,
     };
-    this.leaveConfirmFunction = () => {
+    this.leaveConfirmFunction = async () => {
       const msg = {
         msg_type: 'leave',
       };
       this.props.wsSend(msg);
       AsyncStorage.multiRemove(['game', 'player']);
+      await Navigation.dismissModal('leaveScreen');
       goMainMenu();
     };
   }
@@ -43,7 +44,9 @@ class LoadingScreen extends Component {
             {
               inLeaveModal: true,
             },
-            showLeave(this.leaveConfirmFunction),
+            () => {
+              showLeave(this.leaveConfirmFunction);
+            },
           );
         }
         break;
@@ -97,9 +100,7 @@ class LoadingScreen extends Component {
             source={require('../../assets/loading/castle.png')}
           />
         </ImageBackground>
-        <Text style={styles.codeText}>
-          Game Code: {this.props.gameCode}
-        </Text>
+        <Text style={styles.codeText}>Game Code: {this.props.gameCode}</Text>
       </View>
     );
   }

@@ -34,7 +34,8 @@ class QuestResultScreen extends Component {
         <Modal
           isVisible={this.state.visible}
           style={styles.overlay}
-          onBackdropPress={this.dissmissHandler}>
+          onBackdropPress={this.dissmissHandler}
+          backdropTransitionOutTiming={0}>
           <ImageBackground
             style={styles.background}
             source={require('../../assets/popups/popup-back.png')}

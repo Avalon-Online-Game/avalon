@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,14 +9,19 @@ import DefaultColors from '../colors';
 
 const defaultButton = props => {
   return (
-    <TouchableOpacity onPress={props.onPress} disabled={props.disabled}>
-      <View style={[styles.button, props.buttonStyle]}>
+    <TouchableWithoutFeedback onPress={props.onPress} disabled={props.disabled}>
+      <View
+        style={[
+          styles.button,
+          props.buttonStyle,
+          props.disabled ? styles.disabled : styles.enabled,
+        ]}>
         {props.Icon}
         <Text style={[styles.buttonText, props.textStyle]}>
           {props.children}
         </Text>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -33,6 +38,12 @@ const styles = StyleSheet.create({
     color: DefaultColors.dark,
     fontSize: wp('5%'),
     fontFamily: 'JosefinSans-Bold',
+  },
+  disabled: {
+    opacity: 0.5,
+  },
+  enabled: {
+    opacity: 1,
   },
 });
 

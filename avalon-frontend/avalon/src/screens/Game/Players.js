@@ -165,7 +165,8 @@ class PlayersScreen extends Component {
           style={styles.overlay}
           isVisible={this.state.visible}
           onBackdropPress={this.dissmissHandler}
-          onBackButtonPress={this.dissmissHandler}>
+          onBackButtonPress={this.dissmissHandler}
+          backdropTransitionOutTiming={0}>
           <View>
             <ImageBackground
               style={styles.background}

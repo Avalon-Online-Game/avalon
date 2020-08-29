@@ -26,7 +26,7 @@ class EntranceScreen extends Component {
         await this.isPlayerValid();
       }
     }
-    // await new Promise(resolve => setTimeout(resolve, 4000));
+    await new Promise(resolve => setTimeout(resolve, 4000));
     this.navigationFunction();
   }
 

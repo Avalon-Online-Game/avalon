@@ -76,7 +76,10 @@ class VoteResultScreen extends Component {
   render() {
     return (
       <View>
-        <Modal isVisible={this.state.visible} style={styles.overlay}>
+        <Modal
+          isVisible={this.state.visible}
+          style={styles.overlay}
+          backdropTransitionOutTiming={0}>
           <ImageBackground
             style={styles.background}
             source={require('../../assets/popups/modal-back.png')}
