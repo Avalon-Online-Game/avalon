@@ -72,6 +72,7 @@ const reducer = (state = initialState, action) => {
         roleData: action.data.player.role_data,
         questChosenPlayers: action.data.game_state.quest_chosen_players,
         questVotedPlayers: action.data.game_state.quest_voted_players,
+        questScoredPlayers: action.data.game_state.quest_scored_players,
         disconnectedPlayers: [],
         leftPlayers: [],
       };
@@ -123,9 +124,7 @@ const reducer = (state = initialState, action) => {
     case SET_QUEST_SCORED_PLAYERS: {
       return {
         ...state,
-        questChosenPlayers: action.data.game_state.quest_chosen_players,
-        questScoredPlayers: action.data.game_state.quest_scored_players,
-        gameState: action.data.game_state.state,
+        questScoredPlayers: action.data.quest_scored_players,
       };
     }
     case SET_QUEST_RESULT: {

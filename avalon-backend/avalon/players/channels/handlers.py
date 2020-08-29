@@ -121,7 +121,7 @@ class MessageHandler:
                     'game_state': game_state.to_json(),
                 },
             )
-            game_state.clear_voting_state()
+            # game_state.clear_voting_state()
 
         cache.set(game_state.game, game_state)
 
@@ -174,6 +174,7 @@ class MessageHandler:
                         },
                     )
             game_state.clear_quest_state()
+
         # Update quests and game state
         else:
             game_state.update_current_quest(current_quest)
@@ -183,7 +184,7 @@ class MessageHandler:
                     'type': 'game.quest_score',
                     'player': {'token': quest_player.token, 'username': quest_player.user.username,
                                'avatar': quest_player.user.avatar},
-                    'scored_players': game_state.quest_scored_players,
+                    'quest_scored_players': game_state.quest_scored_players,
                 },
             )
 

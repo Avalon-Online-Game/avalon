@@ -110,7 +110,7 @@ class PlayerConsumer(AsyncJsonWebsocketConsumer):
             {
                 'msg_type': messages.MessageTypes.QUEST_SCORE,
                 'player': event['player'],
-                'scored_players': event['scored_players'],
+                'quest_scored_players': event['quest_scored_players'],
             }
         )
 

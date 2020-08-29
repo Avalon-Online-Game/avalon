@@ -35,10 +35,14 @@ class PlayersScreen extends Component {
   }
 
   dissmissHandler = () => {
-    Navigation.dismissModal(this.props.componentId);
-    this.setState({
-      visible: false,
-    });
+    this.setState(
+      {
+        visible: false,
+      },
+      async () => {
+        await Navigation.dismissModal(this.props.componentId);
+      },
+    );
   };
 
   onButtonHandler = () => {
@@ -58,10 +62,14 @@ class PlayersScreen extends Component {
       };
       this.props.wsSend(msg);
     }
-    Navigation.dismissModal(this.props.componentId);
-    this.setState({
-      visible: false,
-    });
+    this.setState(
+      {
+        visible: false,
+      },
+      async () => {
+        await Navigation.dismissModal(this.props.componentId);
+      },
+    );
   };
 
   clickOnPlayerHandler = player => {

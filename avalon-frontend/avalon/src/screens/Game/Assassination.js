@@ -27,13 +27,6 @@ class AssassinationScreen extends Component {
     };
   }
 
-  //   dissmissHandler = () => {
-  //     this.setState({
-  //       visible: false,
-  //     });
-  //     Navigation.dismissModal(this.props.componentId);
-  //   };
-
   clickOnPlayerHandler = player => {
     Navigation.showModal({
       component: {

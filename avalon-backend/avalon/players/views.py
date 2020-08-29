@@ -28,7 +28,6 @@ class PlayerListCreateAPIView(generics.ListCreateAPIView):
         player_num = game.players.count() + 1
         serializer_data = {'user': self.request.user.id, 'token': user_token,
                            'game': game.code, 'player_num': player_num}
-        print(serializer_data)
         serializer = self.get_serializer(data=serializer_data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

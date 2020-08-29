@@ -167,13 +167,11 @@ class GameState:
         self.quest_scored_players.append({'token': player.token, 'username': player.user.username,
                                           'avatar': player.user.avatar})
 
-    def clear_voting_state(self):
+    def clear_quest_state(self):
         self.quest_chosen_players = []
         self.quest_voted_players = []
         self.quest_voting_result = ''
         self.quest_votes = []
-
-    def clear_quest_state(self):
         self.quest_scored_players = []
 
     def update_current_quest(self, quest):

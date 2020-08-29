@@ -13,7 +13,7 @@ class CustomLoginView(LoginView):
     """
     def get_response(self):
         response = super().get_response()
-        user = User.objects.get(email=self.request.user)
+        user = User.objects.get(username=self.request.user)
         user_data = AccountDetailsSerializer(user).data
         response.data.update(user_data)
         return response

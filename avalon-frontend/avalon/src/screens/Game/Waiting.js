@@ -31,10 +31,14 @@ class WaitingScreen extends Component {
   }
 
   dissmissHandler = () => {
-    Navigation.dismissModal(this.props.componentId);
-    this.setState({
-      visible: false,
-    });
+    this.setState(
+      {
+        visible: false,
+      },
+      async () => {
+        await Navigation.dismissModal(this.props.componentId);
+      },
+    );
   };
 
   render() {

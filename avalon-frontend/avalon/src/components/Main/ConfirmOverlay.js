@@ -6,9 +6,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {Navigation} from 'react-native-navigation';
-import AsyncStorage from '@react-native-community/async-storage';
 
-import {goAuth} from '../../screens/Entrance/navigation';
 import DefaultButton from '../UI/Main/DefaultButton';
 import DefaultColors from '../UI/colors';
 

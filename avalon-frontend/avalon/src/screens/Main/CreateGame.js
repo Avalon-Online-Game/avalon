@@ -22,7 +22,9 @@ import {showShortBottomToast, showLongBottomToast} from '../../utils/toasts';
 class CreateGameScreen extends Component {
   validateChosenRoles = () => {
     if (this.props.chosenRoles.length !== this.props.numberOfPlayers) {
-      showShortBottomToast(`Choose exactly ${this.props.numberOfPlayers} players`)
+      showShortBottomToast(
+        `Choose exactly ${this.props.numberOfPlayers} players`,
+      );
       return false;
     }
     const validation = chosenRolesValidation(this.props.chosenRoles);

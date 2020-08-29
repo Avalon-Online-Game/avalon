@@ -6,7 +6,7 @@ import DefaultColors from '../../components/UI/colors';
 
 export const goBoard = async () => {
   const logoutIcon = await Icon.getImageSource('ios-log-out', wp('8%'));
-  const settingsIcon = await Icon.getImageSource('ios-settings', wp('8%'));
+  // const settingsIcon = await Icon.getImageSource('ios-settings', wp('8%'));
   Navigation.setStackRoot('mainStack', {
     component: {
       id: 'boardScreen',
@@ -20,13 +20,13 @@ export const goBoard = async () => {
               color: DefaultColors.light,
             },
           ],
-          rightButtons: [
-            {
-              id: 'settingsButton',
-              icon: settingsIcon,
-              color: DefaultColors.light,
-            },
-          ],
+          // rightButtons: [
+          //   {
+          //     id: 'settingsButton',
+          //     icon: settingsIcon,
+          //     color: DefaultColors.light,
+          //   },
+          // ],
         },
       },
     },

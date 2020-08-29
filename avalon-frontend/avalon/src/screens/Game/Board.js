@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
-// import {Tooltip} from 'react-native-elements';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -33,6 +32,7 @@ import {
 import {goMainMenu} from '../Entrance/navigation';
 import {wsSend} from '../../store/actions/index';
 import DefaultColors from '../../components/UI/colors';
+import {showShortBottomToast} from '../../utils/toasts';
 
 class BoardScreen extends Component {
   constructor(props) {
@@ -95,7 +95,10 @@ class BoardScreen extends Component {
         if (
           this.props.questChosenPlayers.find(
             player => player.token === this.props.playerToken,
-          ) !== undefined
+          ) !== undefined &&
+          this.props.questScoredPlayers.find(
+            player => player.token === this.props.playerToken,
+          ) === undefined
         ) {
           pushQuest(this.props.componentId);
         } else {
@@ -201,6 +204,26 @@ class BoardScreen extends Component {
     }
     if (prevProps.leftPlayers.length !== this.props.leftPlayers.length) {
       showPlayerLeft(this.props.leftPlayers[this.props.leftPlayers.length - 1]);
+      return;
+    }
+    if (
+      this.props.questVotedPlayers.length !==
+        prevProps.questVotedPlayers.length &&
+      this.props.questVotedPlayers.length !== this.props.numberOfPlayers
+    ) {
+      showShortBottomToast(
+        `${this.props.questVotedPlayers.length} players has voted`,
+      );
+      return;
+    }
+    if (
+      this.props.questScoredPlayers.length !==
+        prevProps.questScoredPlayers.length &&
+      this.props.questScoredPlayers.length !== this.props.numberOfPlayers
+    ) {
+      showShortBottomToast(
+        `${this.props.questScoredPlayers.length} players has done quest`,
+      );
       return;
     }
     if (this.props.gameState !== prevProps.gameState) {
@@ -374,6 +397,7 @@ const mapStateToProps = state => {
     questVotedPlayers: state.game.questVotedPlayers,
     questVotingResult: state.game.questVotingResult,
     questPlayersVotes: state.game.questPlayersVotes,
+    questScoredPlayers: state.game.questScoredPlayers,
     questScores: state.game.questScores,
     questResult: state.game.questResult,
     assassinatedPlayer: state.game.assassinatedPlayer,

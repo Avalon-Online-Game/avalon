@@ -40,3 +40,10 @@ class GameRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Game.objects.all()
     serializer_class = GameSerializer
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not (request.user.is_staff or request.user in instance.players.all()):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
