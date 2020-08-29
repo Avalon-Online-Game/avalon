@@ -1,15 +1,12 @@
-from itertools import chain
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics, status
 from uuid import uuid4
-from django.db.models import Q
 
-from players.serializers import PlayerSerializer
-from players.models import Player
 from users.models import User
 from .models import Game
 from .serializers import GameCreateSerializer, GameSerializer
+
 
 class GameListCreateAPIView(generics.ListCreateAPIView):
     """
@@ -26,14 +23,14 @@ class GameListCreateAPIView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         game_code = uuid4().hex[:4].upper()
-        user = User.objects.get(email=self.request.user)
         data = request.data.copy()
-        data.update({'creator': user.id, 'code': game_code})
+        data.update({'creator': self.request.user.id, 'code': game_code})
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        instance = serializer.save()
+        serializer.save()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class GameRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -43,3 +40,10 @@ class GameRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Game.objects.all()
     serializer_class = GameSerializer
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not (request.user.is_staff or request.user in instance.players.all()):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)

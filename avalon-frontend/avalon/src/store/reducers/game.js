@@ -5,6 +5,7 @@ import {UPDATE_GAME} from '../actions/actionTypes';
 import {SET_QUEST_CHOSEN_PLAYERS} from '../actions/actionTypes';
 import {SET_QUEST_VOTED_PLAYERS} from '../actions/actionTypes';
 import {SET_QUEST_VOTE_RESULT} from '../actions/actionTypes';
+import {SET_QUEST_SCORED_PLAYERS} from '../actions/actionTypes';
 import {SET_QUEST_RESULT} from '../actions/actionTypes';
 import {SET_ASSASSINATION_STATE} from '../actions/actionTypes';
 import {SET_ASSASSINATION_RESULT} from '../actions/actionTypes';
@@ -30,6 +31,7 @@ const initialState = {
   questVotedPlayers: [],
   questVotingResult: '',
   questPlayersVotes: [],
+  questScoredPlayers: [],
   questScores: undefined,
   questResult: '',
   assassinationChoices: [],
@@ -70,6 +72,7 @@ const reducer = (state = initialState, action) => {
         roleData: action.data.player.role_data,
         questChosenPlayers: action.data.game_state.quest_chosen_players,
         questVotedPlayers: action.data.game_state.quest_voted_players,
+        questScoredPlayers: action.data.game_state.quest_scored_players,
         disconnectedPlayers: [],
         leftPlayers: [],
       };
@@ -95,7 +98,6 @@ const reducer = (state = initialState, action) => {
         currentQuestNumber: action.data.game_state.quest_number,
         failedVotings: action.data.game_state.failed_votings,
         gameState: action.data.game_state.state,
-        // winner: action.data.game_state.winner,
       };
     }
     case SET_QUEST_VOTED_PLAYERS: {
@@ -103,12 +105,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         questChosenPlayers: action.data.game_state.quest_chosen_players,
         questVotedPlayers: action.data.game_state.quest_voted_players,
-        // commander: action.data.game_state.commander,
-        // quests: action.data.game_state.quests,
-        // currentQuestNumber: action.data.game_state.quest_number,
-        // failedVotings: action.data.game_state.failed_votings,
         gameState: action.data.game_state.state,
-        // winner: action.data.game_state.winner,
       };
     }
     case SET_QUEST_VOTE_RESULT: {
@@ -122,7 +119,12 @@ const reducer = (state = initialState, action) => {
         currentQuestNumber: action.data.game_state.quest_number,
         failedVotings: action.data.game_state.failed_votings,
         gameState: action.data.game_state.state,
-        // winner: action.data.game_state.winner,
+      };
+    }
+    case SET_QUEST_SCORED_PLAYERS: {
+      return {
+        ...state,
+        questScoredPlayers: action.data.quest_scored_players,
       };
     }
     case SET_QUEST_RESULT: {
@@ -137,7 +139,6 @@ const reducer = (state = initialState, action) => {
         currentQuestNumber: action.data.game_state.quest_number,
         failedVotings: action.data.game_state.failed_votings,
         gameState: action.data.game_state.state,
-        // winner: action.data.game_state.winner,
       };
     }
     case SET_ASSASSINATION_STATE: {

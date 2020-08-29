@@ -6,7 +6,6 @@ from django.conf import settings
 
 
 urlpatterns = [
-    
     path('api/v1/users/', include('users.urls')),
     path('api/v1/games/', include('games.urls')),
     path('api/v1/players/', include('players.urls')),

@@ -68,7 +68,7 @@ class QuestsList extends Component {
       content = (
         <View>
           {detail}
-          <TouchableWithoutFeedback onPress={() => this.seeQuestHandler(item)}>
+          <TouchableWithoutFeedback>
             <ImageBackground
               style={styles.questBackgroundBorder}
               source={questResultBorder}
@@ -87,9 +87,7 @@ class QuestsList extends Component {
       content = (
         <View>
           {detail}
-          <TouchableWithoutFeedback
-            style={styles.questButton}
-            onPress={() => this.seeQuestHandler(item)}>
+          <TouchableWithoutFeedback style={styles.questButton}>
             <View
               style={styles.questBackgroundBorder}
               source={require('../../assets/popups/player-back-border.png')}

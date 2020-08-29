@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField, JSONField
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from users.models import User

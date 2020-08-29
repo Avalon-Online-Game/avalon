@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'players',
 ]
 
-##### Channels-specific settings
+# Channels settings
 redis_host = os.environ.get('REDIS_HOST', 'localhost')
 
 # Channel layer definitions

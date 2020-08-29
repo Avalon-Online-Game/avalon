@@ -11,6 +11,7 @@ export {updateGame} from './game';
 export {setQuestChosenPlayers} from './game';
 export {setQuestVotedPlayers} from './game';
 export {setQuestVoteResult} from './game';
+export {setQuestScoredPlayers} from './game';
 export {setQuestResult} from './game';
 export {setAssassinationState} from './game';
 export {setAssassinationResult} from './game';

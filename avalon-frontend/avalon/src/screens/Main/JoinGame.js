@@ -143,9 +143,9 @@ const styles = StyleSheet.create({
   },
   textInput: {
     backgroundColor: '#17242c',
-    width: wp('12%'),
-    height: wp('12%'),
-    fontSize: wp('6%'),
+    width: wp('15%'),
+    height: wp('15%'),
+    fontSize: wp('7%'),
     marginHorizontal: wp('2.5%'),
     color: DefaultColors.light,
     textAlign: 'center',

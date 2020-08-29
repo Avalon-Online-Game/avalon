@@ -42,19 +42,23 @@ class EndScreen extends Component {
       'Content-Type': 'application/json',
       Authorization: `Token ${userToken}`,
     };
-    API.delete(`games/game/${gameCode}`, {
+    API.delete(`games/game/${gameCode}/`, {
       headers: headers,
     });
-    this.setState({
-      visible: false,
-    });
-    Navigation.dismissModal(this.props.componentId);
-    Navigation.setStackRoot('mainStack', {
-      component: {
-        id: 'mainMenuScreen',
-        name: 'avalon.MainMenuScreen',
+    this.setState(
+      {
+        visible: false,
       },
-    });
+      async () => {
+        await Navigation.dismissModal(this.props.componentId);
+        await Navigation.setStackRoot('mainStack', {
+          component: {
+            id: 'mainMenuScreen',
+            name: 'avalon.MainMenuScreen',
+          },
+        });
+      },
+    );
   };
 
   playerRenderItem = ({item}) => {

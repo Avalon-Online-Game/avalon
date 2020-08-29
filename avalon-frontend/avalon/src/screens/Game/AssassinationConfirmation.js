@@ -32,17 +32,25 @@ class AssassinationConfirmationScreen extends Component {
       merlin_choice: this.props.player,
     };
     this.props.wsSend(msg);
-    this.setState({
-      visible: false,
-    });
-    Navigation.dismissAllModals();
+    this.setState(
+      {
+        visible: false,
+      },
+      async () => {
+        await Navigation.dismissAllModals();
+      },
+    );
   };
 
   declineHandler = () => {
-    this.setState({
-      visible: false,
-    });
-    Navigation.dismissModal(this.props.componentId);
+    this.setState(
+      {
+        visible: false,
+      },
+      async () => {
+        await Navigation.dismissModal(this.props.componentId);
+      },
+    );
   };
 
   render() {
